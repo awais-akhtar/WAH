@@ -1,0 +1,48 @@
+<script>
+  $(document).ready(function(){
+    $(".findisp").change(function(){
+      var status =$(this).val();
+      console.log("status", status)
+      var url = `/find_isp/`
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: {
+          'ispf': status // from form
+        },
+        success: function (response) {
+          console.log("response=>",response);
+          if (response === "Out of Stock") {
+              $('#res').text("Out of Stock");
+          } else {
+               $('#res').text("Available");
+          }
+        }
+      });
+    });
+
+    $(".findQuota").change(function(){
+      var findQuota =$(this).val();
+      var ispf = $(".findisp").val();
+      console.log("findQuota", findQuota);
+      console.log("ispf", ispf);
+      var url = `/findQuota/`
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: {
+          'ispf': ispf,
+          'findQuotaf': findQuota // from form
+        },
+        success: function (response) {
+          console.log("response=>",response);
+          if (response === "Out of Stock") {
+              $('#res2').text("Out of Stock");
+          } else {
+               $('#res2').text("Available");
+          }
+        }
+      });
+    });
+  });
+</script>

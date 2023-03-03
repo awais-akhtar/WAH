@@ -1,0 +1,113 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} add request {% endblock %} 
+
+{% block stylesheets %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
+{% endblock stylesheets %}
+
+{% block content %}
+    <!-- [ Main Content ] start -->
+    <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+            <div class="pcoded-content">
+                <div class="pcoded-inner-content">
+                    <!-- [ breadcrumb ] end -->
+                    <div class="main-body">
+                        <div class="page-wrapper">
+                            <!-- [ Main Content ] start -->
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <!-- Input group -->
+                                    <div class="card m-3">
+                                      <div class="card-header">
+                                          <a class="outline-info glow-info font-weight-bold" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Pending Requests</a>
+                                      </div>
+                                      <div class="collapse" id="collapseExample">
+                                        <div >
+                                          <div class="table-responsive">
+                                              <table class="table table-hover">
+                                                  <tbody>
+                                                    {% for s in unapproved_requests %}
+                                                  <tr class="unread">
+                                                      <td><img class="rounded-circle" style="width:40px;"
+                                                                  src="{{ ASSETS_ROOT }}/images/user/avatar-1.jpg" alt="activity-user">
+                                                      </td>
+                                                      <td>
+                                                          <h6 class="mb-1">{{s.name}}</h6>
+                                                          <p class="m-0">{{s.employee_id}}</p>
+                                                      </td>
+                                                      <td>
+                                                        <h6 class="text-muted"><i
+                                                                class="fas fa-circle  f-10 m-r-15"></i>{{s.request_date}}</h6>
+                                                    </td>
+                                                    <td>
+                                                      <h6 class="text-muted"><i
+                                                              class="fas fa-circle text-c-yellow f-10 m-r-15"></i>Pending</h6>
+                                                    </td>
+                                                  </tr>
+                                                  {% endfor %}
+                                                  </tbody>
+                                              </table>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="card m-3">
+                                      <div class="card-header">
+                                          <a class="outline-info glow-info font-weight-bold" data-toggle="collapse" href="#collapseExample1" role="button" aria-expanded="false" aria-controls="collapseExample1">Approved Requests</a>
+                                      </div>
+                                      <div class="collapse" id="collapseExample1">
+                                        <div>
+                                          <div class="table-responsive">
+                                            <table class="table table-hover">
+                                              <tbody>
+                                                {% for s in approved_requests %}
+                                              <tr class="unread">
+                                                  <td><img class="rounded-circle" style="width:40px;"
+                                                              src="{{ ASSETS_ROOT }}/images/user/avatar-1.jpg" alt="activity-user">
+                                                  </td>
+                                                  <td>
+                                                      <h6 class="mb-1">{{s.name}}</h6>
+                                                      <p class="m-0">{{s.employee_id}}</p>
+                                                  </td>
+                                                  <td>
+                                                    <h6 class="text-muted"><i
+                                                            class="fas fa-circle f-10 m-r-15"></i>{{s.approved_date}}</h6>
+                                                </td>
+                                                <td>
+                                                  <h6 class="text-muted"><i
+                                                          class="fas fa-circle text-c-green f-10 m-r-15"></i>Completed Request</h6>
+                                                </td>
+                                              </tr>
+                                              {% endfor %}
+                                              </tbody>
+                                            </table>
+                                          </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- [ Main Content ] end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- [ Main Content ] end -->
+
+    <script>
+        $(document).ready(function(){
+        });
+      </script>
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<!-- Add jQuery library -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Add the DataTable JS file -->
+<script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+{% endblock javascripts %}

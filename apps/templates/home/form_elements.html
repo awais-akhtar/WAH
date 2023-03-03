@@ -1,0 +1,178 @@
+{% extends "layouts/base.html" %} {% block title %} UI Forms {% endblock %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+  <!-- Add the DataTable CSS file -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css"/>
+{% endblock stylesheets %}
+{% block content %}
+<div class="pcoded-main-container">
+  <div class="container">
+    <div class="">
+      <div class="col-auto">
+        <div class="card Recent-Users">
+            <div class="card-header">
+                <h5>Pending Request</h5>
+            </div>
+            <div class="card-block px-0 py-3">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                        {% for f in unapproved_requests %}
+                        <tr class="unread">
+                            <td><img class="rounded-circle" style="width:40px;"
+                                        src="{{ ASSETS_ROOT }}/images/user/avatar-2.jpg" alt="activity-user">
+                            </td>
+                            <td>
+                                <h6 class="mb-1">{{f.name}}</h6>
+                                <p class="m-0">{{f.employee_id}}</p>
+                            </td>
+                            <td>
+                                <h6 class="text-muted"><i
+                                        class="fas fa-circle text-c-green f-10 m-r-15"></i>{{f.request_date}}</h6>
+                            </td>
+                            <form action="{% url 'form' %}" method="post">
+                              {% csrf_token %}
+                            <td>
+                              {% comment %} <a href="#!" class="label theme-bg2 text-white f-12">Reject</a> {% endcomment %}
+                              <input type="hidden" value={{f.employee_id}} name="employee_id" >
+                              <button type="submit" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo" class="label theme-bg text-white f-12">Approve</button>
+                          </td></form>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="{% url 'update_device_data' %}" method="POST" >
+          {% comment %} action="{% url 'update_device_data' %}" {% endcomment %}
+               {% csrf_token %}
+               <input type="hidden" name="id" id="id" value="">
+        <div class="modal-body">
+          <div class="row">
+          <div class="col-6">
+          <div class="form-group">
+            <label for="location">Location:</label>
+            <input type="text" class="form-control" id="location" name="location">
+          </div>
+          <div class="form-group">
+            <label for="type">Type:</label>
+            <input type="text" class="form-control" id="type" name="type">
+          </div>
+          <div class="form-group">
+            <label for="isp">ISP:</label>
+            <input type="text" class="form-control" id="isp" name="isp">
+          </div>
+          <div class="form-group">
+            <label for="data_limit">Data Limit:</label>
+            <input type="text" class="form-control" id="data_limit" name="data_limit">
+          </div>
+          <div class="form-group">
+            <label for="manufacturer">Manufacturer:</label>
+            <input type="text" class="form-control" id="manufacturer" name="manufacturer">
+          </div>
+          <div class="form-group">
+            <label for="instock_date">instock_date:</label>
+            <input type="text" class="form-control" id="instock_date" name="instock_date" readonly>
+          </div>
+          </div>
+          <div class="col-6">
+          <div class="form-group">
+            <label for="device_model">Model:</label>
+            <input type="text" class="form-control" id="device_model" name="device_model">
+          </div>
+          <div class="form-group">
+            <label for="imei">IMEI:</label>
+            <input type="text" class="form-control" id="imei" name="imei">
+          </div>
+          <div class="form-group">
+            <label for="msisdn">MSISDN:</label>
+            <input type="text" class="form-control" id="msisdn" name="msisdn">
+          </div>
+          <div class="form-group">
+            <label for="sim_card">Sim Card:</label>
+            <input type="text" class="form-control" id="sim_card" name="sim_card">
+          </div>
+          <div class="form-group">
+            <label for="device_status">Status:</label>
+            <input type="text" class="form-control" id="device_status" name="device_status">
+          </div>
+          <div class="form-group">
+            <label for="punched_by">punched_by:</label>
+            <input type="text" class="form-control" id="punched_by" readonly>
+          </div>
+        </div>
+        </div>
+        <label for="remarks">Remarks:</label>
+        <textarea class="form-control"  rows="3" cols="20" maxlength="200" id="remarks" name="remarks"></textarea>
+        </div>
+        </form>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Assign device</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Add the jQuery library -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <script>
+    $(document).ready(function() {
+      $('.approve-btn').click(function() {
+        var request_id = $(this).data('id');
+        var id = $('#id').val();
+        console.log(id)
+        $.ajax({
+          url: '/approve_request/',
+          type: 'POST',
+          data: {'request_id': request_id},
+          success: function(response) {
+            console.log('Request approved successfully!');
+            location.reload();  // Reload the page to show the updated requests
+          },
+          error: function(xhr) {
+            console.log('Error approving request');
+          }
+        });
+      });
+      
+      $('.reject-btn').click(function() {
+        var request_id = $(this).data('id');
+        $.ajax({
+          url: '/reject_request/',
+          type: 'POST',
+          data: {'request_id': request_id},
+          success: function(response) {
+            console.log('Request rejected successfully!');
+            location.reload();  // Reload the page to show the updated requests
+          },
+          error: function(xhr) {
+            console.log('Error rejecting request');
+          }
+        });
+      });
+    });
+    
+  </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+  {% endblock content %}
+
+  {% block javascripts %}
+
+  {% endblock javascripts %}
+</div>

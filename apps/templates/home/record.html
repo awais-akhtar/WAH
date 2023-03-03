@@ -1,0 +1,408 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block title %}Records{% endblock %}
+
+{% block stylesheets %}
+    <!-- Add the DataTable CSS file -->
+    
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
+    <style>
+        .card-header {
+            background-color: #007bff;
+
+            font-weight: bold;
+        }
+        .table {
+            font-size: 14px;
+        }
+        th, td {
+            text-align: center;
+            vertical-align: middle !important;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+            <div class="pcoded-content">
+                <div class="pcoded-inner-content">
+                    <div class="main-body">
+                        <div class="page-wrapper">
+                            <div class="row">
+                                <div class="col-sm-auto col-sm-12">
+                                    {% if messages %}
+                                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                                        {% for message in messages %}
+                                            <strong> {{message}}</strong>
+                                        {% endfor %}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                {% endif %}
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <div class="row align-items-center">
+                                                <div class="col">
+                                                  <h5 class="mb-0">Device Record</h5>
+                                                </div>
+                                                <div class="col-auto">
+                                                   <button class="btn btn-outline-info btn-glow-info btn-block" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                                                    <i class="fa fa-filter"></i>Filter
+                                                  </button>
+                                                </div>
+                                            </div>
+                                            <div class="collapse" id="collapseExample" >
+                                                <form action="{% url 'stock_record' %}" method="POST">
+                                                    {% csrf_token %} 
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <label>Location</label>
+                                                            <select class="form-control" name="location" >
+                                                                <option value="No Info Available">No Info Available</option>
+                                                                <option value="Lahore">LHR</option>
+                                                                <option value="Islamabad">ISL</option>
+                                                                <option value="Karachi">KHI</option>
+                                                            </select>
+                                                            <label >Type</label>
+                                                            <select class="form-control" name="type" >
+                                                                <option value="No Info Available">No Info Available</option>
+                                                                <option value="MIFI">MIFI</option>
+                                                                <option value="CAT6">CAT6</option>
+                                                                <option value="CharJi">CharJi</option>
+                                                                <option value="Router">Router</option>
+                                                                <option value="Wingle">Wingle</option>
+                                                                <option value="Bolt/Bolt+">Bolt/Bolt+</option>
+                                                                <option value="SIM Only">SIM Only</option>
+                                                            </select>
+                                                            <label >ISP</label>
+                                                            <select class="form-control" name="isp" required>
+                                                                <option value="No Info Available">No Info Available</option>
+                                                                <option value="Telenor">Telenor</option>
+                                                                <option value="Zong">Zong</option>
+                                                                <option value="PTCL">PTCL</option>
+                                                                <option value="Jazz">Jazz</option>
+                                                            </select>
+                                                            <label >Data limit</label>
+                                                            <select class="form-control" name="data_limit" required>
+                                                                <option value="No Info Available">No Info Available</option>
+                                                                <option value="75GB">75GB</option>
+                                                                <option value="85GB">85GB</option>
+                                                                <option value="100GB">100GB</option>
+                                                                <option value="150GB">150GB</option>
+                                                                <option value="160GB">160GB</option>
+                                                                <option value="275GB">275GB</option>
+                                                            </select>
+                                                            <label >Manufacturer</label>
+                                                            <input name="manufacturer" maxlength="25" type="Text" class="form-control"  placeholder="Manufacturer Name..." >
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <label >Model</label>
+                                                            <input name="device_model" maxlength="25" type="Text" class="form-control"  placeholder="Model Number..." >
+                                                            <label >IMEI#</label>
+                                                            <input name="imei" type="Text" maxlength="25" class="form-control"  placeholder="IMEI Number..." >
+                                                            <label >MSISDN#</label>
+                                                            <input name="msisdn" type="Text" maxlength="25" class="form-control"  placeholder="MSISDN Number..." >
+                                                            <label >SIM Card #</label>
+                                                            <input name="sim_card" type="Text" maxlength="30" class="form-control"  placeholder="SIM Card Number..." >
+                                                            <label >Device Status</label>
+                                                            <select name="device_status" class="form-control" >
+                                                                <option value="No Info Available">No Info Available</option>
+                                                                <option value="Box Packed">Box Packed</option>
+                                                                <option value="Used">Used</option>
+                                                                <option value="Returned">Returned</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                 <input type="submit" class="btn btn-outline-info btn-glow-info mt-2" value="Filter">
+                                                </form>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <div class="dropdown mb-3">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="columnSelector" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                          Select Columns to Display
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="columnSelector">
+                                          <div class="form-check">
+                                            <input type="checkbox" checked data-column="0" checked>
+                                            {% comment %} <input class="form-check-input" type="checkbox" id="locationCheckbox" checked> {% endcomment %}
+                                            <label class="form-check-label" for="locationCheckbox">
+                                              Location
+                                            </label>
+                                          </div>
+                                          <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="typeCheckbox" checked>
+                                            <label class="form-check-label" for="typeCheckbox">
+                                              Type
+                                            </label>
+                                          </div>
+                                          <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="ispCheckbox" checked>
+                                            <label class="form-check-label" for="ispCheckbox">
+                                              ISP
+                                            </label>
+                                          </div>
+                                          <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="dataLimitCheckbox" checked>
+                                            <label class="form-check-label" for="dataLimitCheckbox">
+                                              Data Limit
+                                            </label>
+                                          </div>
+                                          <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="manufacturerCheckbox" checked>
+                                            <label class="form-check-label" for="manufacturerCheckbox">
+                                              Manufacturer
+                                            </label>
+                                          </div>
+                                          <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="modelCheckbox" checked>
+                                            <label class="form-check-label" for="modelCheckbox">
+                                              Model
+                                            </label>
+                                          </div>
+                                          <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="imeiCheckbox" checked>
+                                            <label class="form-check-label" for="imeiCheckbox">
+                                              IMEI
+                                            </label>
+                                          </div>
+                                          <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="msisdnCheckbox" checked>
+                                            <label class="form-check-label" for="msisdnCheckbox">
+                                              MSISDN
+                                            </label>
+                                          </div>
+                                          <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="simCardCheckbox" checked>
+                                            <label class="form-check-label" for="simCardCheckbox">
+                                              SIM Card
+                                            </label>
+                                          </div>
+                                          <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="statusCheckbox" checked>
+                                            <label class="form-check-label" for="statusCheckbox">
+                                              Status
+                                            </label>
+                                          </div>
+                                        </div>
+                                      </div>
+                                            <div class="card card-body">
+                                              <div class="table-responsive">
+                                                <table class="table table-bordered table-striped" id="deviceTable" width="100%">
+                                                  <thead class="thead-dark">
+                                                    <tr>
+                                                      <th>  </th>
+                                                      <th><input type="checkbox" checked data-column="0"> Location</th>
+                                                      <th><input type="checkbox" checked data-column="1"> Type</th>
+                                                      <th><input type="checkbox" checked data-column="2"> ISP</th>
+                                                      <th><input type="checkbox" checked data-column="3"> Data Limit</th>
+                                                      <th><input type="checkbox" checked data-column="4"> Manufacturer</th>
+                                                      <th><input type="checkbox" checked data-column="5"> Model</th>
+                                                      <th><input type="checkbox" checked data-column="6"> IMEI</th>
+                                                      <th><input type="checkbox" checked data-column="7"> MSISDN</th>
+                                                      <th><input type="checkbox" checked data-column="8"> Sim Card</th>
+                                                      <th><input type="checkbox" checked data-column="9"> Status</th>
+                                                    </tr>
+                                                  </thead>
+                                                  <tbody>
+                                                    {% for f in s %}  
+                                                    <tr>
+                                                      <td><a href="#" class="active-blue" data-bs-toggle="modal" data-bs-target="#deviceModal" data-id="{{f.id}}">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+                                                        <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
+                                                      </svg>
+                                                    </a>
+                                                    </td>
+                                                      <td class="column0">{{f.location}}</td>
+                                                      <td class="column1">{{f.type}}</td>
+                                                      <td class="column2">{{f.isp}}</td>
+                                                      <td class="column3">{{f.data_limit}}</td>
+                                                      <td class="column4">{{f.manufacturer}}</td>
+                                                      <td class="column5">{{f.device_model}}</td>
+                                                      <td class="column6">{{f.imei}}</td>
+                                                      <td class="column7">{{f.msisdn}}</td>
+                                                      <td class="column8">{{f.sim_card}}</td>
+                                                      <td class="column9">{{f.device_status}}</td>
+                                                    </tr>
+                                                    {% endfor %} 
+                                                  </tbody>
+                                                </table>
+                                              </div>
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% block javascripts %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+        <script>
+          $(document).ready(function() {
+            const checkboxes = document.querySelectorAll('#deviceTable input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const column = this.dataset.column;
+                    const cells = document.querySelectorAll(`#deviceTable .column${column}`);
+                    const display = this.checked ? '' : 'none';
+                    cells.forEach(cell => {
+                        cell.style.display = display;
+                    });
+                });
+            });
+          
+            $('#updateBtn').click(function() {
+                var id = $('#idd').val(); // add this line
+                $.ajax({
+                    url: '/update_device_data/' + id,
+                    type: 'POST',
+                    data: {
+                        location: $('#location').val(),
+                        type: $('#type').val(),
+                        isp: $('#isp').val(),
+                        data_limit: $('#data_limit').val(),
+                        manufacturer: $('#manufacturer').val(),
+                        device_model: $('#device_model').val(),
+                        imei: $('#imei').val(),
+                        msisdn: $('#msisdn').val(),
+                        sim_card: $('#sim_card').val(),
+                        device_status: $('#device_status').val(),
+                        punched_by: $('#punched_by').val(),
+                        remarks: $('#remarks').val(),
+                        instock_date: $('#instock_date').val(),
+                    },
+                    success: function(response) {
+                        console.log('Device data updated successfully.');
+                        $('#deviceModal').modal('hide');
+                    },
+                    error: function() {
+                        console.log('Error: Failed to update device data.');
+                    }
+                });
+            });
+            $('#deviceTable').on('click', 'a', function() {
+              var id = $(this).data('id');
+              console.log(id);
+              $.ajax({
+                  url: '/get_device_data/' + id,
+                  type: 'GET',
+                  dataType: 'json',
+                  success: function(data) {
+                      // set the values of other input fields
+                      $('#location').val(data.location);
+                      $('#type').val(data.type);
+                      $('#isp').val(data.isp);
+                      $('#data_limit').val(data.data_limit);
+                      $('#manufacturer').val(data.manufacturer);
+                      $('#device_model').val(data.device_model);
+                      $('#imei').val(data.imei);
+                      $('#msisdn').val(data.msisdn);
+                      $('#sim_card').val(data.sim_card);
+                      $('#device_status').val(data.device_status);
+                      $('#punched_by').val(data.punched_by);
+                      $('#instock_date').val(data.instock_date);
+                      $('#remarks').val(data.remarks);
+                      // set the value of the id input field
+                      $('#id').val(id);
+                      $('#deviceModal').modal('show');
+                  },
+                  error: function() {
+                      alert('Error: Failed to fetch device data.');
+                  }
+              });
+          });
+          
+               //Initialize DataTable plugin
+              //$('#deviceTable').DataTable({
+                //  "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
+             // });
+          });
+      </script>
+    {% endblock %}
+    <div class="modal fade" id="deviceModal" tabindex="-1" aria-labelledby="deviceModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="deviceModalLabel"> Details</h5>
+            </div>
+
+           <form action="{% url 'update_device_data' %}" method="POST" >
+              {% comment %} action="{% url 'update_device_data' %}" {% endcomment %}
+                   {% csrf_token %}
+                   <input type="hidden" name="id" id="id" value="">
+            <div class="modal-body">
+              <div class="row">
+              <div class="col-6">
+              <div class="form-group">
+                <label for="location">Location:</label>
+                <input type="text" class="form-control" id="location" name="location">
+              </div>
+              <div class="form-group">
+                <label for="type">Type:</label>
+                <input type="text" class="form-control" id="type" name="type">
+              </div>
+              <div class="form-group">
+                <label for="isp">ISP:</label>
+                <input type="text" class="form-control" id="isp" name="isp">
+              </div>
+              <div class="form-group">
+                <label for="data_limit">Data Limit:</label>
+                <input type="text" class="form-control" id="data_limit" name="data_limit">
+              </div>
+              <div class="form-group">
+                <label for="manufacturer">Manufacturer:</label>
+                <input type="text" class="form-control" id="manufacturer" name="manufacturer">
+              </div>
+              <div class="form-group">
+                <label for="instock_date">instock_date:</label>
+                <input type="text" class="form-control" id="instock_date" name="instock_date" readonly>
+              </div>
+              </div>
+              <div class="col-6">
+              <div class="form-group">
+                <label for="device_model">Model:</label>
+                <input type="text" class="form-control" id="device_model" name="device_model">
+              </div>
+              <div class="form-group">
+                <label for="imei">IMEI:</label>
+                <input type="text" class="form-control" id="imei" name="imei">
+              </div>
+              <div class="form-group">
+                <label for="msisdn">MSISDN:</label>
+                <input type="text" class="form-control" id="msisdn" name="msisdn">
+              </div>
+              <div class="form-group">
+                <label for="sim_card">Sim Card:</label>
+                <input type="text" class="form-control" id="sim_card" name="sim_card">
+              </div>
+              <div class="form-group">
+                <label for="device_status">Status:</label>
+                <input type="text" class="form-control" id="device_status" name="device_status">
+              </div>
+              <div class="form-group">
+                <label for="punched_by">punched_by:</label>
+                <input type="text" class="form-control" id="punched_by" readonly>
+              </div>
+            </div>
+            </div>
+            <label for="remarks">Remarks:</label>
+            <textarea class="form-control"  rows="3" cols="20" maxlength="200" id="remarks" name="remarks"></textarea>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary" id="updateBtn">Update</button>
+            </form>
+            </div>
+          </div>
+        </div>
+      </div>
+{% endblock %}

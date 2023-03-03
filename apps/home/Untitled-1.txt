@@ -1,0 +1,191 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} UI Forms {% endblock %} 
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <!-- [ Main Content ] start -->
+    <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+            <div class="pcoded-content">
+                <div class="pcoded-inner-content">
+                    <!-- [ breadcrumb ] end -->
+                    <div class="main-body">
+                        <div class="page-wrapper">
+                            <!-- [ Main Content ] start -->
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h5 class="mb-2">Employee Details</h5>
+                                        </div>
+
+                                        <form class="form-inline" action="{% url 'form' %}" method="post" >
+                                            {% csrf_token %}
+                                            <div class="form-group mx-sm-3 mb-2">
+                                                <label for="inputPassword2" class="sr-only">Employee ID:</label>
+                                                <h5 class="m-1">Employee ID: </h5>
+                                                <input type="text" class="form-control m-1" name="text"  placeholder="Enter employee id..." required>
+                                            </div>
+                                            <input type="submit" class="btn btn-primary mb-2" value="Search">
+                                        </form>
+                                        <div class="card-body">
+                                            <hr>
+                                            <div class="row">
+                                                {% for item in obj%}
+                                                <div class="col-md-6">
+                                                    <label class="font-weight-bold">Name</label>
+                                                    <label class="form-control font-weight-bold" style="border-bottom: 2px solid;">{{item.Name}}</label>
+                                                    <label class="font-weight-bold">Email</label>
+                                                    <label class="form-control font-weight-bold" style="border-bottom: 2px solid;">{{item.Email}}</label>
+                                                    <label class="font-weight-bold">Current Designation</label>
+                                                    <label class="form-control font-weight-bold" style="border-bottom: 2px solid;">{{item.Current_Designation}}</label>
+                                                    <label class="font-weight-bold">Department</label>
+                                                    <label class="form-control font-weight-bold" style="border-bottom: 2px solid;" >{{item.Department}}</label>
+                                                    {% if data2 == 'Active' %}
+                                                    <label class="font-weight-bold">CNIC</label>
+                                                    <input class="form-control font-weight-bold" style="border-bottom: 2px solid;" data-inputmask="'mask': '99999-9999999-9'"  placeholder="XXXXX-XXXXXXX-X"  name="cnic" required="">
+                                                    <label class="font-weight-bold">Contact Number</label>
+                                                    <input name="number" type="text"  data-inputmask="'mask': '039999999999'" required=""  type = "number" maxlength = "12" class="form-control font-weight-bold" style="border-bottom: 2px solid;">
+                                                    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+                                                    <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/jquery.inputmask.bundle.js"></script>
+                                                   <script>
+                                                    $(":input").inputmask();
+                                                   </script>
+                                                   {% else %}
+                                                   <h6 class="font-weight-bold">Status:</h6>
+                                                   <span class="badge badge-danger">{{data2}}</span>
+                                                   {% endif %}
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="font-weight-bold">Location</label>
+                                                    <label class="form-control font-weight-bold" style="border-bottom: 2px solid;">{{item.Location}}</label>
+                                                    <label class="font-weight-bold">Legal Entity</label>
+                                                    <label class="form-control font-weight-bold" style="border-bottom: 2px solid;">{{item.LegalEntity}}</label>
+                                                    <label class="font-weight-bold">Team</label>
+                                                    <label class="form-control font-weight-bold" style="border-bottom: 2px solid;">{{item.Team}}</label>
+                                                    <label class="font-weight-bold">Supervisor</label>
+                                                    <label class="form-control font-weight-bold" style="border-bottom: 2px solid;" >{{item.Supervisor}}</label>
+                                                    <label class="font-weight-bold">Supervisor Email</label>
+                                                    <label class="form-control font-weight-bold" style="border-bottom: 2px solid;" >{{item.SupervisorEmail}}</label>
+                                                    {% if data2 == 'Active' %}
+                                                    <label class="font-weight-bold mt-4">Status:</label>
+                                                    <span class="badge badge-success m-2">{{data2}}</span>
+                                                    {% endif %}
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Input group -->
+                                    {% if data2 == 'Active' %}
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h5>Input Data</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label >ISP</label>
+                                                    <select name="ISP" class="findisp form-control">
+                                                        {% comment %} <option value="No Info Available">No Info Available</option> {% endcomment %}
+                                                        <option value="Telenor">Telenor</option>
+                                                        <option value="Zong">Zong</option>
+                                                        <option value="PTCL">PTCL</option>
+                                                        <option value="Jazz">Jazz</option>
+                                                    </select>
+                                                    <p id="res" class="badge badge-info m-2"></p><br>
+                                                    <label >DOA</label>
+                                                    <input type="date" class="form-control" >
+                                                    <label >Type</label>
+                                                    <select class="form-control">
+                                                        <option value="">No Info Available</option>
+                                                        <option value="online">MIFI</option>
+                                                        <option value="offline">CAT6</option>
+                                                        <option value="pending">CharJi</option>
+                                                        <option value="online">Router</option>
+                                                        <option value="offline">Wingle</option>
+                                                        <option value="pending">Bolt/Bolt+</option>
+                                                        <option value="online">SIM Only</option>
+                                                    </select>
+                                                    <label >Quota</label>
+                                                    <select class="form-control">
+                                                        <option value="">No Info Available</option>
+                                                        <option value="online">75GB</option>
+                                                        <option value="offline">85GB</option>
+                                                        <option value="pending">100GB</option>
+                                                        <option value="online">150GB</option>
+                                                        <option value="offline">160GB</option>
+                                                        <option value="pending">275GB</option>
+                                                    </select>
+                                                    <label >Criteria</label>
+                                                    <select class="form-control">
+                                                        <option value="">No Info Available</option>
+                                                        <option value="online">CoVID 19</option>
+                                                        <option value="online">Normal</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label >IMEI #</label>
+                                                    <input type="Text" class="form-control"  placeholder="text">
+                                                    <label >MSISDN#</label>
+                                                    <input type="Text" class="form-control"  placeholder="text">
+                                                    <label >SIM Card #</label>
+                                                    <input type="Text" class="form-control"  placeholder="text">
+                                                    <label >Device Status</label>
+                                                    <select class="form-control">
+                                                        <option value="">No Info Available</option>
+                                                        <option value="online">OK</option>
+                                                        <option value="online">Damaged</option>
+                                                        <option value="offline">Lost</option>
+                                                    </select>
+                                                    <label >Remarks</label>
+                                                    <textarea class="form-control" placeholder="Leave a comment here"></textarea>
+                                                </div>
+                                            </div>
+                                            <button class="btn btn-primary mt-2" type="button">Assign</button>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <!-- [ Main Content ] end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- [ Main Content ] end -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+          $(".findisp").change(function(){
+            var status =$(this).val();
+            console.log("status", status)
+            var url = `/find_isp/`
+            $.ajax({
+              type: "POST",
+              url: url,
+              data: {
+                'ispf': status // from form
+              },
+              success: function (response) {
+                console.log("response=>",response);
+                if (response === "Out of Stock") {
+                    $('#res').text("Out of Stock");
+                } else {
+                     $('#res').text("Available");
+                }
+              }
+            });
+          });
+        });
+      </script>
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
