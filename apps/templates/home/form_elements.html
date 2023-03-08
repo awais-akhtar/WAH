@@ -1,9 +1,6 @@
 {% extends "layouts/base.html" %} {% block title %} UI Forms {% endblock %}
-
-<!-- Specific CSS goes HERE -->
 {% block stylesheets %}
-  <!-- Add the DataTable CSS file -->
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css"/>
+
 {% endblock stylesheets %}
 {% block content %}
 <div class="pcoded-main-container">
@@ -16,69 +13,207 @@
             </div>
             <div class="card-block px-0 py-3">
                 <div class="table-responsive">
-                    <table class="table table-hover">
+                     <table id="deviceTable" class="table table-hover">
                         <tbody>
                         {% for f in unapproved_requests %}
                         <tr class="unread">
-                            <td><img class="rounded-circle" style="width:40px;"
-                                        src="{{ ASSETS_ROOT }}/images/user/avatar-2.jpg" alt="activity-user">
+                            <td> <h6 class="mb-1">{{f.name}}</h6><p class="m-0">{{f.employee_id}}</p></td>
+                            <td> <h6 class="text-muted"><i class="fas fa-circle text-c-green f-10 m-r-15"></i>{{f.request_date}}</h6>
                             </td>
                             <td>
-                                <h6 class="mb-1">{{f.name}}</h6>
-                                <p class="m-0">{{f.employee_id}}</p>
+                              <h6 class="text-muted">Ticket id: #{{f.ticket_id}}</h6>
                             </td>
                             <td>
-                                <h6 class="text-muted"><i
-                                        class="fas fa-circle text-c-green f-10 m-r-15"></i>{{f.request_date}}</h6>
+                              <!--<a href="#!" class="label theme-bg2 text-white f-12">Reject</a> -->
+                              <input type="hidden" value={{f.employee_id}} name="employee_id" id="employee_id">
+                              <a class="label theme-bg text-white f-12 active-blue" data-bs-toggle="modal" data-bs-target="#deviceModal" data-id="{{f.id}}">Approve</a>
                             </td>
-                            <form action="{% url 'form' %}" method="post">
-                              {% csrf_token %}
-                            <td>
-                              {% comment %} <a href="#!" class="label theme-bg2 text-white f-12">Reject</a> {% endcomment %}
-                              <input type="hidden" value={{f.employee_id}} name="employee_id" >
-                              <button type="submit" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo" class="label theme-bg text-white f-12">Approve</button>
-                          </td></form>
                         </tr>
                         {% endfor %}
                         </tbody>
-                    </table>
+                     </table>
                 </div>
             </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+
+  <script>
+    $(document).ready(function() {
+      $('#deviceTable').on('click', 'a', function() {
+        var id = $(this).data('id');
+        var employee_id = $('#employee_id').val();
+        console.log(id);
+        console.log(employee_id);
+        $.ajax({
+            url: '/get_request_data/' + id,
+            type: 'GET',
+            dataType: 'json',
+            //data: { id: id, employee_id: employee_id },
+            success: function(data) {
+              // defining for date formate
+              var datetime = new Date(data.request_date);
+              var options = { 
+                month: 'long', 
+                day: 'numeric', 
+                year: 'numeric', 
+                hour: 'numeric', 
+                minute: 'numeric',
+                hour12: true
+              };
+              var formattedDatetime = datetime.toLocaleString('en-US', options);
+
+              // var uuid = data.ticket_id;
+              // var uuidSections = uuid.split("-");
+              // var numberFormat = "";
+              // for (var i = 0; i < uuidSections.length; i++) {
+              //   var decimal = parseInt(uuidSections[i], 16);
+              //   numberFormat += decimal.toString();
+              // }
+              //console.log(numberFormat)
+
+
+                // set the values of other input fields
+                console.log(data)
+                $('#ticket_id').append('#' + data.ticket_id);
+                //$('#name').val(data.name);
+                $('#name').append(data.name);
+                //$('#request_by').val(data.request_by);
+                $('#request_by').append(data.request_by);
+                //$('#employee_idd').val(data.employee_idd);
+                $('#employee_idd').append(data.employee_idd);
+                //$('#request_date').val(data.request_date);
+                $('#request_date').append(formattedDatetime);
+                //$('#device_type').val(data.device_type);
+                $('#device_type').append(data.device_type);
+                $('#name_id').val(data.id);
+                $('#name_id').append(data.id);
+
+                $('#location').val(data.location);
+                $('#type').val(data.type);
+                $('#isp').val(data.isp);
+                $('#data_limit').val(data.data_limit);
+                $('#manufacturer').val(data.manufacturer);
+                $('#device_model').val(data.device_model);
+                $('#imei').val(data.imei);
+                $('#msisdn').val(data.msisdn);
+                $('#sim_card').val(data.sim_card);
+                $('#device_status').val(data.device_status);
+                $('#punched_by').val(data.punched_by);
+                $('#instock_date').val(data.instock_date);
+                $('#remarks').val(data.remarks);
+                // set the value of the id input field
+                $('#id').val(id);
+                $('#deviceModal').modal('show');
+            },
+            error: function() {
+                console.log('Error: Failed to fetch device data.');
+            }
+        });
+      });
+    });
+</script>
+
+  {% block javascripts %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+  {% endblock javascripts %}
+
+  <div class="modal fade" id="deviceModal" tabindex="-1" aria-labelledby="deviceModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">New message</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+          <h5 class="modal-title" id="deviceModalLabel"> Details</h5>
         </div>
-        <form action="{% url 'update_device_data' %}" method="POST" >
-          {% comment %} action="{% url 'update_device_data' %}" {% endcomment %}
+       <form action="{% url 'approve_request' %}" method="POST" >
                {% csrf_token %}
-               <input type="hidden" name="id" id="id" value="">
+               <input type="hidden" name="id" id="id" >
         <div class="modal-body">
           <div class="row">
-          <div class="col-6">
+            <div class="col-4">
+              <div class="form-group">
+                <label for="name">Name</label>
+                <h6 class="mb-1" id="name" name="name"></h6>
+              </div>
+              <div class="form-group">
+                <label for="request_by">Requested by</label>
+                <h6 class="mb-1" id="request_by" name="request_by"></h6>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="form-group">
+                <label for="employee_id">Employee ID</label>
+               <!-- <input type="text" class="form-control" id="employee_idd" name="employee_id">  -->
+                <h6 class="mb-1" id="employee_idd" name="employee_idd"></h6>
+              </div>
+              <div class="form-group">
+                <label for="request_date">Request Date</label>
+                <!-- <input type="text" class="form-control" id="request_date" name="request_date"> -->
+                <h6 class="mb-1"  id="request_date" name="request_dates"></h6>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="form-group">
+                <label for="device_type">device_type</label>
+                <h6 class="mb-1"  id="device_type" name="device_type"></h6>
+                <!--
+                <label for="Code">Code</label>
+                <select class="form-control"  name="Code" data-live-search="true">
+                {% comment %} <option value="" disabled selected hidden></option> {% endcomment %}
+                {% for code in work_code %}
+                <option value="{{code.Work_Code}}"   {% if select_code == code.Work_Code %} 
+                selected
+                {%endif%}>
+                {{code.Work_Code}}
+                </option>
+                {% endfor %}
+                </select>
+                <script>
+                    $( document ).ready(function() {
+                        $('#search_select_box select').selectpicker();
+                      });
+                      $(document).ready(function() {
+                        $(window).keydown(function(event){
+                          if(event.keyCode == 13) {
+                            event.preventDefault();
+                            return false;
+                          }
+                        });
+                      });
+                </script>-->
+              </div>
+              <div class="form-group">
+                <label for="ticket_id">Ticket ID</label>
+                <h6 class="mb-1"  id="ticket_id" name="ticket_id"></h6>
+                <input type="hidden" class="form-control mt-2" id="name_id" name="name_id">
+              </div>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+          <div class="col-4">
           <div class="form-group">
-            <label for="location">Location:</label>
-            <input type="text" class="form-control" id="location" name="location">
+            <label >ISP</label>
+            <select class="form-control" name="isp" required>
+                <option value="No Info Available">No Info Available</option>
+                <option value="Telenor">Telenor</option>
+                <option value="Zong">Zong</option>
+                <option value="PTCL">PTCL</option>
+                <option value="Jazz">Jazz</option>
+            </select>
           </div>
           <div class="form-group">
-            <label for="type">Type:</label>
-            <input type="text" class="form-control" id="type" name="type">
-          </div>
-          <div class="form-group">
-            <label for="isp">ISP:</label>
-            <input type="text" class="form-control" id="isp" name="isp">
-          </div>
-          <div class="form-group">
-            <label for="data_limit">Data Limit:</label>
-            <input type="text" class="form-control" id="data_limit" name="data_limit">
+            <label >Data limit</label>
+            <select class="form-control" name="data_limit" required>
+                <option value="No Info Available">No Info Available</option>
+                <option value="75GB">75GB</option>
+                <option value="85GB">85GB</option>
+                <option value="100GB">100GB</option>
+                <option value="150GB">150GB</option>
+                <option value="160GB">160GB</option>
+                <option value="275GB">275GB</option>
+            </select>
           </div>
           <div class="form-group">
             <label for="manufacturer">Manufacturer:</label>
@@ -89,7 +224,7 @@
             <input type="text" class="form-control" id="instock_date" name="instock_date" readonly>
           </div>
           </div>
-          <div class="col-6">
+          <div class="col-4">
           <div class="form-group">
             <label for="device_model">Model:</label>
             <input type="text" class="form-control" id="device_model" name="device_model">
@@ -106,6 +241,8 @@
             <label for="sim_card">Sim Card:</label>
             <input type="text" class="form-control" id="sim_card" name="sim_card">
           </div>
+        </div>
+        <div class="col-4">
           <div class="form-group">
             <label for="device_status">Status:</label>
             <input type="text" class="form-control" id="device_status" name="device_status">
@@ -114,25 +251,97 @@
             <label for="punched_by">punched_by:</label>
             <input type="text" class="form-control" id="punched_by" readonly>
           </div>
+          <div class="form-group">
+            <label >Location</label>
+            <select class="form-control" name="location" required>
+                <option value="No Info Available">No Info Available</option>
+                <option value="Lahore">LHR</option>
+                <option value="Islamabad">ISL</option>
+                <option value="Karachi">KHI</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label >Type</label>
+            <select class="form-control" name="type" required>
+                <option value="No Info Available">No Info Available</option>
+                <option value="MIFI">MIFI</option>
+                <option value="CAT6">CAT6</option>
+                <option value="CharJi">CharJi</option>
+                <option value="Router">Router</option>
+                <option value="Wingle">Wingle</option>
+                <option value="Bolt/Bolt+">Bolt/Bolt+</option>
+                <option value="SIM Only">SIM Only</option>
+            </select>
+          </div>
         </div>
-        </div>
+      </div>
         <label for="remarks">Remarks:</label>
         <textarea class="form-control"  rows="3" cols="20" maxlength="200" id="remarks" name="remarks"></textarea>
         </div>
-        </form>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Assign device</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary" id="updateBtn">Assign device</button>
+        </form>
         </div>
       </div>
     </div>
   </div>
-  <!-- Add the jQuery library -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  {% endblock content %}
 
-  <script>
-    $(document).ready(function() {
-      $('.approve-btn').click(function() {
+
+
+
+
+
+
+
+
+  {% comment %} $('#updateBtn').click(function() {
+    var id = $('#idd').val(); // add this line
+    $.ajax({
+        url: '/update_device_data/' + id,
+        type: 'POST',
+        data: {
+            location: $('#location').val(),
+            type: $('#type').val(),
+            isp: $('#isp').val(),
+            data_limit: $('#data_limit').val(),
+            manufacturer: $('#manufacturer').val(),
+            device_model: $('#device_model').val(),
+            imei: $('#imei').val(),
+            msisdn: $('#msisdn').val(),
+            sim_card: $('#sim_card').val(),
+            device_status: $('#device_status').val(),
+            punched_by: $('#punched_by').val(),
+            remarks: $('#remarks').val(),
+            instock_date: $('#instock_date').val(),
+        },
+        success: function(response) {
+            console.log('Device data updated successfully.');
+            $('#deviceModal').modal('hide');
+        },
+        error: function() {
+            console.log('Error: Failed to update device data.');
+        }
+    });
+});
+ {% endcomment %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% comment %}   
+</div>
+     $('.approve-btn').click(function() {
         var request_id = $(this).data('id');
         var id = $('#id').val();
         console.log(id)
@@ -164,15 +373,4 @@
             console.log('Error rejecting request');
           }
         });
-      });
-    });
-    
-  </script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-  {% endblock content %}
-
-  {% block javascripts %}
-
-  {% endblock javascripts %}
-</div>
+      }); {% endcomment %}

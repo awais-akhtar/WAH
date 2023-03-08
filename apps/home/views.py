@@ -99,42 +99,36 @@ def add_request(request):
         dd= json.loads(responsestatus.text)
         data2=dd['data']['EmployeeStatus']
         print(data2)
-        if data2 == 'Active':
-            ss= json.loads(response.text)
-            data=ss['data']['PointsData']
-            for details in data:
-                print(details['Location'])
-                f = (details['Location'])
-            print("ttttttttttttttt",f)
+        ss= json.loads(response.text)
+        data=ss['data']['PointsData']
+        print(data)
+        # if data2 == 'Active':
+        #     ss= json.loads(response.text)
+        #     data=ss['data']['PointsData']
+        #     for details in data:
+        #         print(details['Location'])
+        #         f = (details['Location'])
+        #     print("ttttttttttttttt",f)
 
-            if AddRequest.objects.filter(employee_id=f'{id}').exists():
-                find = AddRequest.objects.filter(employee_id=f'{id}').values()
-                print(find)
-            unapproved_requests = AddRequest.objects.filter(is_approved=False).values()
-            approved_requests = AddRequest.objects.filter(is_approved=True).values()
-            context = {'obj':data, 'data2':data2, 'find':find, 'id':id,
-                'unapproved_requests': unapproved_requests,
-                'approved_requests': approved_requests,}
-
-            return render(request, "home/add_request.html", context)
-        else:
-            ss= json.loads(response.text)
-            data=ss['data']['PointsData']
-            for details in data:
-                print(details['Current_Designation'])
-            unapproved_requests = AddRequest.objects.filter(is_approved=False).values()
-            approved_requests = AddRequest.objects.filter(is_approved=True).values()
-            context = {'obj':data, 'data2':data2,
-                               'unapproved_requests': unapproved_requests,
-        'approved_requests': approved_requests,}
-            return render(request, "home/add_request.html", context)
-    unapproved_requests = AddRequest.objects.filter(is_approved=False).values()
-    approved_requests = AddRequest.objects.filter(is_approved=True).values()
-    context = {
-        'unapproved_requests': unapproved_requests,
-        'approved_requests': approved_requests,
-    }
-    return render(request, "home/add_request.html", context)
+            # if AddRequest.objects.filter(employee_id=f'{id}').exists():
+            #     find = AddRequest.objects.filter(employee_id=f'{id}').values()
+            #     print(find)
+            #     unapproved_requests = AddRequest.objects.filter(is_approved=False).values()
+            #     approved_requests = AddRequest.objects.filter(is_approved=True).values()
+            #     context = {'obj':data, 'data2':data2, 'find':find, 'id':id,
+            #     'unapproved_requests': unapproved_requests,
+            #     'approved_requests': approved_requests,}
+            #     return render(request, "home/add_request.html", context)
+        # else:
+        #     ss= json.loads(response.text)
+        #     data=ss['data']['PointsData']
+        #     for details in data:
+        #         print(details['Current_Designation'])
+        # unapproved_requests = AddRequest.objects.filter(is_approved=False).values()
+        # approved_requests = AddRequest.objects.filter(is_approved=True).values()
+        context = {'obj':data, 'data2':data2}
+        return render(request, "home/add_request.html", context)
+    return render(request, "home/add_request.html")
 
 def request_status(request):
     unapproved_requests = AddRequest.objects.filter(is_approved=False).values()
@@ -218,8 +212,17 @@ def approve_request(request):
         request.approved_date = timezone.now()
         request.approved_by = request.user
         request.save()
+        device = device_inventory.objects.get(id=device_id) # put here device inventory id
+        request = AddRequest.objects.get(ticket_id=ticket_id) # put here ticket id
+        allocation = DeviceAllocation.objects.create(assigned_device=device, ticket_id=request, allocated_by=request.user)
+        allocation.save()
         return JsonResponse({'success': True})
-        
+
+
+
+
+
+
 @csrf_exempt
 def reject_request(request):
     if request.method == 'POST':
@@ -260,7 +263,6 @@ def stock_record(request):
         type=request.POST['type']
         isp=request.POST['isp']
         data_limit=request.POST['data_limit']
-        print(data_limit)
         manufacturer=request.POST['manufacturer']
         device_model=request.POST['device_model']
         imei=request.POST['imei']
@@ -466,14 +468,40 @@ def get_device_data(request, id):
 
 
 @csrf_exempt
+def get_request_data(request, id):
+    id=id
+    print("================",id)
+    request = AddRequest.objects.get(id=id)
+    ss = device_inventory.objects.filter(location__contains='Islamabad').all()
+    print(ss)
+    print(request)
+    # Create a dictionary containing the device data
+    data = {
+        'id': request.id,
+        'employee_idd': request.employee_id,
+        'name': request.name,
+        'request_date': request.request_date,
+        'request_by': request.request_by,
+        'device_type': request.device_type,
+        'ticket_id' : request.ticket_id,
+    }
+    return JsonResponse(data)
+
+
+
+
+
+
+
+
+
+@csrf_exempt
 def update_device_data(request):
     if request.method == 'POST':
         id = request.POST['id']
         user = request.user.username
         try:
             device = device_inventory.objects.get(id=id)
-            # history = device.history.all()
-            # print("history=======",     history)
             device.location = request.POST.get('location')
             device.type = request.POST.get('type')
             device.isp = request.POST.get('isp')
@@ -488,43 +516,11 @@ def update_device_data(request):
             device.punched_by = user
             device.remarks = request.POST.get('remarks')
             device.save()
-
-        # Create a DeviceHistory record
-            # DeviceHistory.objects.create(
-            #     device=device,
-            #     location=device.location,
-            #     type=device.type,
-            #     isp=device.isp,
-            #     data_limit=device.data_limit,
-            #     manufacturer=device.manufacturer,
-            #     device_model=device.device_model,
-            #     imei=device.imei,
-            #     msisdn=device.msisdn,
-            #     sim_card=device.sim_card,
-            #     device_status=device.device_status,
-            #     instock_date=device.instock_date,
-            #     punched_by=device.punched_by,
-            #     remarks=device.remarks,
-            #     updated_date=timezone.now(),
-            # )
+            messages.info(request,"Record has been Updated")
             return redirect('stock_record')
-            # return JsonResponse({'success': True, 'device': {
-            #     'location': device.location,
-            #     'type': device.type,
-            #     'isp': device.isp,
-            #     'data_limit': device.data_limit,
-            #     'manufacturer': device.manufacturer,
-            #     'device_model': device.device_model,
-            #     'imei': device.imei,
-            #     'msisdn': device.msisdn,
-            #     'sim_card': device.sim_card,
-            #     'device_status': device.device_status,
-            #     'instock_date': device.instock_date,
-            #     'punched_by': device.punched_by,
-            #     'remarks': device.remarks,
-            # }})
         except device_inventory.DoesNotExist:
-            return JsonResponse({'success': False, 'error': 'device_inventory does not exist'})
+            messages.info(request,"Record  does not exist")
+            return JsonResponse({'success': False, 'error': 'device does not exist'})
     else:
         return JsonResponse({'success': False, 'error': 'Invalid request method'})
 

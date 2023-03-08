@@ -69,7 +69,7 @@
                                               <label class="font-weight-bold">Department</label>
                                               <label class="form-control font-weight-bold" style="border-bottom: 2px solid;" >{{item.Department}}</label>
                                               {% if data2 == 'Active'  %}
-                                              <input type="hidden" value={{id}} name="employee_id" >
+                                              <input type="hidden" name="employee_id" value={{item.EMPLOYEEOID}}>
                                               {% comment %} <label class="font-weight-bold">CNIC</label>
                                               <input class="form-control font-weight-bold" style="border-bottom: 2px solid;" data-inputmask="'mask': '99999-9999999-9'"  placeholder="XXXXX-XXXXXXX-X"  name="cnic" required="">
                                               <label class="font-weight-bold">Contact Number</label>

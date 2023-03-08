@@ -20,12 +20,11 @@ urlpatterns = [
     path('edit/<pk>', views.edit_device, name='edit'),
     path('delete/<pk>', views.delete_device, name='delete'),
     path('get_device_data/<int:id>', views.get_device_data, name='get_device_data'),
+    path('get_request_data/<int:id>', views.get_request_data, name='get_request_data'),
     path('update_device_data/', views.update_device_data, name='update_device_data'),
     # path('update_device_data/<int:id>/', views.update_device_data, name='update_device_data')
 
     path('test/', views.test, name='test'),
-
-
 
     path('approve_request/', views.approve_request, name='approve_request'),
     path('reject_request/', views.reject_request, name='reject_request'),

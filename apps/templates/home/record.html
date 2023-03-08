@@ -121,90 +121,23 @@
                                             </div>
                                         </div>
                                       </div>
-                                      <div class="dropdown mb-3">
-                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="columnSelector" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                          Select Columns to Display
-                                        </button>
-                                        <div class="dropdown-menu" aria-labelledby="columnSelector">
-                                          <div class="form-check">
-                                            <input type="checkbox" checked data-column="0" checked>
-                                            {% comment %} <input class="form-check-input" type="checkbox" id="locationCheckbox" checked> {% endcomment %}
-                                            <label class="form-check-label" for="locationCheckbox">
-                                              Location
-                                            </label>
-                                          </div>
-                                          <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="typeCheckbox" checked>
-                                            <label class="form-check-label" for="typeCheckbox">
-                                              Type
-                                            </label>
-                                          </div>
-                                          <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="ispCheckbox" checked>
-                                            <label class="form-check-label" for="ispCheckbox">
-                                              ISP
-                                            </label>
-                                          </div>
-                                          <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="dataLimitCheckbox" checked>
-                                            <label class="form-check-label" for="dataLimitCheckbox">
-                                              Data Limit
-                                            </label>
-                                          </div>
-                                          <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="manufacturerCheckbox" checked>
-                                            <label class="form-check-label" for="manufacturerCheckbox">
-                                              Manufacturer
-                                            </label>
-                                          </div>
-                                          <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="modelCheckbox" checked>
-                                            <label class="form-check-label" for="modelCheckbox">
-                                              Model
-                                            </label>
-                                          </div>
-                                          <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="imeiCheckbox" checked>
-                                            <label class="form-check-label" for="imeiCheckbox">
-                                              IMEI
-                                            </label>
-                                          </div>
-                                          <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="msisdnCheckbox" checked>
-                                            <label class="form-check-label" for="msisdnCheckbox">
-                                              MSISDN
-                                            </label>
-                                          </div>
-                                          <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="simCardCheckbox" checked>
-                                            <label class="form-check-label" for="simCardCheckbox">
-                                              SIM Card
-                                            </label>
-                                          </div>
-                                          <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="statusCheckbox" checked>
-                                            <label class="form-check-label" for="statusCheckbox">
-                                              Status
-                                            </label>
-                                          </div>
-                                        </div>
-                                      </div>
+                                     
                                             <div class="card card-body">
                                               <div class="table-responsive">
                                                 <table class="table table-bordered table-striped" id="deviceTable" width="100%">
                                                   <thead class="thead-dark">
                                                     <tr>
-                                                      <th>  </th>
-                                                      <th><input type="checkbox" checked data-column="0"> Location</th>
-                                                      <th><input type="checkbox" checked data-column="1"> Type</th>
-                                                      <th><input type="checkbox" checked data-column="2"> ISP</th>
-                                                      <th><input type="checkbox" checked data-column="3"> Data Limit</th>
-                                                      <th><input type="checkbox" checked data-column="4"> Manufacturer</th>
-                                                      <th><input type="checkbox" checked data-column="5"> Model</th>
-                                                      <th><input type="checkbox" checked data-column="6"> IMEI</th>
-                                                      <th><input type="checkbox" checked data-column="7"> MSISDN</th>
-                                                      <th><input type="checkbox" checked data-column="8"> Sim Card</th>
-                                                      <th><input type="checkbox" checked data-column="9"> Status</th>
+                                                      <th> Edit</th>
+                                                      <th> Location</th>
+                                                      <th> Type</th>
+                                                      <th> ISP</th>
+                                                      <th> Data Limit</th>
+                                                      <th> Manufacturer</th>
+                                                      <th> Model</th>
+                                                      <th> IMEI</th>
+                                                      <th> MSISDN</th>
+                                                      <th> Sim Card</th>
+                                                      <th> Status</th>
                                                     </tr>
                                                   </thead>
                                                   <tbody>
@@ -216,16 +149,16 @@
                                                       </svg>
                                                     </a>
                                                     </td>
-                                                      <td class="column0">{{f.location}}</td>
-                                                      <td class="column1">{{f.type}}</td>
-                                                      <td class="column2">{{f.isp}}</td>
-                                                      <td class="column3">{{f.data_limit}}</td>
-                                                      <td class="column4">{{f.manufacturer}}</td>
-                                                      <td class="column5">{{f.device_model}}</td>
-                                                      <td class="column6">{{f.imei}}</td>
-                                                      <td class="column7">{{f.msisdn}}</td>
-                                                      <td class="column8">{{f.sim_card}}</td>
-                                                      <td class="column9">{{f.device_status}}</td>
+                                                      <td >{{f.location}}</td>
+                                                      <td >{{f.type}}</td>
+                                                      <td >{{f.isp}}</td>
+                                                      <td >{{f.data_limit}}</td>
+                                                      <td >{{f.manufacturer}}</td>
+                                                      <td >{{f.device_model}}</td>
+                                                      <td >{{f.imei}}</td>
+                                                      <td >{{f.msisdn}}</td>
+                                                      <td >{{f.sim_card}}</td>
+                                                      <td >{{f.device_status}}</td>
                                                     </tr>
                                                     {% endfor %} 
                                                   </tbody>
@@ -248,18 +181,6 @@
         <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
         <script>
           $(document).ready(function() {
-            const checkboxes = document.querySelectorAll('#deviceTable input[type="checkbox"]');
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
-                    const column = this.dataset.column;
-                    const cells = document.querySelectorAll(`#deviceTable .column${column}`);
-                    const display = this.checked ? '' : 'none';
-                    cells.forEach(cell => {
-                        cell.style.display = display;
-                    });
-                });
-            });
-          
             $('#updateBtn').click(function() {
                 var id = $('#idd').val(); // add this line
                 $.ajax({
@@ -344,19 +265,47 @@
               <div class="col-6">
               <div class="form-group">
                 <label for="location">Location:</label>
-                <input type="text" class="form-control" id="location" name="location">
+                <select class="form-control" id="location" name="location" >
+                  <option value="No Info Available">No Info Available</option>
+                  <option value="Lahore">LHR</option>
+                  <option value="Islamabad">ISL</option>
+                  <option value="Karachi">KHI</option>
+              </select>
               </div>
               <div class="form-group">
                 <label for="type">Type:</label>
-                <input type="text" class="form-control" id="type" name="type">
+                <select class="form-control" id="type" name="type" >
+                  <option value="No Info Available">No Info Available</option>
+                  <option value="MIFI">MIFI</option>
+                  <option value="CAT6">CAT6</option>
+                  <option value="CharJi">CharJi</option>
+                  <option value="Router">Router</option>
+                  <option value="Wingle">Wingle</option>
+                  <option value="Bolt/Bolt+">Bolt/Bolt+</option>
+                  <option value="SIM Only">SIM Only</option>
+              </select>
               </div>
               <div class="form-group">
                 <label for="isp">ISP:</label>
-                <input type="text" class="form-control" id="isp" name="isp">
+                <select class="form-control" id="isp" name="isp">
+                  <option value="No Info Available">No Info Available</option>
+                  <option value="Telenor">Telenor</option>
+                  <option value="Zong">Zong</option>
+                  <option value="PTCL">PTCL</option>
+                  <option value="Jazz">Jazz</option>
+              </select>
               </div>
               <div class="form-group">
                 <label for="data_limit">Data Limit:</label>
-                <input type="text" class="form-control" id="data_limit" name="data_limit">
+                <select class="form-control" name="data_limit" id="data_limit">
+                    <option value="No Info Available">No Info Available</option>
+                    <option value="75GB">75GB</option>
+                    <option value="85GB">85GB</option>
+                    <option value="100GB">100GB</option>
+                    <option value="150GB">150GB</option>
+                    <option value="160GB">160GB</option>
+                    <option value="275GB">275GB</option>
+                </select>
               </div>
               <div class="form-group">
                 <label for="manufacturer">Manufacturer:</label>
@@ -385,8 +334,13 @@
                 <input type="text" class="form-control" id="sim_card" name="sim_card">
               </div>
               <div class="form-group">
-                <label for="device_status">Status:</label>
-                <input type="text" class="form-control" id="device_status" name="device_status">
+                <label for="device_status">Device Status:</label>
+                <select id="device_status" name="device_status" class="form-control" >
+                  <option value="No Info Available">No Info Available</option>
+                  <option value="Box Packed">Box Packed</option>
+                  <option value="Used">Used</option>
+                  <option value="Returned">Returned</option>
+              </select>
               </div>
               <div class="form-group">
                 <label for="punched_by">punched_by:</label>
