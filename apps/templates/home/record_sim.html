@@ -46,7 +46,7 @@
                                         <div class="card-header">
                                             <div class="row align-items-center">
                                                 <div class="col">
-                                                  <h5 class="mb-0">Device Record</h5>
+                                                  <h5 class="mb-0">Sim Record</h5>
                                                 </div>
                                                 <div class="col-auto">
                                                    <button class="btn btn-outline-info btn-glow-info btn-block" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
@@ -55,7 +55,7 @@
                                                 </div>
                                             </div>
                                             <div class="collapse" id="collapseExample" >
-                                                <form action="{% url 'stock_record' %}" method="POST">
+                                                <form action="{% url 'sim_record' %}" method="POST">
                                                     {% csrf_token %} 
                                                     <div class="row">
                                                         <div class="col-6">
@@ -65,17 +65,6 @@
                                                                 <option value="Lahore">LHR</option>
                                                                 <option value="Islamabad">ISL</option>
                                                                 <option value="Karachi">KHI</option>
-                                                            </select>
-                                                            <label >Type</label>
-                                                            <select class="form-control" name="type" >
-                                                                <option value="No Info Available">No Info Available</option>
-                                                                <option value="MIFI">MIFI</option>
-                                                                <option value="CAT6">CAT6</option>
-                                                                <option value="CharJi">CharJi</option>
-                                                                <option value="Router">Router</option>
-                                                                <option value="Wingle">Wingle</option>
-                                                                <option value="Bolt/Bolt+">Bolt/Bolt+</option>
-                                                                <option value="SIM Only">SIM Only</option>
                                                             </select>
                                                             <label >ISP</label>
                                                             <select class="form-control" name="isp" required>
@@ -95,19 +84,16 @@
                                                                 <option value="160GB">160GB</option>
                                                                 <option value="275GB">275GB</option>
                                                             </select>
-
                                                         </div>
                                                         <div class="col-6">
-                                                            <label >Model</label>
-                                                            <input name="device_model" maxlength="25" type="Text" class="form-control"  placeholder="Model Number..." >
-                                                            <label >IMEI</label>
-                                                            <input name="imei" type="Text" maxlength="25" class="form-control"  placeholder="IMEI Number..." >
-                                                            <label >Manufacturer</label>
-                                                            <input name="manufacturer" maxlength="25" type="Text" class="form-control"  placeholder="Manufacturer Name..." >
-                                                            <label >Device Status</label>
+                                                            <label >MSISDN</label>
+                                                            <input name="msisdn" type="Text" maxlength="25" class="form-control"  placeholder="MSISDN Number..." >
+                                                            <label >SIM Card</label>
+                                                            <input name="sim_card" type="Text" maxlength="30" class="form-control"  placeholder="SIM Card Number..." >
+                                                            <label >Sim Status</label>
                                                             <select name="device_status" class="form-control" >
                                                                 <option value="No Info Available">No Info Available</option>
-                                                                <option value="Box Packed">Box Packed</option>
+                                                                <option value="New">New</option>
                                                                 <option value="Used">Used</option>
                                                                 <option value="Returned">Returned</option>
                                                             </select>
@@ -118,7 +104,6 @@
                                             </div>
                                         </div>
                                       </div>
-                                     
                                             <div class="card card-body">
                                               <div class="table-responsive">
                                                 <table class="table table-bordered table-striped" id="deviceTable" width="100%">
@@ -126,12 +111,10 @@
                                                     <tr>
                                                       <th> Edit</th>
                                                       <th> Location</th>
-                                                      <th> Type</th>
                                                       <th> ISP</th>
                                                       <th> Data Limit</th>
-                                                      <th> Manufacturer</th>
-                                                      <th> Model</th>
-                                                      <th> IMEI</th>
+                                                      <th> MSISDN</th>
+                                                      <th> Sim Card</th>
                                                       <th> Status</th>
                                                     </tr>
                                                   </thead>
@@ -145,13 +128,11 @@
                                                     </a>
                                                     </td>
                                                       <td >{{f.location}}</td>
-                                                      <td >{{f.type}}</td>
                                                       <td >{{f.isp}}</td>
                                                       <td >{{f.data_limit}}</td>
-                                                      <td >{{f.manufacturer}}</td>
-                                                      <td >{{f.device_model}}</td>
-                                                      <td >{{f.imei}}</td>
-                                                      <td >{{f.device_status}}</td>
+                                                      <td >{{f.msisdn}}</td>
+                                                      <td >{{f.sim_card}}</td>
+                                                      <td >{{f.sim_status}}</td>
                                                     </tr>
                                                     {% endfor %} 
                                                   </tbody>
@@ -177,22 +158,15 @@
             // $('#updateBtn').click(function() {
             //     var id = $('#idd').val(); // add this line
             //     $.ajax({
-            //         url: '/update_device_data/' + id,
+            //         url: '/update_sim_data/' + id,
             //         type: 'POST',
             //         data: {
-            //             location: $('#location').val(),
-            //             type: $('#type').val(),
             //             isp: $('#isp').val(),
             //             data_limit: $('#data_limit').val(),
-            //             manufacturer: $('#manufacturer').val(),
-            //             device_model: $('#device_model').val(),
-            //             imei: $('#imei').val(),
             //             msisdn: $('#msisdn').val(),
             //             sim_card: $('#sim_card').val(),
             //             device_status: $('#device_status').val(),
             //             punched_by: $('#punched_by').val(),
-            //             remarks: $('#remarks').val(),
-            //             instock_date: $('#instock_date').val(),
             //         },
             //         success: function(response) {
             //             console.log('Device data updated successfully.');
@@ -207,11 +181,11 @@
               var id = $(this).data('id');
               console.log(id);
               $.ajax({
-                  url: '/get_device_data/' + id,
+                  url: '/get_sim_data/' + id,
                   type: 'GET',
                   dataType: 'json',
                   success: function(data) {
-                                      // defining for date formate
+                  // defining for date formate
                   var datetime = new Date(data.instock_date);
                   var options = { 
                     month: 'long', 
@@ -224,18 +198,14 @@
                   var formattedDatetime = datetime.toLocaleString('en-US', options);
                       // set the values of other input fields
                       $('#location').val(data.location);
-                      $('#type').val(data.type);
                       $('#isp').val(data.isp);
                       $('#data_limit').val(data.data_limit);
-                      $('#manufacturer').val(data.manufacturer);
-                      $('#device_model').val(data.device_model);
-                      $('#imei').val(data.imei);
+                      $('#msisdn').val(data.msisdn);
+                      $('#sim_card').val(data.sim_card);
                       $('#device_status').val(data.device_status);
                       $('#punched_by').val(data.punched_by);
                       $('#instock_date').val(formattedDatetime);
-                      $('#remarks').val(data.remarks);
-                      // set the value of the id input field
-                      $('#id').val(id);
+                      //$('#id').val(id);
                       $('#deviceModal').modal('show');
                   },
                   error: function() {
@@ -246,9 +216,9 @@
           $('#deviceTable').DataTable().destroy();
                //Initialize DataTable plugin
               $('#deviceTable').DataTable({
-
                 //  "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
              });
+
           });
       </script>
     {% endblock %}
@@ -259,8 +229,7 @@
               <h5 class="modal-title" id="deviceModalLabel"> Details</h5>
             </div>
 
-           <form action="{% url 'update_device_data' %}" method="POST" >
-
+           <form action="{% url 'update_sim_data' %}" method="POST" >
                    {% csrf_token %}
                    <input type="hidden" name="id" id="id" value="">
             <div class="modal-body">
@@ -273,19 +242,6 @@
                   <option value="Lahore">LHR</option>
                   <option value="Islamabad">ISL</option>
                   <option value="Karachi">KHI</option>
-              </select>
-              </div>
-              <div class="form-group">
-                <label for="type">Type:</label>
-                <select class="form-control" id="type" name="type" >
-                  <option value="No Info Available">No Info Available</option>
-                  <option value="MIFI">MIFI</option>
-                  <option value="CAT6">CAT6</option>
-                  <option value="CharJi">CharJi</option>
-                  <option value="Router">Router</option>
-                  <option value="Wingle">Wingle</option>
-                  <option value="Bolt/Bolt+">Bolt/Bolt+</option>
-                  <option value="SIM Only">SIM Only</option>
               </select>
               </div>
               <div class="form-group">
@@ -311,44 +267,38 @@
                 </select>
               </div>
               <div class="form-group">
-                <label for="manufacturer">Manufacturer:</label>
-                <input type="text" class="form-control" id="manufacturer" name="manufacturer">
+                <label for="instock_date">instock_date:</label>
+                <input type="text" class="form-control" id="instock_date" name="instock_date" readonly>
               </div>
               </div>
               <div class="col-6">
               <div class="form-group">
-                <label for="device_model">Model:</label>
-                <input type="text" class="form-control" id="device_model" name="device_model">
+                <label for="msisdn">MSISDN:</label>
+                <input type="text" class="form-control" id="msisdn" name="msisdn">
               </div>
               <div class="form-group">
-                <label for="imei">IMEI:</label>
-                <input type="text" class="form-control" id="imei" name="imei">
+                <label for="sim_card">Sim Card:</label>
+                <input type="text" class="form-control" id="sim_card" name="sim_card">
               </div>
               <div class="form-group">
-                <label for="device_status">Device Status:</label>
+                <label for="device_status">Sim Status:</label>
                 <select id="device_status" name="device_status" class="form-control" >
                   <option value="No Info Available">No Info Available</option>
-                  <option value="Box Packed">Box Packed</option>
+                  <option value="New">New</option>
                   <option value="Used">Used</option>
                   <option value="Returned">Returned</option>
               </select>
               </div>
               <div class="form-group">
-                <label for="instock_date">instock_date:</label>
-                <input type="text" class="form-control" id="instock_date" name="instock_date" readonly>
-              </div>
-              <div class="form-group">
-                <label for="punched_by">punched_by:</label>
+                <label for="Added_by">Added_by:</label>
                 <input type="text" class="form-control" id="punched_by" readonly>
               </div>
             </div>
             </div>
-            <label for="remarks">Remarks:</label>
-            <textarea class="form-control"  rows="3" cols="20" maxlength="200" id="remarks" name="remarks"></textarea>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-outline-danger btn-glow-danger" data-bs-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-outline-success btn-glow-success " id="updateBtn">Update</button>
+              <button type="submit" class="btn btn-outline-success btn-glow-success" id="updateBtn">Update</button>
             </form>
             </div>
           </div>

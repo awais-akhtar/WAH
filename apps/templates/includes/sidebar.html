@@ -12,7 +12,7 @@
         </div>
         <div class="navbar-content scroll-div">
             <ul class="nav pcoded-inner-navbar">
-                <li class="nav-item pcoded-menu-caption">
+                {% comment %} <li class="nav-item pcoded-menu-caption">
                     <label>Navigation</label>
                 </li>
                 <li data-username="dashboard Default Ecommerce CRM Analytics Crypto Project" 
@@ -25,7 +25,7 @@
                     <a href="/profile.html" class="nav-link">
                         <span class="pcoded-micon"><i class="feather icon-user"></i></span>
                             <span class="pcoded-mtext">Profile Page</span></a>
-                </li>                
+                </li> {% endcomment %}
                 <li class="nav-item pcoded-menu-caption">
                     <label>Inventory</label>
                 </li>
@@ -36,6 +36,7 @@
                     <ul class="pcoded-submenu">
                         <li class=""><a href="{% url 'stock' %}" class="">Add Device</a></li>
                         <li class=""><a href="{% url 'stock_record' %}" class="">Device Record</a></li>
+                        <li class=""><a href="{% url 'sim_record' %}" class="">Sim Record</a></li>
                         {% comment %} <li class=""><a href="/bc_button.html" class="">Button</a></li>
                         <li class=""><a href="/bc_badges.html" class="">Badges</a></li>
                         <li class=""><a href="/bc_breadcrumb-pagination.html" class="">Breadcrumb & paggination</a></li>
@@ -60,7 +61,7 @@
                     {% comment %} <li class=""><a href="{% url 'stock_record' %}" class="">Record</a></li> {% endcomment %}
                 </ul>
             </li>
-                <li data-username="form elements advance componant validation masking wizard picker select"
+                {% comment %} <li data-username="form elements advance componant validation masking wizard picker select"
                     class="nav-item {% if 'form_elements' in segment %} active {% endif %}">
                     <a href="/form_elements.html" class="nav-link "><span class="pcoded-micon"><i
                             class="feather icon-file-text"></i></span><span
@@ -73,39 +74,39 @@
                 </li>
                 <li class="nav-item pcoded-menu-caption">
                     <label>Chart & Maps</label>
-                </li>
-                <li data-username="Charts Morris" 
+                </li> {% endcomment %}
+                {% comment %} <li data-username="Charts Morris" 
                     class="nav-item {% if 'chart-morris' in segment %} active {% endif %}">
                     <a href="/chart-morris.html" class="nav-link "><span
                         class="pcoded-micon"><i class="feather icon-pie-chart"></i></span><span class="pcoded-mtext">Chart</span></a>
-                </li>
-                <li data-username="Maps Google" 
+                </li> {% endcomment %}
+                {% comment %} <li data-username="Maps Google" 
                     class="nav-item {% if 'map-google' in segment %} active {% endif %}">
                     <a href="/map-google.html" class="nav-link "><span
                         class="pcoded-micon"><i class="feather icon-map"></i></span><span
-                        class="pcoded-mtext">Maps</span></a></li>
-                <li class="nav-item pcoded-menu-caption">
+                        class="pcoded-mtext">Maps</span></a></li> {% endcomment %}
+                {% comment %} <li class="nav-item pcoded-menu-caption">
                     <label>Pages</label>
-                </li>
+                </li> {% endcomment %}
                 <li data-username="Authentication Sign up Sign in reset password Change password Personal information profile settings map form subscribe"
                     class="nav-item pcoded-hasmenu">
-                    <a href="javascript:" class="nav-link "><span class="pcoded-micon"><i class="feather icon-lock"></i></span><span
-                            class="pcoded-mtext">Authentication</span></a>
-                    <ul class="pcoded-submenu">
+                    {% comment %} <a href="javascript:" class="nav-link "><span class="pcoded-micon"><i class="feather icon-lock"></i></span><span
+                            class="pcoded-mtext">Authentication</span></a> {% endcomment %}
+                    {% comment %} <ul class="pcoded-submenu">
                         <li class=""><a href="/register.html" class="" target="_blank">Sign UP</a></li>
                         <li class=""><a href="/login.html" class="" target="_blank">Sign IN</a></li>
-                    </ul>
+                    </ul> {% endcomment %}
                 </li>
 
-                <li data-username="Sample Page" class="nav-item"><a href="/page-blank.html" class="nav-link"><span
+                {% comment %} <li data-username="Sample Page" class="nav-item"><a href="/page-blank.html" class="nav-link"><span
                         class="pcoded-micon"><i class="feather icon-sidebar"></i></span><span class="pcoded-mtext">Sample page</span></a>
-                </li>
+                </li> {% endcomment %}
 
-                <li data-username="Disabled Menu" class="nav-item">
+                {% comment %} <li data-username="Disabled Menu" class="nav-item">
                     <a href="{% url 'logout' %}" class="nav-link">
                         <span class="pcoded-micon"><i class="feather icon-power"></i></span><span class="pcoded-mtext">Logout</span>
                     </a>
-                </li>
+                </li> {% endcomment %}
                 {% comment %} <li class="nav-item pcoded-menu-caption">
                     <label>More Resources</label>
                 </li>                    

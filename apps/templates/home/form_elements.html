@@ -40,79 +40,60 @@
   </div>
 
   <script>
-    $(document).ready(function() {
-      $('#deviceTable').on('click', 'a', function() {
-        var id = $(this).data('id');
-        var employee_id = $('#employee_id').val();
-        console.log(id);
-        console.log(employee_id);
-        $.ajax({
-            url: '/get_request_data/' + id,
-            type: 'GET',
-            dataType: 'json',
-            //data: { id: id, employee_id: employee_id },
-            success: function(data) {
-              // defining for date formate
-              var datetime = new Date(data.request_date);
-              var options = { 
-                month: 'long', 
-                day: 'numeric', 
-                year: 'numeric', 
-                hour: 'numeric', 
-                minute: 'numeric',
-                hour12: true
-              };
-              var formattedDatetime = datetime.toLocaleString('en-US', options);
-
-              // var uuid = data.ticket_id;
-              // var uuidSections = uuid.split("-");
-              // var numberFormat = "";
-              // for (var i = 0; i < uuidSections.length; i++) {
-              //   var decimal = parseInt(uuidSections[i], 16);
-              //   numberFormat += decimal.toString();
-              // }
-              //console.log(numberFormat)
-
-
-                // set the values of other input fields
-                console.log(data)
-                $('#ticket_id').append('#' + data.ticket_id);
-                //$('#name').val(data.name);
-                $('#name').append(data.name);
-                //$('#request_by').val(data.request_by);
-                $('#request_by').append(data.request_by);
-                //$('#employee_idd').val(data.employee_idd);
-                $('#employee_idd').append(data.employee_idd);
-                //$('#request_date').val(data.request_date);
-                $('#request_date').append(formattedDatetime);
-                //$('#device_type').val(data.device_type);
-                $('#device_type').append(data.device_type);
-                $('#name_id').val(data.id);
-                $('#name_id').append(data.id);
-
-                $('#location').val(data.location);
-                $('#type').val(data.type);
-                $('#isp').val(data.isp);
-                $('#data_limit').val(data.data_limit);
-                $('#manufacturer').val(data.manufacturer);
-                $('#device_model').val(data.device_model);
-                $('#imei').val(data.imei);
-                $('#msisdn').val(data.msisdn);
-                $('#sim_card').val(data.sim_card);
-                $('#device_status').val(data.device_status);
-                $('#punched_by').val(data.punched_by);
-                $('#instock_date').val(data.instock_date);
-                $('#remarks').val(data.remarks);
-                // set the value of the id input field
-                $('#id').val(id);
-                $('#deviceModal').modal('show');
-            },
-            error: function() {
-                console.log('Error: Failed to fetch device data.');
-            }
-        });
-      });
+$(document).ready(function() {
+  $('#deviceTable').on('click', 'a', function() {
+    var id = $(this).data('id');
+    var employee_id = $('#employee_id').val();
+    console.log(id);
+    console.log(employee_id);
+    $.ajax({
+      url: '/get_request_data/' + id,
+      type: 'GET',
+      dataType: 'json',
+      success: function(data) {
+        var datetime = new Date(data.request_date);
+        var options = { 
+          month: 'long', 
+          day: 'numeric', 
+          year: 'numeric', 
+          hour: 'numeric', 
+          minute: 'numeric',
+          hour12: true
+        };
+        var formattedDatetime = datetime.toLocaleString('en-US', options);
+        // clear the contents of the relevant elements before appending new data
+        $('#ticket_id').empty().append('#' + data.ticket_id);
+        $('#name').empty().append(data.name);
+        $('#request_by').empty().append(data.request_by);
+        $('#employee_idd').empty().append(data.employee_idd);
+        $('#request_date').empty().append(formattedDatetime);
+        $('#device_type').empty().append(data.device_type);
+        $('#name_id').empty().val(data.id).append(data.id);
+        $('#location').empty().val(data.location);
+        $('#type').empty().val(data.type);
+        $('#isp').empty().val(data.isp);
+        $('#data_limit').empty().val(data.data_limit);
+        $('#manufacturer').empty().val(data.manufacturer);
+        $('#device_model').empty().val(data.device_model);
+        $('#imei').empty().val(data.imei);
+        $('#msisdn').empty().val(data.msisdn);
+        $('#sim_card').empty().val(data.sim_card);
+        $('#device_status').empty().val(data.device_status);
+        $('#punched_by').empty().val(data.punched_by);
+        $('#instock_date').empty().val(data.instock_date);
+        $('#remarks').empty().val(data.remarks);
+        // set the value of the id input field
+        $('#id').val(id);
+        $('#ticket').val(data.ticket_id);
+        $('#deviceModal').modal('show');
+      },
+      error: function() {
+        console.log('Error: Failed to fetch device data.');
+      }
     });
+  });
+});
+
 </script>
 
   {% block javascripts %}
@@ -128,7 +109,7 @@
         </div>
        <form action="{% url 'approve_request' %}" method="POST" >
                {% csrf_token %}
-               <input type="hidden" name="id" id="id" >
+               <input type="hidden" name="ticket" id="ticket" value="">
         <div class="modal-body">
           <div class="row">
             <div class="col-4">
@@ -155,33 +136,8 @@
             </div>
             <div class="col-4">
               <div class="form-group">
-                <label for="device_type">device_type</label>
+                <label for="device_type">Requested Device</label>
                 <h6 class="mb-1"  id="device_type" name="device_type"></h6>
-                <!--
-                <label for="Code">Code</label>
-                <select class="form-control"  name="Code" data-live-search="true">
-                {% comment %} <option value="" disabled selected hidden></option> {% endcomment %}
-                {% for code in work_code %}
-                <option value="{{code.Work_Code}}"   {% if select_code == code.Work_Code %} 
-                selected
-                {%endif%}>
-                {{code.Work_Code}}
-                </option>
-                {% endfor %}
-                </select>
-                <script>
-                    $( document ).ready(function() {
-                        $('#search_select_box select').selectpicker();
-                      });
-                      $(document).ready(function() {
-                        $(window).keydown(function(event){
-                          if(event.keyCode == 13) {
-                            event.preventDefault();
-                            return false;
-                          }
-                        });
-                      });
-                </script>-->
               </div>
               <div class="form-group">
                 <label for="ticket_id">Ticket ID</label>
@@ -192,91 +148,20 @@
           </div>
           <hr>
           <div class="row">
-          <div class="col-4">
-          <div class="form-group">
-            <label >ISP</label>
-            <select class="form-control" name="isp" required>
-                <option value="No Info Available">No Info Available</option>
-                <option value="Telenor">Telenor</option>
-                <option value="Zong">Zong</option>
-                <option value="PTCL">PTCL</option>
-                <option value="Jazz">Jazz</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label >Data limit</label>
-            <select class="form-control" name="data_limit" required>
-                <option value="No Info Available">No Info Available</option>
-                <option value="75GB">75GB</option>
-                <option value="85GB">85GB</option>
-                <option value="100GB">100GB</option>
-                <option value="150GB">150GB</option>
-                <option value="160GB">160GB</option>
-                <option value="275GB">275GB</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="manufacturer">Manufacturer:</label>
-            <input type="text" class="form-control" id="manufacturer" name="manufacturer">
-          </div>
-          <div class="form-group">
-            <label for="instock_date">instock_date:</label>
-            <input type="text" class="form-control" id="instock_date" name="instock_date" readonly>
+          <div class="col-6">
+            <div class="form-group">
+              <label for="imei">Device IMEI</label>
+              <input type="text" class="form-control" id="imei" name="imei" placeholder="Please enter device IMEI Number...">
+            </div>
+            <div class="form-group">
+              <label for="sim_num">Sim Number</label>
+              <input type="text" class="form-control" id="sim_num" name="sim_num" placeholder="Please enter Sim Number...">
+            </div>
           </div>
           </div>
-          <div class="col-4">
-          <div class="form-group">
-            <label for="device_model">Model:</label>
-            <input type="text" class="form-control" id="device_model" name="device_model">
-          </div>
-          <div class="form-group">
-            <label for="imei">IMEI:</label>
-            <input type="text" class="form-control" id="imei" name="imei">
-          </div>
-          <div class="form-group">
-            <label for="msisdn">MSISDN:</label>
-            <input type="text" class="form-control" id="msisdn" name="msisdn">
-          </div>
-          <div class="form-group">
-            <label for="sim_card">Sim Card:</label>
-            <input type="text" class="form-control" id="sim_card" name="sim_card">
-          </div>
-        </div>
-        <div class="col-4">
-          <div class="form-group">
-            <label for="device_status">Status:</label>
-            <input type="text" class="form-control" id="device_status" name="device_status">
-          </div>
-          <div class="form-group">
-            <label for="punched_by">punched_by:</label>
-            <input type="text" class="form-control" id="punched_by" readonly>
-          </div>
-          <div class="form-group">
-            <label >Location</label>
-            <select class="form-control" name="location" required>
-                <option value="No Info Available">No Info Available</option>
-                <option value="Lahore">LHR</option>
-                <option value="Islamabad">ISL</option>
-                <option value="Karachi">KHI</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label >Type</label>
-            <select class="form-control" name="type" required>
-                <option value="No Info Available">No Info Available</option>
-                <option value="MIFI">MIFI</option>
-                <option value="CAT6">CAT6</option>
-                <option value="CharJi">CharJi</option>
-                <option value="Router">Router</option>
-                <option value="Wingle">Wingle</option>
-                <option value="Bolt/Bolt+">Bolt/Bolt+</option>
-                <option value="SIM Only">SIM Only</option>
-            </select>
-          </div>
-        </div>
-      </div>
+        <div>
         <label for="remarks">Remarks:</label>
-        <textarea class="form-control"  rows="3" cols="20" maxlength="200" id="remarks" name="remarks"></textarea>
+        <textarea class="form-control"  rows="3" cols="5" maxlength="300" id="remarks" name="remarks"></textarea>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

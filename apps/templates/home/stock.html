@@ -46,24 +46,97 @@
                         <div class="page-wrapper">
                             <!-- [ Main Content ] start -->
                             <div class="row">
-                                <div class="col-sm-12 col-md-12">
-                                    <!-- Input group -->
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h5>Device Inventory</h5>
+                                {% if messages %}
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    {% for message in messages %}
+                                        <strong> {{message}}</strong>
+                                    {% endfor %}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                          <h5 class="mb-0">Sim Inventory</h5>
                                         </div>
-                                        <div class="card-body">
-                                            {% if messages %}
-                                                <div class="alert alert-info alert-dismissible fade show" role="alert">
-                                                    {% for message in messages %}
-                                                        <strong> {{message}}</strong>
-                                                    {% endfor %}
-                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
+                                        <div class="col-auto">
+                                           <button class="btn btn-outline-info btn-glow-info btn-block" type="button" data-toggle="collapse" data-target="#collapseExamplesim" aria-expanded="false" aria-controls="collapseExample">
+                                            Add Sim 
+                                          </button>
+                                        </div>
+                                    </div>
+                                    <div class="collapse" id="collapseExamplesim" >
+                                        <form action="{% url 'add_sim' %}" method="POST">
+                                            {% csrf_token %} 
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <label >Location</label>
+                                                    <select class="form-control" name="location" required>
+                                                        <option value="No Info Available">No Info Available</option>
+                                                        <option value="Lahore">LHR</option>
+                                                        <option value="Islamabad">ISL</option>
+                                                        <option value="Karachi">KHI</option>
+                                                    </select>
+                                                    <label >ISP</label>
+                                                    <select class="form-control" name="isp" required>
+                                                        <option value="No Info Available">No Info Available</option>
+                                                        <option value="Telenor">Telenor</option>
+                                                        <option value="Zong">Zong</option>
+                                                        <option value="PTCL">PTCL</option>
+                                                        <option value="Jazz">Jazz</option>
+                                                    </select>
+                                                    <label >Data Limit</label>
+                                                    <select class="form-control" name="data_limit" required>
+                                                        <option value="No Info Available">No Info Available</option>
+                                                        <option value="75GB">75GB</option>
+                                                        <option value="85GB">85GB</option>
+                                                        <option value="100GB">100GB</option>
+                                                        <option value="150GB">150GB</option>
+                                                        <option value="160GB">160GB</option>
+                                                        <option value="275GB">275GB</option>
+                                                    </select>
                                                 </div>
-                                            {% endif %}
-                                            <form action="{% url 'stock' %}" method="post">
+                                                <div class="col-6">
+                                                    <label >MSISDN</label>
+                                                    <input name="msisdn" required type="Text" maxlength="25" class="form-control"  placeholder="MSISDN Number..." >
+                                                    <label >SIM Card</label>
+                                                    <input name="sim_card" type="Text" required maxlength="30" class="form-control"  placeholder="SIM Card Number..." >
+                                                    <label >Sim Status</label>
+                                                    <select name="device_status" class="form-control" required>
+                                                        <option value="No Info Available">No Info Available</option>
+                                                        <option value="New">New</option>
+                                                        <option value="Used">Used</option>
+                                                        <option value="Returned">Returned</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <button class="btn btn-outline-info btn-glow-info mt-2" type="submit">
+                                                Add Sim
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                              </div>
+                            <!-- [ Main Content ] end -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                          <h5 class="mb-0">Device Inventory</h5>
+                                        </div>
+                                        <div class="col-auto">
+                                           <button class="btn btn-outline-info btn-glow-info btn-block" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                                            Add device
+                                          </button>
+                                        </div>
+                                    </div>
+                                    <div class="collapse" id="collapseExample" >
+                                        <form action="{% url 'add_stock' %}" method="post">
                                             <div class="row">
                                                 {% csrf_token %}
                                                 <div class="col-md-6">
@@ -103,18 +176,12 @@
                                                         <option value="160GB">160GB</option>
                                                         <option value="275GB">275GB</option>
                                                     </select>
-                                                    <label >Manufacturer</label>
-                                                    <input name="manufacturer" maxlength="25" type="Text" class="form-control"  placeholder="Manufacturer Name..." required>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label >Model</label>
                                                     <input name="device_model" maxlength="25" type="Text" class="form-control"  placeholder="Model Number..." required>
-                                                    <label >IMEI#</label>
+                                                    <label >IMEI</label>
                                                     <input name="imei" type="Text" maxlength="25" class="form-control"  placeholder="IMEI Number..." required>
-                                                    <label >MSISDN#</label>
-                                                    <input name="msisdn" type="Text" maxlength="25" class="form-control"  placeholder="MSISDN Number..." required>
-                                                    <label >SIM Card #</label>
-                                                    <input name="sim_card" type="Text" maxlength="30" class="form-control"  placeholder="SIM Card Number..." required>
                                                     <label >Device Status</label>
                                                     <select name="device_status" class="form-control" required>
                                                         <option value="No Info Available">No Info Available</option>
@@ -122,19 +189,19 @@
                                                         <option value="Used">Used</option>
                                                         <option value="Returned">Returned</option>
                                                     </select>
+                                                    <label >Manufacturer</label>
+                                                    <input name="manufacturer" maxlength="25" type="Text" class="form-control"  placeholder="Manufacturer Name..." required>
                                                 </div>
                                                 <label class="ml-3">Remarks</label>
                                                 <textarea class="form-control ml-3 mr-3" name="remarks" rows="3" cols="20" maxlength="200"></textarea>
                                             </div>
-                                            <button class="btn btn-outline-info btn-glow-info mt-2" type="submit">
-                                                Add Device
-                                              </button>
-                                        </form>
-                                        </div>
+                                                <button class="btn btn-outline-info btn-glow-info mt-3" type="submit">
+                                                    Add Device
+                                                </button>
+                                            </form>
                                     </div>
                                 </div>
-                            </div>
-                            <!-- [ Main Content ] end -->
+                              </div>
                         </div>
                     </div>
                 </div>
