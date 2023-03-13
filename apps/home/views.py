@@ -164,7 +164,7 @@ def request_data(request):
         #     employee = AddRequest(employee_id=id,request_by=request.user,device_type=isp,name=name)
         #     employee.save() 
         # else:
-        employee = AddRequest(employee_id=id,request_by=request.user,device_type=isp,name=name,employee_email=employee_email)
+        employee = AddRequest(employee_id=id,request_by=request.user,isp=isp,name=name,employee_email=employee_email)
         employee.save() # save the instance to the database
         messages.warning(request,"Request has been created")
         MESSAGE_TAGS = 'alert-danger'
@@ -214,26 +214,37 @@ def approve_request(request):
         sim_num = request.POST['sim_num']
         remarks = request.POST['remarks']
         print(ticket_id + " ",device_imei  + " ",sim_num + " ", remarks + " ", user)
+
         request_ticket = AddRequest.objects.get(ticket_id=ticket_id)
         request_ticket.approved_date = timezone.now()
         request_ticket.is_approved = True
         request_ticket.approved_by = user
         request_ticket.assigned_device_imei = device_imei
         request_ticket.save()
+        print("request is approved")
 
         request_device = device_inventory.objects.get(imei=device_imei)
         request_device.status = 'Assigned To'
         request_device.assigned_to = request_ticket.employee_id
         request_device.save()
+        print("device allocated")
 
         request_sim = sim_inventory.objects.get(sim_card=sim_num)
         request_sim.status = 'Assigned To'
         request_sim.assigned_to = request_ticket.employee_id
         request_sim.save()
-        allocation = DeviceAllocation.objects.create(assigned_device=device_imei, assigned_sim=sim_num, ticket=ticket_id, allocated_date=timezone.now(),
+        print("sim allocated")
+        device = device_inventory.objects.get(imei=device_imei)
+        sim = sim_inventory.objects.get(sim_card=sim_num)
+        ticket = AddRequest.objects.get(ticket_id=ticket_id)
+        allocation = DeviceAllocation.objects.create(assigned_device=device, assigned_sim=sim,
+                                                     ticket=ticket, allocated_date=timezone.now(),
                                                      allocated_by=user, remarks=remarks)
         allocation.save()
-        return JsonResponse({'success': True})
+        print("allocation done!")
+        messages.success(request,"Request has been Approved")
+        return redirect('form')
+        # return JsonResponse({'success': True})
 
 
 
@@ -252,36 +263,52 @@ def stock(request):
 
 def add_stock(request):
     if request.method == "POST":
-        location=request.POST['location']
-        type=request.POST['type']
-        isp=request.POST['isp']
-        data_limit=request.POST['data_limit']
-        manufacturer=request.POST['manufacturer']
-        device_model=request.POST['device_model']
-        imei=request.POST['imei']
-        device_status=request.POST['device_status']
-        remarks=request.POST['remarks']
-        stock = device_inventory(remarks=remarks,punched_by=request.user,device_status=device_status,
-                                 imei=imei,device_model=device_model,manufacturer=manufacturer,
-                                 data_limit=data_limit,isp=isp,type=type,location=location)
+        location = request.POST['location']
+        type = request.POST['type']
+        isp = request.POST['isp']
+        data_limit = request.POST['data_limit']
+        manufacturer = request.POST['manufacturer']
+        device_model = request.POST['device_model']
+        imei = request.POST['imei']
+        device_status = request.POST['device_status']
+        remarks = request.POST['remarks']
+        # Check if a device with the same details already exists in the database
+        existing_device = device_inventory.objects.filter(
+            Q(data_limit=data_limit) | Q(manufacturer=manufacturer) | Q(device_model=device_model) |
+            Q(imei=imei) | Q(isp=isp) | Q(type=type)).exists()
+
+        if existing_device:
+            messages.error(request, "A Device with the same details already exists in the database.")
+            return render(request, "home/stock.html")
+        # If the device doesn't exist, create and save the new stock object
+        stock = device_inventory(remarks=remarks, punched_by=request.user, device_status=device_status,
+                                 imei=imei, device_model=device_model, manufacturer=manufacturer,
+                                 data_limit=data_limit, isp=isp, type=type, location=location)
         stock.save()
-        messages.info(request,"New Record has been added!")
+        messages.info(request, "Device Record has been added!")
         return render(request, "home/stock.html")
 
 def add_sim(request):
     if request.method == "POST":
-        msisdn=request.POST['msisdn']
-        location=request.POST['location']
-        isp=request.POST['isp']
-        data_limit=request.POST['data_limit']
-        sim_card=request.POST['sim_card']
-        sim_status=request.POST['device_status']
-        print("===================",sim_status)
-        sim = sim_inventory(added_by=request.user,sim_status=sim_status,sim_card=sim_card,
-                            msisdn=msisdn,data_limit=data_limit,isp=isp,location=location)
+        msisdn = request.POST['msisdn']
+        location = request.POST['location']
+        isp = request.POST['isp']
+        data_limit = request.POST['data_limit']
+        sim_card = request.POST['sim_card']
+        sim_status = request.POST['device_status']
+        print("===================", sim_status)
+        # Check if the SIM already exists in the database
+        existing_sim = sim_inventory.objects.filter(Q(msisdn=msisdn) | Q(sim_card=sim_card) | Q(isp=isp)).exists()
+        if existing_sim:
+            messages.error(request, "A SIM with the same details already exists in the database.")
+            return render(request, "home/stock.html")
+        # Create and save the new SIM object
+        sim = sim_inventory(added_by=request.user, sim_status=sim_status, sim_card=sim_card,
+                            msisdn=msisdn, data_limit=data_limit, isp=isp, location=location)
         sim.save()
-        messages.info(request,"Sim has been added in Record")
+        messages.info(request, "Sim has been added in Record")
         return render(request, "home/stock.html")
+
 
 
 
@@ -302,7 +329,7 @@ def stock_record(request):
             return render(request, "home/record.html", context)
         else:
             messages.info(request,"No Record has been found!")
-    s = device_inventory.objects.all()
+    s = device_inventory.objects.filter(status='NotAssigned').all()
     context= {'s':s}
     return render(request, "home/record.html", context)
 
@@ -322,7 +349,7 @@ def sim_record(request):
             return render(request, "home/record_sim.html", context)
         else:
             messages.info(request,"No Record has been found!")
-    s = sim_inventory.objects.all()
+    s = sim_inventory.objects.filter(status='NotAssigned').all()
     context= {'s':s}
     return render(request, "home/record_sim.html", context)
 

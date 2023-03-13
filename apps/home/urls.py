@@ -1,8 +1,9 @@
 from django.urls import path, re_path
 from apps.home import views
+from django.contrib import admin
 
 urlpatterns = [
-
+    path('admin/', admin.site.urls),         # Django admin route
     # The home page
     # path('', views.index, name='home'),
     path('form/', views.assignment, name='form'),

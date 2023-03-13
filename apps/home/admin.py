@@ -17,3 +17,5 @@ admin.site.register(device_inventory, SessionAdmin)
 # admin.site.register(data_limit)
 
 admin.site.register(AddRequest)
+admin.site.register(DeviceAllocation)
+admin.site.register(sim_inventory)

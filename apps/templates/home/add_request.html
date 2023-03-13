@@ -1,21 +1,15 @@
 {% extends "layouts/base.html" %}
-
 {% block title %} add request {% endblock %} 
-
 {% block stylesheets %}
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
 {% endblock stylesheets %}
-
 {% block content %}
-    <!-- [ Main Content ] start -->
     <div class="pcoded-main-container">
         <div class="pcoded-wrapper">
             <div class="pcoded-content">
                 <div class="pcoded-inner-content">
-                    <!-- [ breadcrumb ] end -->
                     <div class="main-body">
                         <div class="page-wrapper">
-                            <!-- [ Main Content ] start -->
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="col">
@@ -42,13 +36,11 @@
             </button>
           </div>
         {% endif %}
-                                    <!-- Input group -->
                                     {% if obj %}
                                     <div class="card m-3">
                                       <div class="card-header">
                                         Employee Status:
                                         {% if data2 == 'Active' %}
-                                        {% comment %} <label class="font-weight-bold mt-4">Status:</label> {% endcomment %}
                                         <label class="badge badge-success m-2 ">{{data2}}</label>
                                         {% else %}
                                         <span class="badge badge-danger m-2">{{data2}}</span>
@@ -70,10 +62,6 @@
                                               <label class="form-control font-weight-bold" style="border-bottom: 2px solid;" >{{item.Department}}</label>
                                               {% if data2 == 'Active'  %}
                                               <input type="hidden" name="employee_id" value={{item.EMPLOYEEOID}}>
-                                              {% comment %} <label class="font-weight-bold">CNIC</label>
-                                              <input class="form-control font-weight-bold" style="border-bottom: 2px solid;" data-inputmask="'mask': '99999-9999999-9'"  placeholder="XXXXX-XXXXXXX-X"  name="cnic" required="">
-                                              <label class="font-weight-bold">Contact Number</label>
-                                              <input name="number" type="text"  data-inputmask="'mask': '039999999999'" required type = "number" maxlength = "12" class="form-control font-weight-bold" style="border-bottom: 2px solid;">{% endcomment %}
                                               <label class="font-weight-bold">Preferred ISP</label> 
                                                     <select class="form-control font-weight-bold" name="isp" required>
                                                         <option value="No Info Available">No Info Available</option>
@@ -104,10 +92,6 @@
                                               <label class="form-control font-weight-bold" style="border-bottom: 2px solid;" >{{item.Supervisor}}</label>
                                               <label class="font-weight-bold">Supervisor Email</label>
                                               <label class="form-control font-weight-bold" style="border-bottom: 2px solid;" >{{item.SupervisorEmail}}</label>
-                                              {% comment %} {% if data2 == 'Active' %}
-                                              <label class="font-weight-bold mt-4">Status:</label>
-                                              <span class="badge badge-success m-2">{{data2}}</span>
-                                              {% endif %} {% endcomment %}
                                           </div>
                                           {% endfor %}
                                         </div>
@@ -115,48 +99,20 @@
                                      </form>
                                     </div>
                                     {% endif %}
-
-                                    <table class="table table-hover">
-                                      <tbody>
-                                        {% for s in find %}
-                                       <tr class="unread">
-                                          <td><img class="rounded-circle" style="width:40px;" src="{{ ASSETS_ROOT }}/images/user/avatar-1.jpg" alt="activity-user">
-                                          </td>
-                                          <td>
-                                              <h6 class="mb-1">{{s.name}}</h6>
-                                              <p class="m-0">{{s.employee_id}}</p>
-                                          </td>
-                                          <td>
-                                            <h6 class="text-muted"><i class="fas fa-circle f-10 m-r-15"></i>{{s.request_date}}</h6>
-                                        </td>
-                                        <td>
-                                          <h6 class="text-muted"><i  class="fas fa-circle text-c-green f-10 m-r-15"></i>Completed Request</h6>
-                                        </td>
-                                      </tr>
-                                      {% endfor %}
-                                      </tbody>
-                                    </table>
                             </div>
-                            <!-- [ Main Content ] end -->
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- [ Main Content ] end -->
-
     <script>
         $(document).ready(function(){
         });
       </script>
 {% endblock content %}
-
-<!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<!-- Add jQuery library -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- Add the DataTable JS file -->
 <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 {% endblock javascripts %}
