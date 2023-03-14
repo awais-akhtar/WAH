@@ -81,53 +81,48 @@ def add_request(request):
         text = request.POST.get('text')
         print(text)
         id = int(text)
-        api_key = 'Basic Att3nd@nc3'
-        api_url = f'http://portal.ibexglobal.com/AttendancePointsService/api/values/getemployeehierarchy?portalid={id}'
-        headers = {
-        'Authorization': api_key}
-        response = requests.get(api_url, headers=headers)
-        # print(json.loads(response.text))
-        api_key2 = 'Basic Tk$PkD@taMast3r'
-        # mm/dd/y
-        d3 = date.today()
-        checktoday = d3.strftime("%m/%d/%y")
-        print("checktoday =", checktoday)
-        api_url2 = f'http://portal.ibexglobal.com:88/AttendancePointsService/api/values/GetLeavesBalance?portalid={id}&year={checktoday}'
-        headers2 = {
-        'Authorization': api_key2}
-        responsestatus = requests.get(api_url2, headers=headers2)
-        dd= json.loads(responsestatus.text)
-        data2=dd['data']['EmployeeStatus']
-        print(data2)
-        ss= json.loads(response.text)
-        data=ss['data']['PointsData']
-        print(data)
-        # if data2 == 'Active':
-        #     ss= json.loads(response.text)
-        #     data=ss['data']['PointsData']
-        #     for details in data:
-        #         print(details['Location'])
-        #         f = (details['Location'])
-        #     print("ttttttttttttttt",f)
-
-            # if AddRequest.objects.filter(employee_id=f'{id}').exists():
-            #     find = AddRequest.objects.filter(employee_id=f'{id}').values()
-            #     print(find)
-            #     unapproved_requests = AddRequest.objects.filter(is_approved=False).values()
-            #     approved_requests = AddRequest.objects.filter(is_approved=True).values()
-            #     context = {'obj':data, 'data2':data2, 'find':find, 'id':id,
-            #     'unapproved_requests': unapproved_requests,
-            #     'approved_requests': approved_requests,}
-            #     return render(request, "home/add_request.html", context)
-        # else:
-        #     ss= json.loads(response.text)
-        #     data=ss['data']['PointsData']
-        #     for details in data:
-        #         print(details['Current_Designation'])
-        # unapproved_requests = AddRequest.objects.filter(is_approved=False).values()
-        # approved_requests = AddRequest.objects.filter(is_approved=True).values()
-        context = {'obj':data, 'data2':data2}
-        return render(request, "home/add_request.html", context)
+        unapproved_requests = AddRequest.objects.filter(Q(is_approved=False) | Q(employee_id=id)).exists()
+        approved_requests = AddRequest.objects.filter(Q(is_approved=True) | Q(employee_id=id)).exists()
+        if unapproved_requests:
+            messages.error(request, "A Request with the same details already exists in the database.")
+            db = AddRequest.objects.filter(Q(is_approved=False) | Q(employee_id=id)).values()
+            context={
+                'unapproved_requests': db
+            }
+            return render(request, "home/add_request.html", context)
+        elif approved_requests:
+            messages.error(request, "A Request with the same details already exists in the database.")
+            db2 = AddRequest.objects.filter(Q(is_approved=True) | Q(employee_id=id))
+            request_device = device_inventory.objects.get(assigned_to=id)
+            context={
+                'approved_requests': db2,
+                'request_device': request_device
+            }
+            return render(request, "home/add_request.html", context)
+        else:
+            api_key = 'Basic Att3nd@nc3'
+            api_url = f'http://portal.ibexglobal.com/AttendancePointsService/api/values/getemployeehierarchy?portalid={id}'
+            headers = {
+            'Authorization': api_key}
+            response = requests.get(api_url, headers=headers)
+            # print(json.loads(response.text))
+            api_key2 = 'Basic Tk$PkD@taMast3r'
+            # mm/dd/y
+            d3 = date.today()
+            checktoday = d3.strftime("%m/%d/%y")
+            print("checktoday =", checktoday)
+            api_url2 = f'http://portal.ibexglobal.com:88/AttendancePointsService/api/values/GetLeavesBalance?portalid={id}&year={checktoday}'
+            headers2 = {
+            'Authorization': api_key2}
+            responsestatus = requests.get(api_url2, headers=headers2)
+            dd= json.loads(responsestatus.text)
+            data2=dd['data']['EmployeeStatus']
+            print(data2)
+            ss= json.loads(response.text)
+            data=ss['data']['PointsData']
+            print(data)
+            context = {'obj':data, 'data2':data2}
+            return render(request, "home/add_request.html", context)
     return render(request, "home/add_request.html")
 
 def request_status(request):

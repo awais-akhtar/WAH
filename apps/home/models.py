@@ -57,6 +57,8 @@ class AddRequest(models.Model):
     approved_by = models.CharField(max_length=20, null=True, blank=True)
     is_approved = models.BooleanField(default=False)
     assigned_device_imei = models.CharField(max_length=50, null=True, blank=True)
+    # cnic = models.CharField(max_length=15, null=True, blank=True)
+    # phone = models.CharField(max_length=11, null=True, blank=True)
     # Generate a unique ticket ID on save
     def save(self, *args, **kwargs):
         if not self.ticket_id:

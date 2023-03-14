@@ -1,118 +1,295 @@
-{% extends "layouts/base.html" %}
-{% block title %} add request {% endblock %} 
+{% extends "layouts/base.html" %} {% block title %} add request {% endblock %}
 {% block stylesheets %}
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
-{% endblock stylesheets %}
-{% block content %}
-    <div class="pcoded-main-container">
-        <div class="pcoded-wrapper">
-            <div class="pcoded-content">
-                <div class="pcoded-inner-content">
-                    <div class="main-body">
-                        <div class="page-wrapper">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="col">
-                                          <div class="card">
-                                              <div class="card-body">
-                                                <form class="form-inline" action="{% url 'add_request' %}" method="post" >
-                                                  {% csrf_token %}
-                                                  <div class="form-group mx-sm-3 mb-2">
-                                                      <label for="inputPassword2" class="sr-only">Employee ID:</label>
-                                                      <input type="text" class="form-control" name="text"  placeholder="Enter employee id..." required>
-                                                  </div>
-                                                  <input type="submit" class="btn btn-outline-info btn-glow-info mb-2" value="Search">
-                                              </form>
-                                              </div>
-                                          </div>
-                                  </div>
-        {% if messages %}
-        <div class="alert alert-info alert-dismissible fade show m-3" role="alert" >
-            {% for message in messages %}
-            <strong> {{message}}</strong>
-            {% endfor %}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-        {% endif %}
-                                    {% if obj %}
-                                    <div class="card m-3">
-                                      <div class="card-header">
-                                        Employee Status:
-                                        {% if data2 == 'Active' %}
-                                        <label class="badge badge-success m-2 ">{{data2}}</label>
-                                        {% else %}
-                                        <span class="badge badge-danger m-2">{{data2}}</span>
-                                        {% endif %}
-                                      </div>
-                                     <form action="{% url 'request_data' %}" method="post" >
-                                      {% csrf_token %}
-                                      <div class="card-body">
-                                        <div class="row">
-                                          {% for item in obj%}
-                                          <div class="col-md-6 ">
-                                              <label class="font-weight-bold">Name</label>
-                                              <label class="form-control font-weight-bold" style="border-bottom: 2px solid;" >{{item.Name}}</label>
-                                              <label class="font-weight-bold">Email</label>
-                                              <label class="form-control font-weight-bold" style="border-bottom: 2px solid;" >{{item.Email}}</label>
-                                              <label class="font-weight-bold">Current Designation</label>
-                                              <label class="form-control font-weight-bold" style="border-bottom: 2px solid;" >{{item.Current_Designation}}</label>
-                                              <label class="font-weight-bold">Department</label>
-                                              <label class="form-control font-weight-bold" style="border-bottom: 2px solid;" >{{item.Department}}</label>
-                                              {% if data2 == 'Active'  %}
-                                              <input type="hidden" name="employee_id" value={{item.EMPLOYEEOID}}>
-                                              <label class="font-weight-bold">Preferred ISP</label> 
-                                                    <select class="form-control font-weight-bold" name="isp" required>
-                                                        <option value="No Info Available">No Info Available</option>
-                                                        <option value="Telenor">Telenor</option>
-                                                        <option value="Zong">Zong</option>
-                                                        <option value="PTCL">PTCL</option>
-                                                        <option value="Jazz">Jazz</option>
-                                                    </select>
-                                              <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-                                              <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/jquery.inputmask.bundle.js"></script>
-                                             <script>
-                                              $(":input").inputmask();
-                                             </script>
-                                             <input type="submit" class="btn btn-outline-info btn-glow-info mt-3">
-                                             {% else %}
-                                             <label class="font-weight-bold" >Preferred ISP</label> 
-                                             <input class="form-control font-weight-bold" style="border-bottom: 2px solid;" disabled value="No Info Available">
-                                             {% endif %}
-                                          </div>
-                                          <div class="col-md-6">
-                                              <label class="font-weight-bold">Location</label>
-                                              <label class="form-control font-weight-bold" style="border-bottom: 2px solid;">{{item.Location}}</label>
-                                              <label class="font-weight-bold">Legal Entity</label>
-                                              <label class="form-control font-weight-bold" style="border-bottom: 2px solid;" >{{item.LegalEntity}}</label>
-                                              <label class="font-weight-bold">Team</label>
-                                              <label class="form-control font-weight-bold" style="border-bottom: 2px solid;" >{{item.Team}}</label>
-                                              <label class="font-weight-bold">Supervisor</label>
-                                              <label class="form-control font-weight-bold" style="border-bottom: 2px solid;" >{{item.Supervisor}}</label>
-                                              <label class="font-weight-bold">Supervisor Email</label>
-                                              <label class="form-control font-weight-bold" style="border-bottom: 2px solid;" >{{item.SupervisorEmail}}</label>
-                                          </div>
-                                          {% endfor %}
-                                        </div>
-                                      </div>
-                                     </form>
-                                    </div>
-                                    {% endif %}
-                            </div>
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css"
+/>
+{% endblock stylesheets %} {% block content %}
+<div class="pcoded-main-container">
+  <div class="pcoded-wrapper">
+    <div class="pcoded-content">
+      <div class="pcoded-inner-content">
+        <div class="main-body">
+          <div class="page-wrapper">
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="col">
+                  <div class="card">
+                    <div class="card-body">
+                      <form
+                        class="form-inline"
+                        action="{% url 'add_request' %}"
+                        method="post"
+                      >
+                        {% csrf_token %}
+                        <div class="form-group mx-sm-3 mb-2">
+                          <label for="inputPassword2" class="sr-only"
+                            >Employee ID:</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="text"
+                            placeholder="Enter employee id..."
+                            required
+                          />
                         </div>
+                        <input
+                          type="submit"
+                          class="btn btn-outline-info btn-glow-info mb-2"
+                          value="Search"
+                        />
+                      </form>
                     </div>
+                  </div>
                 </div>
+                {% if messages %}
+                <div
+                  class="alert alert-info alert-dismissible fade show m-3"
+                  role="alert"
+                >
+                  {% for message in messages %}
+                  <strong> {{message}}</strong>
+                  {% endfor %}
+                  <button
+                    type="button"
+                    class="close"
+                    data-dismiss="alert"
+                    aria-label="Close"
+                  >
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+
+                </div>
+                {% endif %}
+                <form action="{% url 'requestdata' %}" method="post">
+                {% if unapproved_requests %}
+                  <div class="card">
+                    <div class="card-body">
+                      <div class="form-group mx-sm-3 mb-2">
+                        <div class="table-responsive">
+                          <table class="table table-hover">
+                            <tbody>
+                              {% for s in unapproved_requests %}
+                             <tr class="unread">
+                                <td>
+                                    <h6 class="mb-1">{{s.name}}</h6>
+                                    <p class="m-0">{{s.employee_id}}</p>
+                                    <p class="m-0">{{s.employee_email}}</p>
+                                </td>
+                                <td>
+                                  <h6 class="mb-1">Requested By</h6>
+                                  <p class="m-0">{{s.request_by}}</p>
+                                  <p class="m-0">{{s.request_date}}</p>
+                                </td>
+                                <td>
+                                  <h6 class="mb-1">Requested Device</h6>
+                                  <p class="m-0">{{s.isp}}</p>
+                                </td>
+                                <td>
+                                  <h6 class="mb-1">Ticket ID</h6>
+                                  <p class="m-0">#{{s.ticket_id}}</p>
+                                  <p class="text-muted"><i
+                                    class="fas fa-circle text-c-yellow f-10 m-r-5">
+                                  </i>Pending</p>
+                                </td>
+                              </tr>
+                            {% endfor %}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                    <!-- </div>-->
+                {% endif %}
+                {% if approved_requests %}
+                  <div class="card">
+                    <div class="card-body">
+                      <div class="form-group mx-sm-3 mb-2">
+                        <div class="table-responsive">
+                          <table class="table table-hover">
+                            <tbody>
+                              {% for a in approved_requests %}
+                              <tr class="unread">
+                                <td>
+                                    <h6 class="mb-1">{{a.name}}</h6>
+                                    <p class="m-0">{{a.employee_id}}</p>
+                                    <p class="m-0">{{s.employee_email}}</p>
+                                </td>
+                                <td>
+                                  <h6 class="mb-1">Requested By</h6>
+                                  <p class="m-0">{{s.request_by}}</p>
+                                  <p class="m-0">{{s.request_date}}</p>
+                                </td>
+                                <td>
+                                  <h6 class="mb-1">Approved By</h6>
+                                  <p class="m-0">{{s.approved_by}}</p>
+                                  <p class="m-0">{{s.approved_date}}</p>
+                                </td>
+                                {% for d in request_device %}
+                                <td>
+                                  <h6 class="mb-1">Device</h6>
+                                  <p class="m-0">{{d.type}}</p>
+                                  <p class="m-0">{{d.isp}}</p>
+                                </td>
+                                {% endfor %}
+                                <td>
+                                  <h6 class="mb-1">Ticket ID</h6>
+                                  <p class="m-0">#{{s.ticket_id}}</p>
+                                  <p class="text-muted"><i
+                                    class="fas fa-circle text-c-green f-10 m-r-5"></i>Completed</p>
+                                </td>
+                              </tr>
+                            {% endfor %}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- </div>-->
+              {% endif %}
+                {% if obj %}
+                <div class="card m-3">
+                  <div class="card-header">
+                    Employee Status: {% if data2 == 'Active' %}
+                    <label class="badge badge-success m-2">{{data2}}</label>
+                    {% else %}
+                    <span class="badge badge-danger m-2">{{data2}}</span>
+                    {% endif %}
+                  </div>
+                  <form action="{% url 'request_data' %}" method="post">
+                    {% csrf_token %}
+                    <div class="card-body">
+                      <div class="row">
+                        {% for item in obj%}
+                        <div class="col-md-6">
+                          <label class="font-weight-bold">Name</label>
+                          <label
+                            class="form-control font-weight-bold"
+                            style="border-bottom: 2px solid"
+                            >{{item.Name}}</label
+                          >
+                          <label class="font-weight-bold">Email</label>
+                          <label
+                            class="form-control font-weight-bold"
+                            style="border-bottom: 2px solid"
+                            >{{item.Email}}</label
+                          >
+                          <label class="font-weight-bold"
+                            >Current Designation</label
+                          >
+                          <label
+                            class="form-control font-weight-bold"
+                            style="border-bottom: 2px solid"
+                            >{{item.Current_Designation}}</label
+                          >
+                          <label class="font-weight-bold">Department</label>
+                          <label
+                            class="form-control font-weight-bold"
+                            style="border-bottom: 2px solid"
+                            >{{item.Department}}</label
+                          >
+                          {% if data2 == 'Active' %}
+                          <input
+                            type="hidden"
+                            name="employee_id"
+                            value="{{item.EMPLOYEEOID}}"
+                          />
+                          <label class="font-weight-bold">Preferred ISP</label>
+                          <select
+                            class="form-control font-weight-bold"
+                            name="isp"
+                            required
+                          >
+                            <option value="No Info Available">
+                              No Info Available
+                            </option>
+                            <option value="Telenor">Telenor</option>
+                            <option value="Zong">Zong</option>
+                            <option value="PTCL">PTCL</option>
+                            <option value="Jazz">Jazz</option>
+                          </select>
+                          <input type="text"  data-inputmask="'mask': '99999-9999999-9'"  placeholder="XXXXX-XXXXXXX-X"  name="cnic" required="" maxlength="15">
+                          <input type="text"  data-inputmask="'mask': '0399-9999999'" required=""  type = "number" maxlength = "12" >
+                          <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+                          <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/jquery.inputmask.bundle.js"></script>
+                          <script>
+                            $(":input").inputmask();
+                          </script>
+                          <input
+                            type="submit"
+                            class="btn btn-outline-info btn-glow-info mt-3"
+                          />
+                          {% else %}
+                          <label class="font-weight-bold">Preferred ISP</label>
+                          <input
+                            class="form-control font-weight-bold"
+                            style="border-bottom: 2px solid"
+                            disabled
+                            value="No Info Available"
+                          />
+                          {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                          <label class="font-weight-bold">Location</label>
+                          <label
+                            class="form-control font-weight-bold"
+                            style="border-bottom: 2px solid"
+                            >{{item.Location}}</label
+                          >
+                          <label class="font-weight-bold">Legal Entity</label>
+                          <label
+                            class="form-control font-weight-bold"
+                            style="border-bottom: 2px solid"
+                            >{{item.LegalEntity}}</label
+                          >
+                          <label class="font-weight-bold">Team</label>
+                          <label
+                            class="form-control font-weight-bold"
+                            style="border-bottom: 2px solid"
+                            >{{item.Team}}</label
+                          >
+                          <label class="font-weight-bold">Supervisor</label>
+                          <label
+                            class="form-control font-weight-bold"
+                            style="border-bottom: 2px solid"
+                            >{{item.Supervisor}}</label
+                          >
+                          <label class="font-weight-bold"
+                            >Supervisor Email</label
+                          >
+                          <label
+                            class="form-control font-weight-bold"
+                            style="border-bottom: 2px solid"
+                            >{{item.SupervisorEmail}}</label
+                          >
+                        </div>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                {% endif %}
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
-    <script>
-        $(document).ready(function(){
-        });
-      </script>
-{% endblock content %}
-{% block javascripts %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-{% endblock javascripts %}
+  </div>
+  <form action="{% url 'getdata' %}" method="post">
+  <script>
+    $(document).ready(function () {});
+  </script>
+  {% endblock content %} {% block javascripts %}
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script
+    type="text/javascript"
+    src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"
+  ></script>
+  {% endblock javascripts %}
+</div>
