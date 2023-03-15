@@ -63,7 +63,7 @@
 
                 </div>
                 {% endif %}
-                <form action="{% url 'requestdata' %}" method="post">
+               <form action="{% url 'requestdata' %}" method="post"> 
                 {% if unapproved_requests %}
                   <div class="card">
                     <div class="card-body">
@@ -116,28 +116,26 @@
                                 <td>
                                     <h6 class="mb-1">{{a.name}}</h6>
                                     <p class="m-0">{{a.employee_id}}</p>
-                                    <p class="m-0">{{s.employee_email}}</p>
+                                    <p class="m-0">{{a.employee_email}}</p>
                                 </td>
                                 <td>
                                   <h6 class="mb-1">Requested By</h6>
-                                  <p class="m-0">{{s.request_by}}</p>
-                                  <p class="m-0">{{s.request_date}}</p>
+                                  <p class="m-0">{{a.request_by}}</p>
+                                  <p class="m-0">{{a.request_date}}</p>
                                 </td>
                                 <td>
                                   <h6 class="mb-1">Approved By</h6>
-                                  <p class="m-0">{{s.approved_by}}</p>
-                                  <p class="m-0">{{s.approved_date}}</p>
+                                  <p class="m-0">{{a.approved_by}}</p>
+                                  <p class="m-0">{{a.approved_date}}</p>
                                 </td>
-                                {% for d in request_device %}
                                 <td>
                                   <h6 class="mb-1">Device</h6>
-                                  <p class="m-0">{{d.type}}</p>
-                                  <p class="m-0">{{d.isp}}</p>
+                                  <p class="m-0">{{request_device.isp}}</p>
+                                  <p class="m-0">{{request_device.type}}</p>
                                 </td>
-                                {% endfor %}
                                 <td>
                                   <h6 class="mb-1">Ticket ID</h6>
-                                  <p class="m-0">#{{s.ticket_id}}</p>
+                                  <p class="m-0">#{{a.ticket_id}}</p>
                                   <p class="text-muted"><i
                                     class="fas fa-circle text-c-green f-10 m-r-5"></i>Completed</p>
                                 </td>
@@ -280,7 +278,7 @@
       </div>
     </div>
   </div>
-  <form action="{% url 'getdata' %}" method="post">
+ <form action="{% url 'getdata' %}" method="post"> 
   <script>
     $(document).ready(function () {});
   </script>

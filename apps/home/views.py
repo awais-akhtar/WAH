@@ -81,19 +81,20 @@ def add_request(request):
         text = request.POST.get('text')
         print(text)
         id = int(text)
-        unapproved_requests = AddRequest.objects.filter(Q(is_approved=False) | Q(employee_id=id)).exists()
-        approved_requests = AddRequest.objects.filter(Q(is_approved=True) | Q(employee_id=id)).exists()
-        if unapproved_requests:
+        if AddRequest.objects.filter(Q(is_approved=False) & Q(employee_id=id)).exists():
             messages.error(request, "A Request with the same details already exists in the database.")
-            db = AddRequest.objects.filter(Q(is_approved=False) | Q(employee_id=id)).values()
+            db = AddRequest.objects.filter(Q(is_approved=False) & Q(employee_id=id)).values()
+            print("details already exists=======", db)
             context={
                 'unapproved_requests': db
             }
             return render(request, "home/add_request.html", context)
-        elif approved_requests:
-            messages.error(request, "A Request with the same details already exists in the database.")
-            db2 = AddRequest.objects.filter(Q(is_approved=True) | Q(employee_id=id))
+        elif AddRequest.objects.filter(Q(is_approved=True) & Q(employee_id=id)).exists():
+            messages.error(request, "A Request with the same details already Approved.")
+            db2 = AddRequest.objects.filter(Q(is_approved=True) & Q(employee_id=id))
+            print("Same details with user is existing in database=====", db2)
             request_device = device_inventory.objects.get(assigned_to=id)
+            print("the assigned device details=========", request_device)
             context={
                 'approved_requests': db2,
                 'request_device': request_device
@@ -124,6 +125,8 @@ def add_request(request):
             context = {'obj':data, 'data2':data2}
             return render(request, "home/add_request.html", context)
     return render(request, "home/add_request.html")
+
+
 
 def request_status(request):
     unapproved_requests = AddRequest.objects.filter(is_approved=False).values()
@@ -190,16 +193,39 @@ def assignment(request):
     }
     return render(request, "home/form_elements.html", context)
 
+# this will post data to approved request
+@csrf_exempt
+def get_approved_request_details(request):
+    if request.method=="POST":
+        ticket_id = request.POST['ticket_id']
+        request = AddRequest.objects.get(id=ticket_id) # get all request data here
+        print(request)
+        employee_id = request.employee_id
+        print(employee_id)
+        device = device_inventory.objects.get(assigned_to=employee_id) # get complete device data here
+        sim = sim_inventory.objects.get(assigned_to=employee_id) # get complete sim data here
+        allocation = DeviceAllocation.objects.get(assigned_to=employee_id) # get complete allocation data here
+        # Create a dictionary containing the data
+        data = {
+                'id': request.id,
+                'name': request.name,
+                'employee_id': request.employee_id,
+                'employee_email': request.employee_email,
+                'ticket_id' : request.ticket_id,
+                'request_by': request.request_by,
+                'request_date': request.request_date,
+                'approved_by': request.approved_by,
+                'approved_date': request.approved_date,
+                'allocate_date': allocation.allocated_date,
+                'allocated_by' : allocation.allocated_by,
+                'device_type': device.type,
+                'isp': request.isp,
+                'sim_number' : sim.sim_card,
+                'data_limit' : sim.data_limit,
+        }
+        return JsonResponse(data)
 
-# def approve_request(request, request_id):
-#     request = AddRequest.objects.get(pk=request_id)
-#     request.is_approved = True
-#     request.approved_date = timezone.now()
-#     request.save()
-#     return redirect('list_unapproved_requests')
-
-
-# request approving here
+# device request approving here
 @csrf_exempt
 def approve_request(request):
     if request.method == 'POST':
@@ -209,7 +235,6 @@ def approve_request(request):
         sim_num = request.POST['sim_num']
         remarks = request.POST['remarks']
         print(ticket_id + " ",device_imei  + " ",sim_num + " ", remarks + " ", user)
-
         request_ticket = AddRequest.objects.get(ticket_id=ticket_id)
         request_ticket.approved_date = timezone.now()
         request_ticket.is_approved = True
@@ -217,13 +242,11 @@ def approve_request(request):
         request_ticket.assigned_device_imei = device_imei
         request_ticket.save()
         print("request is approved")
-
         request_device = device_inventory.objects.get(imei=device_imei)
         request_device.status = 'Assigned To'
         request_device.assigned_to = request_ticket.employee_id
         request_device.save()
         print("device allocated")
-
         request_sim = sim_inventory.objects.get(sim_card=sim_num)
         request_sim.status = 'Assigned To'
         request_sim.assigned_to = request_ticket.employee_id
@@ -239,10 +262,9 @@ def approve_request(request):
         print("allocation done!")
         messages.success(request,"Request has been Approved")
         return redirect('form')
-        # return JsonResponse({'success': True})
 
 
-
+# the reject method is not done yet. 
 @csrf_exempt
 def reject_request(request):
     if request.method == 'POST':
@@ -270,7 +292,7 @@ def add_stock(request):
         # Check if a device with the same details already exists in the database
         existing_device = device_inventory.objects.filter(
             Q(data_limit=data_limit) | Q(manufacturer=manufacturer) | Q(device_model=device_model) |
-            Q(imei=imei) | Q(isp=isp) | Q(type=type)).exists()
+            Q(imei=imei) & Q(isp=isp) & Q(type=type) & Q(location=location)).exists()
 
         if existing_device:
             messages.error(request, "A Device with the same details already exists in the database.")
@@ -293,7 +315,7 @@ def add_sim(request):
         sim_status = request.POST['device_status']
         print("===================", sim_status)
         # Check if the SIM already exists in the database
-        existing_sim = sim_inventory.objects.filter(Q(msisdn=msisdn) | Q(sim_card=sim_card) | Q(isp=isp)).exists()
+        existing_sim = sim_inventory.objects.filter(Q(msisdn=msisdn) & Q(sim_card=sim_card) & Q(isp=isp) & Q(location=location)).exists()
         if existing_sim:
             messages.error(request, "A SIM with the same details already exists in the database.")
             return render(request, "home/stock.html")
