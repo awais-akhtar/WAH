@@ -63,7 +63,7 @@
 
                 </div>
                 {% endif %}
-               <form action="{% url 'requestdata' %}" method="post"> 
+               {% comment %} <form action="{% url 'requestdata' %}" method="post">  {% endcomment %}
                 {% if unapproved_requests %}
                   <div class="card">
                     <div class="card-body">
@@ -278,7 +278,7 @@
       </div>
     </div>
   </div>
- <form action="{% url 'getdata' %}" method="post"> 
+ {% comment %} <form action="{% url 'getdata' %}" method="post">  {% endcomment %}
   <script>
     $(document).ready(function () {});
   </script>

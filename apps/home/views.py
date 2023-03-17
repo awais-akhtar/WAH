@@ -18,7 +18,7 @@ from django.http import JsonResponse
 from django.contrib import messages
 from django.db.models import Q
 from django.contrib.auth.models import User
-
+from django.shortcuts import get_object_or_404
 
 # from .forms import DeviceInventoryForm, CreateInventoryForm
 
@@ -228,40 +228,65 @@ def get_approved_request_details(request):
 # device request approving here
 @csrf_exempt
 def approve_request(request):
-    if request.method == 'POST':
-        user = request.user.username
-        ticket_id = request.POST['ticket']
-        device_imei = request.POST['imei']
-        sim_num = request.POST['sim_num']
-        remarks = request.POST['remarks']
-        print(ticket_id + " ",device_imei  + " ",sim_num + " ", remarks + " ", user)
-        request_ticket = AddRequest.objects.get(ticket_id=ticket_id)
-        request_ticket.approved_date = timezone.now()
-        request_ticket.is_approved = True
-        request_ticket.approved_by = user
-        request_ticket.assigned_device_imei = device_imei
-        request_ticket.save()
-        print("request is approved")
-        request_device = device_inventory.objects.get(imei=device_imei)
-        request_device.status = 'Assigned To'
-        request_device.assigned_to = request_ticket.employee_id
-        request_device.save()
-        print("device allocated")
-        request_sim = sim_inventory.objects.get(sim_card=sim_num)
-        request_sim.status = 'Assigned To'
-        request_sim.assigned_to = request_ticket.employee_id
-        request_sim.save()
-        print("sim allocated")
-        device = device_inventory.objects.get(imei=device_imei)
-        sim = sim_inventory.objects.get(sim_card=sim_num)
-        ticket = AddRequest.objects.get(ticket_id=ticket_id)
-        allocation = DeviceAllocation.objects.create(assigned_device=device, assigned_sim=sim,
-                                                     ticket=ticket, allocated_date=timezone.now(),
-                                                     allocated_by=user, remarks=remarks)
-        allocation.save()
-        print("allocation done!")
-        messages.success(request,"Request has been Approved")
-        return redirect('form')
+    try:
+        if request.method == 'POST':
+            user = request.user.username
+            ticket_id = request.POST['ticket']
+            device_imei = request.POST['imei']
+            sim_num = request.POST['sim_num']
+            remarks = request.POST['remarks']
+
+            if device_inventory.objects.filter(imei=device_imei).exists() and sim_inventory.objects.filter(sim_card=sim_num).exists():
+                device = device_inventory.objects.get(imei=device_imei)
+                request_sim = sim_inventory.objects.get(sim_card=sim_num)
+                if device.status == 'NotAssigned' and request_sim.status == 'NotAssigned':
+                    if device.isp == request_sim.isp:
+                        request_ticket = AddRequest.objects.get(ticket_id=ticket_id)
+                        request_ticket.approved_date = timezone.now()
+                        request_ticket.is_approved = True
+                        request_ticket.approved_by = user
+                        request_ticket.assigned_device_imei = device_imei
+                        request_ticket.save()
+                        print("request approved")
+
+                        request_device = device_inventory.objects.get(imei=device_imei)
+                        request_device.status = 'Assigned To'
+                        request_device.assigned_to = request_ticket.employee_id
+                        request_device.save()
+                        print("device allocated")
+
+                        request_sim = sim_inventory.objects.get(sim_card=sim_num)
+                        request_sim.status = 'Assigned To'
+                        request_sim.assigned_to = request_ticket.employee_id
+                        request_sim.save()
+                        print("sim allocated")
+
+                        device = device_inventory.objects.get(imei=device_imei)
+                        sim = sim_inventory.objects.get(sim_card=sim_num)
+                        ticket = AddRequest.objects.get(ticket_id=ticket_id)
+                        allocation = DeviceAllocation.objects.create(assigned_device=device,
+                                                                    assigned_sim=sim,
+                                                                    ticket=ticket,
+                                                                    allocated_date=timezone.now(),
+                                                                    allocated_by=user, remarks=remarks)
+                        allocation.save()
+                        print("allocation done!")
+                        messages.success(request,"Request has been Approved")
+                        return redirect('form')
+                    else:
+                        messages.error(request, "Different ISP of Sim or Device, it must be same")
+                        return redirect('form')
+                else:
+                    messages.error(request, "Device or sim is already assigned!")
+                    return redirect('form')
+            else:
+                messages.error(request, "Sim or Device Does not exist!")
+                return redirect('form')
+    except:
+        messages.error(request, "An error has been occurred!")
+        return render(request, "home/page-404.html", status=400)
+
+
 
 
 # the reject method is not done yet. 
@@ -278,57 +303,77 @@ def reject_request(request):
 def stock(request):
     return render(request, "home/stock.html")
 
-def add_stock(request):
+
+def add_device(request):
     if request.method == "POST":
-        location = request.POST['location']
-        type = request.POST['type']
-        isp = request.POST['isp']
-        data_limit = request.POST['data_limit']
-        manufacturer = request.POST['manufacturer']
-        device_model = request.POST['device_model']
-        imei = request.POST['imei']
-        device_status = request.POST['device_status']
-        remarks = request.POST['remarks']
-        # Check if a device with the same details already exists in the database
-        existing_device = device_inventory.objects.filter(
-            Q(data_limit=data_limit) | Q(manufacturer=manufacturer) | Q(device_model=device_model) |
-            Q(imei=imei) & Q(isp=isp) & Q(type=type) & Q(location=location)).exists()
-
-        if existing_device:
+        data = request.POST.dict()
+        imei = data.pop('imei')
+        isp = data.pop('isp')
+        device_type = data.pop('type')
+        data.pop('csrfmiddlewaretoken', None)  # Remove the csrfmiddlewaretoken field
+        if device_inventory.objects.filter(imei=imei).exists():
             messages.error(request, "A Device with the same details already exists in the database.")
-            return render(request, "home/stock.html")
-        # If the device doesn't exist, create and save the new stock object
-        stock = device_inventory(remarks=remarks, punched_by=request.user, device_status=device_status,
-                                 imei=imei, device_model=device_model, manufacturer=manufacturer,
-                                 data_limit=data_limit, isp=isp, type=type, location=location)
-        stock.save()
-        messages.info(request, "Device Record has been added!")
-        return render(request, "home/stock.html")
+        else:
+            device = device_inventory(punched_by=request.user, imei=imei, isp=isp, type=device_type, **data)
+            device.save()
+            messages.info(request, "Device Record has been added!")
+    return render(request, "home/stock.html")
 
+
+@csrf_exempt
 def add_sim(request):
     if request.method == "POST":
-        msisdn = request.POST['msisdn']
-        location = request.POST['location']
-        isp = request.POST['isp']
-        data_limit = request.POST['data_limit']
-        sim_card = request.POST['sim_card']
-        sim_status = request.POST['device_status']
-        print("===================", sim_status)
-        # Check if the SIM already exists in the database
-        existing_sim = sim_inventory.objects.filter(Q(msisdn=msisdn) & Q(sim_card=sim_card) & Q(isp=isp) & Q(location=location)).exists()
-        if existing_sim:
-            messages.error(request, "A SIM with the same details already exists in the database.")
+        data = request.POST.dict()
+        try:
+            sim = sim_inventory.objects.get(sim_card=data['sim_card'])
+            messages.error(request, "A SIM with the same Number already exists in the database.")
+            return render(request, "home/page-404.html", status=400)
+        except sim_inventory.DoesNotExist:
+            sim = sim_inventory(
+                added_by=request.user,
+                sim_status=data['device_status'],
+                sim_card=data['sim_card'],
+                msisdn=data['msisdn'],
+                data_limit=data['data_limit'],
+                isp=data['isp'],
+                location=data['location']
+            )
+            sim.save()
+            messages.info(request, "Sim has been added in Record")
             return render(request, "home/stock.html")
-        # Create and save the new SIM object
-        sim = sim_inventory(added_by=request.user, sim_status=sim_status, sim_card=sim_card,
-                            msisdn=msisdn, data_limit=data_limit, isp=isp, location=location)
-        sim.save()
-        messages.info(request, "Sim has been added in Record")
-        return render(request, "home/stock.html")
+    else:
+        return render(request, "home/page-404.html", status=400)
+# def add_sim(request):
+#     if request.method == "POST":
+#         msisdn = request.POST['msisdn']
+#         location = request.POST['location']
+#         isp = request.POST['isp']
+#         data_limit = request.POST['data_limit']
+#         sim_card = request.POST['sim_card']
+#         sim_status = request.POST['device_status']
+#         print("===================", sim_status)
+#         # Check if a SIM with the same details already exists in the database
+#         if sim_inventory.objects.filter(sim_card=sim_card).exists():
+#             messages.error(request, "A SIM with the same details already exists in the database.")
+#             return render(request, "home/stock.html")
+#         # Create and save the new SIM object
+#         sim = sim_inventory(
+#             added_by=request.user,
+#             sim_status=sim_status,
+#             sim_card=sim_card,
+#             msisdn=msisdn,
+#             data_limit=data_limit,
+#             isp=isp,
+#             location=location
+#         )
+#         sim.save()
+#         messages.info(request, "Sim has been added in Record")
+#     return render(request, "home/stock.html")
 
 
 
 
+# filtering device record here
 def stock_record(request):
     if request.method == "POST":
         location=request.POST['location']
@@ -339,8 +384,15 @@ def stock_record(request):
         device_model=request.POST['device_model']
         imei=request.POST['imei']
         device_status=request.POST['device_status']
-        if device_inventory.objects.filter(Q(device_status__contains=f'{device_status}') | Q(imei__contains=f'{imei}') | Q(device_model__contains=f'{device_model}') | Q(manufacturer__contains=f'{manufacturer}') | Q(type__contains=f'{type}') | Q(location__contains=f'{location}') | Q(data_limit__contains=f'{data_limit}') | Q(isp__contains=f'{isp}')).exists():
-            s = device_inventory.objects.filter(Q(device_status__contains=f'{device_status}') & Q(imei__contains=f'{imei}') & Q(device_model__contains=f'{device_model}') & Q(manufacturer__contains=f'{manufacturer}') & Q(type__contains=f'{type}') & Q(location__contains=f'{location}') & Q(data_limit__contains=f'{data_limit}') & Q(isp__contains=f'{isp}')).values()
+        if device_inventory.objects.filter(Q(device_status__contains=f'{device_status}') | 
+                                           Q(imei__contains=f'{imei}') | Q(device_model__contains=f'{device_model}') | 
+                                           Q(manufacturer__contains=f'{manufacturer}') | Q(type__contains=f'{type}') | 
+                                           Q(location__contains=f'{location}') | Q(data_limit__contains=f'{data_limit}') | 
+                                           Q(isp__contains=f'{isp}')).exists():
+            s = device_inventory.objects.filter(Q(device_status__contains=f'{device_status}') & Q(imei__contains=f'{imei}') & 
+                                                Q(device_model__contains=f'{device_model}') & Q(manufacturer__contains=f'{manufacturer}') & 
+                                                Q(type__contains=f'{type}') & Q(location__contains=f'{location}') & 
+                                                Q(data_limit__contains=f'{data_limit}') & Q(isp__contains=f'{isp}')).values()
             print(s)
             context= {'s':s}
             return render(request, "home/record.html", context)
@@ -350,7 +402,7 @@ def stock_record(request):
     context= {'s':s}
     return render(request, "home/record.html", context)
 
-
+# filter sim record here
 def sim_record(request):
     if request.method == "POST":
         location=request.POST['location']
@@ -370,29 +422,6 @@ def sim_record(request):
     context= {'s':s}
     return render(request, "home/record_sim.html", context)
 
-
-
-
-
-
-
-def assign_device(request):
-    if request.method == "POST":
-        location=request.POST['location']
-        type=request.POST['type']
-        isp=request.POST['isp']
-        data_limit=request.POST['data_limit']
-        manufacturer=request.POST['manufacturer']
-        device_model=request.POST['device_model']
-        imei=request.POST['imei']
-        msisdn=request.POST['msisdn']
-        sim_card=request.POST['sim_card']
-        device_status=request.POST['device_status']
-        device_picture=request.POST['devicephoto']
-        assign = device_assign(punched_by=request.user,device_picture=device_picture,device_status=device_status,sim_card=sim_card,msisdn=msisdn,imei=imei,device_model=device_model,manufacturer=manufacturer,data_limit=data_limit,isp=isp,type=type,location=location)
-        assign.save()
-        return render(request, "home/stock.html")
-    return render(request, "home/stock.html")
 
 
 
@@ -536,10 +565,11 @@ def edit_device(request):
 
 @csrf_exempt
 def get_request_data(request, id):
-    id=id
-    print("================",id)
-    request = AddRequest.objects.get(id=id)
-    print(request)
+    try:
+        request = AddRequest.objects.get(id=id)
+    except AddRequest.DoesNotExist:
+        # Return a 404 error if the requested object doesn't exist
+        return render(request, 'home/page-404.html', status=404)
     # Create a dictionary containing the device data
     data = {
         'id': request.id,
@@ -557,29 +587,46 @@ def get_request_data(request, id):
 @csrf_exempt
 def update_device_data(request):
     if request.method == 'POST':
-        id = request.POST['id']
+        data = request.POST.dict()
+        device_id = data.pop('id')
         user = request.user.username
-        try:
-            device = device_inventory.objects.get(id=id)
-            device.location = request.POST.get('location')
-            device.type = request.POST.get('type')
-            device.isp = request.POST.get('isp')
-            device.data_limit = request.POST.get('data_limit')
-            device.manufacturer = request.POST.get('manufacturer')
-            device.device_model = request.POST.get('device_model')
-            device.imei = request.POST.get('imei')
-            device.device_status = request.POST.get('device_status')
-            device.instock_date = datetime.now()
-            device.punched_by = user
-            device.remarks = request.POST.get('remarks')
-            device.save()
-            messages.info(request,"Record has been Updated")
-            return redirect('stock_record')
-        except device_inventory.DoesNotExist:
-            messages.info(request,"Record  does not exist")
-            return JsonResponse({'success': False, 'error': 'device does not exist'})
+        device = get_object_or_404(device_inventory, id=device_id)
+        # Update device data with new values
+        for field, value in data.items():
+            setattr(device, field, value)
+        device.punched_by = user
+        device.instock_date = datetime.now()
+        device.save()
+        messages.info(request, "Record has been updated")
+        return redirect('stock_record')
     else:
         return JsonResponse({'success': False, 'error': 'Invalid request method'})
+# @csrf_exempt
+# def update_device_data(request):
+#     if request.method == 'POST':
+#         id = request.POST['id']
+#         user = request.user.username
+#         try:
+#             device = device_inventory.objects.get(id=id)
+#             device.location = request.POST.get('location')
+#             device.type = request.POST.get('type')
+#             device.isp = request.POST.get('isp')
+#             device.data_limit = request.POST.get('data_limit')
+#             device.manufacturer = request.POST.get('manufacturer')
+#             device.device_model = request.POST.get('device_model')
+#             device.imei = request.POST.get('imei')
+#             device.device_status = request.POST.get('device_status')
+#             device.instock_date = datetime.now()
+#             device.punched_by = user
+#             device.remarks = request.POST.get('remarks')
+#             device.save()
+#             messages.info(request,"Record has been Updated")
+#             return redirect('stock_record')
+#         except device_inventory.DoesNotExist:
+#             messages.info(request,"Record  does not exist")
+#             return JsonResponse({'success': False, 'error': 'device does not exist'})
+#     else:
+#         return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
 
 
@@ -637,7 +684,7 @@ def get_sim_data(request, id):
 def update_sim_data(request):
     if request.method == 'POST':
         id = request.POST['id']
-        user = request.user.username
+        print("========================",id)
         try:
             device = sim_inventory.objects.get(id=id)
             device.location = request.POST.get('location')
@@ -647,7 +694,7 @@ def update_sim_data(request):
             device.sim_card = request.POST.get('sim_card')
             device.sim_status = request.POST.get('device_status')
             device.instock_date = datetime.now()
-            device.added_by = user
+            device.added_by = request.user.username
             device.save()
             messages.info(request,"Record has been Updated")
             return redirect('sim_record')
