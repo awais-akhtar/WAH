@@ -175,11 +175,11 @@ $(document).ready(function() {
           <div class="col-6">
             <div class="form-group">
               <label for="imei">Device IMEI</label>
-              <input type="text" class="form-control" id="imei" name="imei" placeholder="Please enter device IMEI Number...">
+              <input type="text" class="form-control" id="imei" name="imei" placeholder="Please enter device IMEI Number..." required>
             </div>
             <div class="form-group">
               <label for="sim_num">Sim Number</label>
-              <input type="text" class="form-control" id="sim_num" name="sim_num" placeholder="Please enter Sim Number...">
+              <input type="text" class="form-control" id="sim_num" name="sim_num" placeholder="Please enter Sim Number..." required>
             </div>
           </div>
           </div>
@@ -188,8 +188,8 @@ $(document).ready(function() {
         <textarea class="form-control"  rows="3" cols="5" maxlength="300" id="remarks" name="remarks"></textarea>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary" id="updateBtn">Assign device</button>
+          <button type="button" class="btn btn-outline-danger btn-glow-danger" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-outline-success btn-glow-success" id="updateBtn">Assign device</button>
         </form>
         </div>
       </div>

@@ -210,13 +210,13 @@
                             <option value="PTCL">PTCL</option>
                             <option value="Jazz">Jazz</option>
                           </select>
-                          <input type="text"  data-inputmask="'mask': '99999-9999999-9'"  placeholder="XXXXX-XXXXXXX-X"  name="cnic" required="" maxlength="15">
+                          {% comment %} <input type="text"  data-inputmask="'mask': '99999-9999999-9'"  placeholder="XXXXX-XXXXXXX-X"  name="cnic" required="" maxlength="15">
                           <input type="text"  data-inputmask="'mask': '0399-9999999'" required=""  type = "number" maxlength = "12" >
                           <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
                           <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/jquery.inputmask.bundle.js"></script>
                           <script>
                             $(":input").inputmask();
-                          </script>
+                          </script> {% endcomment %}
                           <input
                             type="submit"
                             class="btn btn-outline-info btn-glow-info mt-3"

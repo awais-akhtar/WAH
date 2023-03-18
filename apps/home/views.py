@@ -37,10 +37,22 @@ from django.shortcuts import get_object_or_404
 
 
 
-@login_required(login_url="/login/")
+# @login_required(login_url="/login/")
 def index(request):
     context = {'segment': 'index'}
+    request_approved = AddRequest.objects.filter(is_approved=True).count()
+    request_unapproved = AddRequest.objects.filter(is_approved=False).count()
+    sim_stock = sim_inventory.objects.filter(status__contains = 'NotAssigned').count()
+    device_stock = device_inventory.objects.filter(status__contains = 'NotAssigned').count()
+    
+    context ={
+        'request_approved' : request_approved,
+        'request_unapproved' : request_unapproved,
 
+        'device_stock' : device_stock,
+        'sim_stock' : sim_stock,
+
+    }
     html_template = loader.get_template('home/index.html')
     return HttpResponse(html_template.render(context, request))
 
@@ -70,9 +82,9 @@ def pages(request):
         html_template = loader.get_template('home/page-500.html')
         return HttpResponse(html_template.render(context, request))
 
-def test(request):
-    return render(request,"home/wizard-build-profile.html")
-
+# profile page
+def profile(request):
+    return render(request,"home/profile.html")
 
 
 
@@ -299,7 +311,7 @@ def reject_request(request):
         return JsonResponse({'success': True})
 
 
-
+# rendering Stock page
 def stock(request):
     return render(request, "home/stock.html")
 
