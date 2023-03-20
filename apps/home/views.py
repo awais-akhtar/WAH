@@ -44,8 +44,10 @@ def index(request):
     request_unapproved = AddRequest.objects.filter(is_approved=False).count()
     sim_stock = sim_inventory.objects.filter(status__contains = 'NotAssigned').count()
     device_stock = device_inventory.objects.filter(status__contains = 'NotAssigned').count()
-    
+    us = User.objects.filter(is_active=True).values()
+    print(us)
     context ={
+        'us': us,
         'request_approved' : request_approved,
         'request_unapproved' : request_unapproved,
 

@@ -20,584 +20,8 @@
                         <div class="page-wrapper">
                             <!-- [ Main Content ] start -->
                             <div class="row">
-                                <!--[ daily sales section ] start-->
-                                <div class="col-md-6 col-xl-4">
-                                    <div class="card daily-sales">
-                                        <div class="card-block">
-                                            <h6 class="mb-4">In Stock</h6>
-                                            <div class="row d-flex align-items-center">
-                                                <div class="col-9">
-                                                    <h3 class="f-w-300 d-flex align-items-center m-b-0"><i
-                                                            class="feather  text-c-green f-30 m-r-10"></i>
-                                                        Sim {{sim_stock}}<hr>
-                                                        Device {{device_stock}}
-                                                    </h3>
-                                                </div>
-
-                                                {% comment %} <div class="col-3 text-right">
-                                                    <p class="m-b-0">67%</p>
-                                                </div> {% endcomment %}
-                                            </div>
-                                            {% comment %} <div class="progress m-t-30" style="height: 7px;">
-                                                <div class="progress-bar progress-c-theme" role="progressbar"
-                                                        style="width: 50%;" aria-valuenow="50" aria-valuemin="0"
-                                                        aria-valuemax="100"></div>
-                                            </div> {% endcomment %}
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--[ daily sales section ] end-->
-                                <!--[ Monthly  sales section ] starts-->
-                                <div class="col-md-6 col-xl-4">
-                                    <div class="card Monthly-sales">
-                                        <div class="card-block">
-                                            <h6 class="mb-4">Pending Request</h6>
-                                            <div class="row d-flex align-items-center">
-                                                <div class="col-9">
-                                                    <h3 class="f-w-300 d-flex align-items-center  m-b-0"><i
-                                                            class="feather text-c-red f-30 m-r-10"></i>
-                                                        {{request_unapproved}}</h3>
-                                                </div>
-                                                 <div class="col-3 text-right">
-                                                    <p class="m-b-0">
-                                                        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" 
-                                                        xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 122.88 122.88" 
-                                                        style="enable-background:new 0 0 122.88 122.88; width: 40px; height: 40px;" xml:space="preserve">
-                                                     <style type="text/css">
-                                                       <![CDATA[
-                                                         .st0{fill-rule:evenodd;clip-rule:evenodd;fill:#FF7900;}
-                                                       ]]>
-                                                     </style>
-                                                     <g>
-                                                       <path class="st0" d="M61.44,0c33.93,0,61.44,27.51,61.44,61.44c0,33.93-27.51,61.44-61.44,61.44C27.51,
-                                                           122.88,0,95.37,0,61.44 C0,27.51,27.51,0,61.44,0L61.44,0z M54.22,37.65c0-9.43,14.37-9.44,14.37,
-                                                           0.02v25.75l16.23,8.59c0.08,
-                                                           0.04,0.16,0.09,0.23,0.15 l0.14,0.1c7.54,4.94,0.53,16.81-7.53,12.15l-0.03-0.02L57.99,
-                                                           73.87c-2.3-1.23-3.79-3.67-3.79-6.29l0.01,
-                                                           0L54.22,37.65L54.22,37.65z"/>
-                                                     </g>
-                                                   </svg>
-                                                    </p>
-                                                </div> 
-                                            </div>
-                                            {% comment %} <div class="progress m-t-30" style="height: 7px;">
-                                                <div class="progress-bar progress-c-theme2" role="progressbar"
-                                                        style="width: 35%;" aria-valuenow="35" aria-valuemin="0"
-                                                        aria-valuemax="100"></div>
-                                            </div> {% endcomment %}
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--[ Monthly  sales section ] end-->
-                                <!--[ year  sales section ] starts-->
-                                <div class="col-md-12 col-xl-4">
-                                    <div class="card yearly-sales">
-                                        <div class="card-block">
-                                            <h6 class="mb-4">Approved Requests</h6>
-                                            <div class="row d-flex align-items-center">
-                                                <div class="col-9">
-                                                    <h3 class="f-w-300 d-flex align-items-center  m-b-0"><i
-                                                            class="feather text-c-green f-30 m-r-10"></i>
-                                                        {{request_approved}}</h3>
-                                                </div>
-                                                <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.88 121.86" width="40px" height="40px"></svg>
-                                                <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.88 121.86" width="40px" height="40px"><defs><style>.cls-1{fill:#10a64a;}.cls-1,.cls-2,.cls-3,.cls-4{fill-rule:evenodd;}.cls-2{fill:#0bb34b;}.cls-3{fill:#fff;}.cls-4{fill:#303030;}</style>
-                                                </defs><title>approve</title><path class="cls-1" d="M61.44,0a14.05,14.05,0,0,1,8.45,2.65c3.3,2.1,7,6.23,11.61,8.86C88,
-                                                15.21,99.9,10.12,106,19.21c3.57,5.31,3.73,9.46,4,13.57.29,4.43,1.07,8.51,5.6,14.51,7.51,9.93,9.07,16.54,5.2,23.43-2.63,
-                                                4.69-8.19,7.3-9.47,10.28-2.74,6.33.29,11.1-3.46,18.47a19.66,19.66,0,0,1-12,10.21c-4.5,1.46-9-.64-12.63.87-6.34,2.67-11,
-                                                8.86-16.06,10.42a19.47,19.47,0,0,1-11.64,0c-5-1.56-9.72-7.75-16.06-10.42-3.61-1.51-8.13.59-12.63-.87A19.66,19.66,
-                                                0,0,1,15,99.47C11.23,92.1,14.26,87.33,11.52,81,10.24,78,4.68,75.41,2,70.72c-3.87-6.89-2.3-13.5,5.21-23.43,4.53-6,5.31-10.08,
-                                                5.6-14.51.26-4.11.43-8.26,4-13.57,6.13-9.09,18.08-4,24.53-7.69C46,8.89,49.69,4.76,53,2.66A14.05,14.05,0,0,1,61.44,0Z"/>
-                                                <path class="cls-2" d="M111,38.83a27,27,0,0,0,4.59,8.46c7.51,9.93,9.07,16.54,5.2,23.43-2.63,4.69-8.19,7.3-9.47,10.28-2.74,
-                                                6.33.29,11.1-3.46,18.47a19.68,19.68,0,0,1-12,10.21c-4.5,1.45-9-.64-12.63.87-6.34,2.67-11,8.85-16.06,10.42a19.47,19.47,0,0,1-11.64,
-                                                0c-5-1.57-9.72-7.75-16.06-10.42-3.61-1.51-8.13.58-12.63-.87A19.66,19.66,0,0,1,15,99.47a18.15,18.15,0,0,1-2-6.91l98-53.73Z"/>
-                                                <path class="cls-3" d="M61.26,25.5A36.37,36.37,0,1,1,24.89,61.87,36.37,36.37,0,0,1,61.26,25.5Z"/>
-                                                <path class="cls-4" d="M51.41,54.61l7.12,6.71L72.81,46.8c1.41-1.43,2.3-2.58,4-.79l5.67,5.79c1.85,1.84,1.75,2.91,0,4.63L61.75,
-                                                76.83c-3.69,3.62-3,3.85-6.8.12L41.88,64A1.65,1.65,0,0,1,42,61.41L48.6,54.6c1-1,1.79-1,2.81,0Z"/></svg>
-                                                {% comment %} <div class="col-3 text-right">
-                                                    <p class="m-b-0">80%</p>
-                                                </div> {% endcomment %}
-                                            </div>
-                                            {% comment %} <div class="progress m-t-30" style="height: 7px;">
-                                                <div class="progress-bar progress-c-theme" role="progressbar"
-                                                        style="width: 70%;" aria-valuenow="70" aria-valuemin="0"
-                                                        aria-valuemax="100"></div>
-                                            </div> {% endcomment %}
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--[ year  sales section ] end-->
                                 <!--[ Recent Users ] start-->
-                                <div class="col-xl-8 col-md-6">
-                                    <div class="card Recent-Users">
-                                        <div class="card-header">
-                                            <h5>Recent Users</h5>
-                                        </div>
-                                        <div class="card-block px-0 py-3">
-                                            <div class="table-responsive">
-                                                <table class="table table-hover">
-                                                    <tbody>
-                                                    <tr class="unread">
-                                                        <td><img class="rounded-circle" style="width:40px;"
-                                                                    src="{{ ASSETS_ROOT }}/images/user/avatar-1.jpg" alt="activity-user">
-                                                        </td>
-                                                        <td>
-                                                            <h6 class="mb-1">Isabella Christensen</h6>
-                                                            <p class="m-0">Lorem Ipsum is simply…</p>
-                                                        </td>
-                                                        <td>
-                                                            <h6 class="text-muted"><i
-                                                                    class="fas fa-circle text-c-green f-10 m-r-15"></i>11
-                                                                MAY 12:56</h6>
-                                                        </td>
-                                                        <td><a href="#!"
-                                                                class="label theme-bg2 text-white f-12">Reject</a><a
-                                                                href="#!" class="label theme-bg text-white f-12">Approve</a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr class="unread">
-                                                        <td><img class="rounded-circle" style="width:40px;"
-                                                                    src="{{ ASSETS_ROOT }}/images/user/avatar-2.jpg" alt="activity-user">
-                                                        </td>
-                                                        <td>
-                                                            <h6 class="mb-1">Mathilde Andersen</h6>
-                                                            <p class="m-0">Lorem Ipsum is simply text of…</p>
-                                                        </td>
-                                                        <td>
-                                                            <h6 class="text-muted"><i
-                                                                    class="fas fa-circle text-c-red f-10 m-r-15"></i>11 MAY
-                                                                10:35</h6>
-                                                        </td>
-                                                        <td><a href="#!"
-                                                                class="label theme-bg2 text-white f-12">Reject</a><a
-                                                                href="#!" class="label theme-bg text-white f-12">Approve</a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr class="unread">
-                                                        <td><img class="rounded-circle" style="width:40px;"
-                                                                    src="{{ ASSETS_ROOT }}/images/user/avatar-3.jpg" alt="activity-user">
-                                                        </td>
-                                                        <td>
-                                                            <h6 class="mb-1">Karla Sorensen</h6>
-                                                            <p class="m-0">Lorem Ipsum is simply…</p>
-                                                        </td>
-                                                        <td>
-                                                            <h6 class="text-muted"><i
-                                                                    class="fas fa-circle text-c-green f-10 m-r-15"></i>9 MAY
-                                                                17:38</h6>
-                                                        </td>
-                                                        <td><a href="#!"
-                                                                class="label theme-bg2 text-white f-12">Reject</a><a
-                                                                href="#!" class="label theme-bg text-white f-12">Approve</a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr class="unread">
-                                                        <td><img class="rounded-circle" style="width:40px;"
-                                                                    src="{{ ASSETS_ROOT }}/images/user/avatar-1.jpg" alt="activity-user">
-                                                        </td>
-                                                        <td>
-                                                            <h6 class="mb-1">Ida Jorgensen</h6>
-                                                            <p class="m-0">Lorem Ipsum is simply text of…</p>
-                                                        </td>
-                                                        <td>
-                                                            <h6 class="text-muted f-w-300"><i
-                                                                    class="fas fa-circle text-c-red f-10 m-r-15"></i>19 MAY
-                                                                12:56</h6>
-                                                        </td>
-                                                        <td><a href="#!"
-                                                                class="label theme-bg2 text-white f-12">Reject</a><a
-                                                                href="#!" class="label theme-bg text-white f-12">Approve</a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr class="unread">
-                                                        <td><img class="rounded-circle" style="width:40px;"
-                                                                    src="{{ ASSETS_ROOT }}/images/user/avatar-2.jpg" alt="activity-user">
-                                                        </td>
-                                                        <td>
-                                                            <h6 class="mb-1">Albert Andersen</h6>
-                                                            <p class="m-0">Lorem Ipsum is simply dummy…</p>
-                                                        </td>
-                                                        <td>
-                                                            <h6 class="text-muted"><i
-                                                                    class="fas fa-circle text-c-green f-10 m-r-15"></i>21
-                                                                July 12:56</h6>
-                                                        </td>
-                                                        <td><a href="#!"
-                                                                class="label theme-bg2 text-white f-12">Reject</a><a
-                                                                href="#!" class="label theme-bg text-white f-12">Approve</a>
-                                                        </td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--[ Recent Users ] end-->
-
-                                <!-- [ statistics year chart ] start -->
-                                <div class="col-xl-4 col-md-6">
-                                    <div class="card card-event">
-                                        <div class="card-block">
-                                            <div class="row align-items-center justify-content-center">
-                                                <div class="col">
-                                                    <h5 class="m-0">Approved Request</h5>
-                                                </div>
-                                            </div>
-                                            <i class=" -30 text-c-red">
-                                                <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.88 121.86" width="40px" height="40px"></svg>
-                                                <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.88 121.86" width="40px" height="40px"><defs><style>.cls-1{fill:#10a64a;}.cls-1,.cls-2,.cls-3,.cls-4{fill-rule:evenodd;}.cls-2{fill:#0bb34b;}.cls-3{fill:#fff;}.cls-4{fill:#303030;}</style>
-                                                </defs><title>approve</title><path class="cls-1" d="M61.44,0a14.05,14.05,0,0,1,8.45,2.65c3.3,2.1,7,6.23,11.61,8.86C88,
-                                                15.21,99.9,10.12,106,19.21c3.57,5.31,3.73,9.46,4,13.57.29,4.43,1.07,8.51,5.6,14.51,7.51,9.93,9.07,16.54,5.2,23.43-2.63,
-                                                4.69-8.19,7.3-9.47,10.28-2.74,6.33.29,11.1-3.46,18.47a19.66,19.66,0,0,1-12,10.21c-4.5,1.46-9-.64-12.63.87-6.34,2.67-11,
-                                                8.86-16.06,10.42a19.47,19.47,0,0,1-11.64,0c-5-1.56-9.72-7.75-16.06-10.42-3.61-1.51-8.13.59-12.63-.87A19.66,19.66,
-                                                0,0,1,15,99.47C11.23,92.1,14.26,87.33,11.52,81,10.24,78,4.68,75.41,2,70.72c-3.87-6.89-2.3-13.5,5.21-23.43,4.53-6,5.31-10.08,
-                                                5.6-14.51.26-4.11.43-8.26,4-13.57,6.13-9.09,18.08-4,24.53-7.69C46,8.89,49.69,4.76,53,2.66A14.05,14.05,0,0,1,61.44,0Z"/>
-                                                <path class="cls-2" d="M111,38.83a27,27,0,0,0,4.59,8.46c7.51,9.93,9.07,16.54,5.2,23.43-2.63,4.69-8.19,7.3-9.47,10.28-2.74,
-                                                6.33.29,11.1-3.46,18.47a19.68,19.68,0,0,1-12,10.21c-4.5,1.45-9-.64-12.63.87-6.34,2.67-11,8.85-16.06,10.42a19.47,19.47,0,0,1-11.64,
-                                                0c-5-1.57-9.72-7.75-16.06-10.42-3.61-1.51-8.13.58-12.63-.87A19.66,19.66,0,0,1,15,99.47a18.15,18.15,0,0,1-2-6.91l98-53.73Z"/>
-                                                <path class="cls-3" d="M61.26,25.5A36.37,36.37,0,1,1,24.89,61.87,36.37,36.37,0,0,1,61.26,25.5Z"/>
-                                                <path class="cls-4" d="M51.41,54.61l7.12,6.71L72.81,46.8c1.41-1.43,2.3-2.58,4-.79l5.67,5.79c1.85,1.84,1.75,2.91,0,4.63L61.75,
-                                                76.83c-3.69,3.62-3,3.85-6.8.12L41.88,64A1.65,1.65,0,0,1,42,61.41L48.6,54.6c1-1,1.79-1,2.81,0Z"/></svg></i>
-                                            <h2 class="mt-3 f-w-300">{{request_approved}}</h2>
-                                        </div>
-                                    </div>
-                                    <div class="card card-event">
-                                        <div class="card-block">
-                                            <div class="row align-items-center justify-content-center">
-                                                <div class="col">
-                                                    <h5 class="m-0">Pending Request</h5>
-                                                </div>
-                                            </div>
-                                            <i class=" -30 text-c-red">
-                                                <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" 
-                                                xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 122.88 122.88" 
-                                                style="enable-background:new 0 0 122.88 122.88; width: 40px; height: 40px;" xml:space="preserve">
-                                             <style type="text/css">
-                                               <![CDATA[
-                                                 .st0{fill-rule:evenodd;clip-rule:evenodd;fill:#FF7900;}
-                                               ]]>
-                                             </style>
-                                             <g>
-                                               <path class="st0" d="M61.44,0c33.93,0,61.44,27.51,61.44,61.44c0,33.93-27.51,61.44-61.44,61.44C27.51,
-                                                   122.88,0,95.37,0,61.44 C0,27.51,27.51,0,61.44,0L61.44,0z M54.22,37.65c0-9.43,14.37-9.44,14.37,
-                                                   0.02v25.75l16.23,8.59c0.08,
-                                                   0.04,0.16,0.09,0.23,0.15 l0.14,0.1c7.54,4.94,0.53,16.81-7.53,12.15l-0.03-0.02L57.99,
-                                                   73.87c-2.3-1.23-3.79-3.67-3.79-6.29l0.01,
-                                                   0L54.22,37.65L54.22,37.65z"/>
-                                             </g>
-                                           </svg></i>
-                                            <h2 class="mt-3 f-w-300">{{request_unapproved}}</h2>
-                                        </div>
-                                    </div>
-                                    <div class="card card-event">
-                                        <div class="card-block">
-                                            <div class="row align-items-center justify-content-center">
-                                                <div class="col">
-                                                    <h5 class="m-0">TOTAL Devices</h5>
-                                                </div>
-                                            </div>
-                                            <i class=" -30 text-c-red">
-                                                <svg class="svg-icon" style="width: 40px;height: 40px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" 
-                                                version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M800 736m-32 0a32 32 0 1 0 64 0 32 32 0 1 0-64 0Z" fill="#5465CF" />
-                                                <path d="M672 736m-32 0a32 32 0 1 0 64 0 32 32 0 1 0-64 0Z" fill="#5465CF" />
-                                                <path d="M544 736m-32 0a32 32 0 1 0 64 0 32 32 0 1 0-64 0Z" fill="#5465CF" />
-                                                <path d="M840.224 544H183.776A184 184 0 0 0 0 727.776v16.448A184 184 0 0 0 183.776 928h656.448A184 184 0 
-                                                0 0 1024 744.224v-16.448A184 184 0 0 0 840.224 544zM960 744.224A119.904 119.904 0 0 1 840.224 864H183.776A119.904 
-                                                119.904 0 0 1 64 744.224v-16.448A119.904 119.904 0 0 1 183.776 608h656.448A119.904 119.904 0 0 1 960 727.776v16.448zM265.728 
-                                                226.56a32 32 0 0 0 44.48 46.048C364 220.64 435.648 192 512 192s148 28.64 201.792 80.608a31.968 31.968 0 0 0 45.248-0.768 32 32
-                                                0 0 0-0.768-45.248C692.48 163.008 604.992 128 512 128s-180.48 35.008-246.272 98.56z" fill="#5465CF" />
-                                                <path d="M672 384a32 32 0 0 0 22.208-55.04C645.504 281.92 580.8 256 512 256s-133.504 25.92-182.208 72.96a32 32 0 
-                                                0 0 44.416 46.08C410.976 339.52 459.872 320 512 320s101.024 19.52 137.792 55.04c6.176 5.984 14.208 8.96 22.208 8.96z" fill="#5465CF" />
-                                                <path d="M409.76 424.96a32 32 0 0 0 44.48 46.08c30.72-29.728 84.8-29.728 115.52 0a31.968 31.968 0 0 0 45.248-0.8 32 32 0 0 0-0.768-45.248C586.88
-                                                398.56 550.56 384 512 384s-74.88 14.56-102.24 40.96z" fill="#5465CF" /></svg></i>
-                                            <h2 class="mt-3 f-w-300">{{device_stock}}</h2>
-                                        </div>
-                                    </div>
-                                    <div class="card card-event">
-                                        <div class="card-block">
-                                            <div class="row align-items-center justify-content-center">
-                                                <div class="col">
-                                                    <h5 class="m-0">TOTAL Sim</h5>
-                                                </div>
-                                            </div>
-                                            <i class="f-30"> <svg height="40px" width="40px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
-                                                viewBox="0 0 505 505" xml:space="preserve">
-                                                <circle style="fill:#84DBFF;" cx="252.5" cy="252.5" r="252.5"/>
-                                                <path style="fill:#FFFFFF;" d="M342.9,396.6H162.1c-9.5,0-17.2-7.7-17.2-17.2V125.6c0-9.5,7.7-17.2,17.2-17.2h116
-                                                c4.6,0,8.9,1.8,12.2,5l64.8,64.8c3.2,3.2,5,7.6,5,12.2v189.1C360.1,388.9,352.4,396.6,342.9,396.6z"/>
-                                                <path style="fill:#FFD05B;" d="M309.8,266.2H195.2c-2.5,0-4.6,2-4.6,4.6v83.6c0,2.5,2,4.6,4.6,4.6h114.7c2.5,0,4.6-2,4.6-4.6v-83.6
-                                                C314.4,268.3,312.4,266.2,309.8,266.2z"/>
-                                                <g>
-                                                    <polygon style="fill:#F9B54C;" points="281.1,293.1 281.1,266.2 274.6,266.2 274.6,293.1 230.4,293.1 230.4,266.2 223.9,266.2 
-                                                    223.9,293.1 190.6,293.1 190.6,299.7 314.4,299.7 314.4,293.1 	"/>
-                                                    <polygon style="fill:#F9B54C;" points="190.6,332 223.9,332 223.9,358.9 230.4,358.9 230.4,332 274.6,332 274.6,358.9 281.1,358.9 
-                                                    281.1,332 314.4,332 314.4,325.4 190.6,325.4 	"/>
-                                                </g>
-                                                </svg>
-                                                </i>
-                                            <h2 class="mt-3 f-w-300">{{sim_stock}}</h2>
-                                        </div>
-                                    </div>
-                                    {% comment %} <div class="card">
-                                        <div class="card-block border-bottom">
-                                            <div class="row d-flex align-items-center">
-                                                <div class="col-auto">
-                                                    <i class=" -30 text-c-red">
-                                                    <svg class="svg-icon" style="width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" 
-                                                    version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M800 736m-32 0a32 32 0 1 0 64 0 32 32 0 1 0-64 0Z" fill="#5465CF" />
-                                                    <path d="M672 736m-32 0a32 32 0 1 0 64 0 32 32 0 1 0-64 0Z" fill="#5465CF" />
-                                                    <path d="M544 736m-32 0a32 32 0 1 0 64 0 32 32 0 1 0-64 0Z" fill="#5465CF" />
-                                                    <path d="M840.224 544H183.776A184 184 0 0 0 0 727.776v16.448A184 184 0 0 0 183.776 928h656.448A184 184 0 
-                                                    0 0 1024 744.224v-16.448A184 184 0 0 0 840.224 544zM960 744.224A119.904 119.904 0 0 1 840.224 864H183.776A119.904 
-                                                    119.904 0 0 1 64 744.224v-16.448A119.904 119.904 0 0 1 183.776 608h656.448A119.904 119.904 0 0 1 960 727.776v16.448zM265.728 
-                                                    226.56a32 32 0 0 0 44.48 46.048C364 220.64 435.648 192 512 192s148 28.64 201.792 80.608a31.968 31.968 0 0 0 45.248-0.768 32 32
-                                                    0 0 0-0.768-45.248C692.48 163.008 604.992 128 512 128s-180.48 35.008-246.272 98.56z" fill="#5465CF" />
-                                                    <path d="M672 384a32 32 0 0 0 22.208-55.04C645.504 281.92 580.8 256 512 256s-133.504 25.92-182.208 72.96a32 32 0 
-                                                    0 0 44.416 46.08C410.976 339.52 459.872 320 512 320s101.024 19.52 137.792 55.04c6.176 5.984 14.208 8.96 22.208 8.96z" fill="#5465CF" />
-                                                    <path d="M409.76 424.96a32 32 0 0 0 44.48 46.08c30.72-29.728 84.8-29.728 115.52 0a31.968 31.968 0 0 0 45.248-0.8 32 32 0 0 0-0.768-45.248C586.88
-                                                    398.56 550.56 384 512 384s-74.88 14.56-102.24 40.96z" fill="#5465CF" /></svg></i>
-                                                </div>
-                                                <div class="col">
-                                                    <h3 class="f-w-300">{{device_stock}}</h3>
-                                                    <span class="d-block text-uppercase">TOTAL Devices</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="card-block">
-                                            <div class="row d-flex align-items-center">
-                                                <div class="col-auto">
-                                                   <i class="f-30"> <svg height="30px" width="30px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
-	                                                viewBox="0 0 505 505" xml:space="preserve">
-                                                    <circle style="fill:#84DBFF;" cx="252.5" cy="252.5" r="252.5"/>
-                                                    <path style="fill:#FFFFFF;" d="M342.9,396.6H162.1c-9.5,0-17.2-7.7-17.2-17.2V125.6c0-9.5,7.7-17.2,17.2-17.2h116
-	                                                c4.6,0,8.9,1.8,12.2,5l64.8,64.8c3.2,3.2,5,7.6,5,12.2v189.1C360.1,388.9,352.4,396.6,342.9,396.6z"/>
-                                                    <path style="fill:#FFD05B;" d="M309.8,266.2H195.2c-2.5,0-4.6,2-4.6,4.6v83.6c0,2.5,2,4.6,4.6,4.6h114.7c2.5,0,4.6-2,4.6-4.6v-83.6
-	                                                C314.4,268.3,312.4,266.2,309.8,266.2z"/>
-                                                    <g>
-	                                                    <polygon style="fill:#F9B54C;" points="281.1,293.1 281.1,266.2 274.6,266.2 274.6,293.1 230.4,293.1 230.4,266.2 223.9,266.2 
-		                                                223.9,293.1 190.6,293.1 190.6,299.7 314.4,299.7 314.4,293.1 	"/>
-	                                                    <polygon style="fill:#F9B54C;" points="190.6,332 223.9,332 223.9,358.9 230.4,358.9 230.4,332 274.6,332 274.6,358.9 281.1,358.9 
-		                                                281.1,332 314.4,332 314.4,325.4 190.6,325.4 	"/>
-                                                    </g>
-                                                    </svg>
-                                                    </i>
-                                                </div>
-                                                <div class="col">
-                                                    <h3 class="f-w-300">{{sim_stock}}</h3>
-                                                    <span class="d-block text-uppercase">TOTAL Sim</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> {% endcomment %}
-                                </div>
-                                <!-- [ statistics year chart ] end -->
-                                <!--[social-media section] start-->
-{% comment %} 
-                                <div class="col-md-12 col-xl-4">
-                                    <div class="card card-social">
-                                        <div class="card-block border-bottom">
-                                            <div class="row align-items-center justify-content-center">
-                                                <div class="col-auto">
-                                                    <i class="fab fa-facebook-f text-primary f-36"></i>
-                                                </div>
-                                                <div class="col text-right">
-                                                    <h3>12,281</h3>
-                                                    <h5 class="text-c-green mb-0">+7.2% <span
-                                                            class="text-muted">Total Likes</span></h5>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="card-block">
-                                            <div class="row align-items-center justify-content-center card-active">
-                                                <div class="col-6">
-                                                    <h6 class="text-center m-b-10"><span
-                                                            class="text-muted m-r-5">Target:</span>35,098</h6>
-                                                    <div class="progress">
-                                                        <div class="progress-bar progress-c-theme" role="progressbar"
-                                                                style="width:60%;height:6px;" aria-valuenow="60"
-                                                                aria-valuemin="0" aria-valuemax="100"></div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <h6 class="text-center  m-b-10"><span
-                                                            class="text-muted m-r-5">Duration:</span>3,539</h6>
-                                                    <div class="progress">
-                                                        <div class="progress-bar progress-c-theme2" role="progressbar"
-                                                                style="width:45%;height:6px;" aria-valuenow="45"
-                                                                aria-valuemin="0" aria-valuemax="100"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-xl-4">
-                                    <div class="card card-social">
-                                        <div class="card-block border-bottom">
-                                            <div class="row align-items-center justify-content-center">
-                                                <div class="col-auto">
-                                                    <i class="fab fa-twitter text-c-blue f-36"></i>
-                                                </div>
-                                                <div class="col text-right">
-                                                    <h3>11,200</h3>
-                                                    <h5 class="text-c-purple mb-0">+6.2% <span class="text-muted">Total Likes</span>
-                                                    </h5>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="card-block">
-                                            <div class="row align-items-center justify-content-center card-active">
-                                                <div class="col-6">
-                                                    <h6 class="text-center m-b-10"><span
-                                                            class="text-muted m-r-5">Target:</span>34,185</h6>
-                                                    <div class="progress">
-                                                        <div class="progress-bar progress-c-green" role="progressbar"
-                                                                style="width:40%;height:6px;" aria-valuenow="40"
-                                                                aria-valuemin="0" aria-valuemax="100"></div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <h6 class="text-center  m-b-10"><span
-                                                            class="text-muted m-r-5">Duration:</span>4,567</h6>
-                                                    <div class="progress">
-                                                        <div class="progress-bar progress-c-blue" role="progressbar"
-                                                                style="width:70%;height:6px;" aria-valuenow="70"
-                                                                aria-valuemin="0" aria-valuemax="100"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-xl-4">
-                                    <div class="card card-social">
-                                        <div class="card-block border-bottom">
-                                            <div class="row align-items-center justify-content-center">
-                                                <div class="col-auto">
-                                                    <i class="fab fa-google-plus-g text-c-red f-36"></i>
-                                                </div>
-                                                <div class="col text-right">
-                                                    <h3>10,500</h3>
-                                                    <h5 class="text-c-blue mb-0">+5.9% <span
-                                                            class="text-muted">Total Likes</span></h5>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="card-block">
-                                            <div class="row align-items-center justify-content-center card-active">
-                                                <div class="col-6">
-                                                    <h6 class="text-center m-b-10"><span
-                                                            class="text-muted m-r-5">Target:</span>25,998</h6>
-                                                    <div class="progress">
-                                                        <div class="progress-bar progress-c-theme" role="progressbar"
-                                                                style="width:80%;height:6px;" aria-valuenow="80"
-                                                                aria-valuemin="0" aria-valuemax="100"></div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <h6 class="text-center  m-b-10"><span
-                                                            class="text-muted m-r-5">Duration:</span>7,753</h6>
-                                                    <div class="progress">
-                                                        <div class="progress-bar progress-c-theme2" role="progressbar"
-                                                                style="width:50%;height:6px;" aria-valuenow="50"
-                                                                aria-valuemin="0" aria-valuemax="100"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> {% endcomment %}
-
-                                <!--[social-media section] end-->
-                                <!-- [ rating list ] starts-->
-                                <div class="col-xl-4 col-md-6">
-                                    <div class="card user-list">
-                                        <div class="card-header">
-                                            <h5>Rating</h5>
-                                        </div>
-                                        <div class="card-block">
-                                            <div class="row align-items-center justify-content-center m-b-20">
-                                                <div class="col-6">
-                                                    <h2 class="f-w-300 d-flex align-items-center float-left m-0">4.7 <i
-                                                            class="fas fa-star f-10 m-l-10 text-c-yellow"></i></h2>
-                                                </div>
-                                                <div class="col-6">
-                                                    <h6 class="d-flex  align-items-center float-right m-0">0.4 <i
-                                                            class="fas fa-caret-up text-c-green f-22 m-l-10"></i></h6>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-xl-12">
-                                                    <h6 class="align-items-center float-left"><i
-                                                            class="fas fa-star f-10 m-r-10 text-c-yellow"></i>5</h6>
-                                                    <h6 class="align-items-center float-right">384</h6>
-                                                    <div class="progress m-t-30 m-b-20" style="height: 6px;">
-                                                        <div class="progress-bar progress-c-theme" role="progressbar"
-                                                                style="width: 70%;" aria-valuenow="70" aria-valuemin="0"
-                                                                aria-valuemax="100"></div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xl-12">
-                                                    <h6 class="align-items-center float-left"><i
-                                                            class="fas fa-star f-10 m-r-10 text-c-yellow"></i>4</h6>
-                                                    <h6 class="align-items-center float-right">145</h6>
-                                                    <div class="progress m-t-30  m-b-20" style="height: 6px;">
-                                                        <div class="progress-bar progress-c-theme" role="progressbar"
-                                                                style="width: 35%;" aria-valuenow="35" aria-valuemin="0"
-                                                                aria-valuemax="100"></div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xl-12">
-                                                    <h6 class="align-items-center float-left"><i
-                                                            class="fas fa-star f-10 m-r-10 text-c-yellow"></i>3</h6>
-                                                    <h6 class="align-items-center float-right">24</h6>
-                                                    <div class="progress m-t-30  m-b-20" style="height: 6px;">
-                                                        <div class="progress-bar progress-c-theme" role="progressbar"
-                                                                style="width: 25%;" aria-valuenow="25" aria-valuemin="0"
-                                                                aria-valuemax="100"></div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xl-12">
-                                                    <h6 class="align-items-center float-left"><i
-                                                            class="fas fa-star f-10 m-r-10 text-c-yellow"></i>2</h6>
-                                                    <h6 class="align-items-center float-right">1</h6>
-                                                    <div class="progress m-t-30  m-b-20" style="height: 6px;">
-                                                        <div class="progress-bar progress-c-theme" role="progressbar"
-                                                                style="width: 10%;" aria-valuenow="10" aria-valuemin="0"
-                                                                aria-valuemax="100"></div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xl-12">
-                                                    <h6 class="align-items-center float-left"><i
-                                                            class="fas fa-star f-10 m-r-10 text-c-yellow"></i>1</h6>
-                                                    <h6 class="align-items-center float-right">0</h6>
-                                                    <div class="progress m-t-30  m-b-20" style="height: 6px;">
-                                                        <div class="progress-bar" role="progressbar" style="width:0;"
-                                                                aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- [ rating list ] end-->
                                 <div class="col-xl-8 col-md-12 m-b-30">
-                                    <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab"
-                                                aria-controls="home" aria-selected="false">Today</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link active show" id="profile-tab" data-toggle="tab"
-                                                href="#profile" role="tab" aria-controls="profile" aria-selected="true">This
-                                                Week</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact"
-                                                role="tab" aria-controls="contact" aria-selected="false">All</a>
-                                        </li>
-                                    </ul>
                                     <div class="tab-content" id="myTabContent">
                                         <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
                                             <table class="table table-hover">
@@ -758,7 +182,13 @@
                                                         <h6 class="m-0">4:28 PM</h6>
                                                     </td>
                                                     <td>
-                                                        <h6 class="m-0 text-c-green">Done</h6>
+                                                        <h6 class="m-0 text-c-green">{% for s in us %}
+                                                            {% if s.is_active == True %}
+                                                            online
+                                                            {% else %}
+                                                            offline
+                                                            {% endif %}
+                                                        {% endfor %}</h6>
                                                     </td>
                                                     <td class="text-right"><i class="fas fa-circle text-c-green f-10"></i>
                                                     </td>
@@ -873,6 +303,7 @@
                                                         <h6 class="m-0 text-c-green">Done</h6>
                                                     </td>
                                                     <td class="text-right"><i class="fas fa-circle text-c-green f-10"></i>
+                                                       
                                                     </td>
                                                 </tr>
                                                 </tbody>
@@ -881,6 +312,114 @@
                                     </div>
                                 </div>
 
+                                <!--[ Recent Users ] end-->
+
+                                <!-- [ statistics year chart ] start -->
+                                <div class="col-xl-4 col-md-6">
+                                    <div class="card card-event">
+                                        <div class="card-block">
+                                            <div class="row align-items-center justify-content-center">
+                                                <div class="col">
+                                                    <h5 class="m-0">Approved Request</h5>
+                                                </div>
+                                            </div>
+                                            <i class=" -30 text-c-red">
+                                                <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.88 121.86" width="40px" height="40px"></svg>
+                                                <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.88 121.86" width="40px" height="40px"><defs><style>.cls-1{fill:#10a64a;}.cls-1,.cls-2,.cls-3,.cls-4{fill-rule:evenodd;}.cls-2{fill:#0bb34b;}.cls-3{fill:#fff;}.cls-4{fill:#303030;}</style>
+                                                </defs><title>approve</title><path class="cls-1" d="M61.44,0a14.05,14.05,0,0,1,8.45,2.65c3.3,2.1,7,6.23,11.61,8.86C88,
+                                                15.21,99.9,10.12,106,19.21c3.57,5.31,3.73,9.46,4,13.57.29,4.43,1.07,8.51,5.6,14.51,7.51,9.93,9.07,16.54,5.2,23.43-2.63,
+                                                4.69-8.19,7.3-9.47,10.28-2.74,6.33.29,11.1-3.46,18.47a19.66,19.66,0,0,1-12,10.21c-4.5,1.46-9-.64-12.63.87-6.34,2.67-11,
+                                                8.86-16.06,10.42a19.47,19.47,0,0,1-11.64,0c-5-1.56-9.72-7.75-16.06-10.42-3.61-1.51-8.13.59-12.63-.87A19.66,19.66,
+                                                0,0,1,15,99.47C11.23,92.1,14.26,87.33,11.52,81,10.24,78,4.68,75.41,2,70.72c-3.87-6.89-2.3-13.5,5.21-23.43,4.53-6,5.31-10.08,
+                                                5.6-14.51.26-4.11.43-8.26,4-13.57,6.13-9.09,18.08-4,24.53-7.69C46,8.89,49.69,4.76,53,2.66A14.05,14.05,0,0,1,61.44,0Z"/>
+                                                <path class="cls-2" d="M111,38.83a27,27,0,0,0,4.59,8.46c7.51,9.93,9.07,16.54,5.2,23.43-2.63,4.69-8.19,7.3-9.47,10.28-2.74,
+                                                6.33.29,11.1-3.46,18.47a19.68,19.68,0,0,1-12,10.21c-4.5,1.45-9-.64-12.63.87-6.34,2.67-11,8.85-16.06,10.42a19.47,19.47,0,0,1-11.64,
+                                                0c-5-1.57-9.72-7.75-16.06-10.42-3.61-1.51-8.13.58-12.63-.87A19.66,19.66,0,0,1,15,99.47a18.15,18.15,0,0,1-2-6.91l98-53.73Z"/>
+                                                <path class="cls-3" d="M61.26,25.5A36.37,36.37,0,1,1,24.89,61.87,36.37,36.37,0,0,1,61.26,25.5Z"/>
+                                                <path class="cls-4" d="M51.41,54.61l7.12,6.71L72.81,46.8c1.41-1.43,2.3-2.58,4-.79l5.67,5.79c1.85,1.84,1.75,2.91,0,4.63L61.75,
+                                                76.83c-3.69,3.62-3,3.85-6.8.12L41.88,64A1.65,1.65,0,0,1,42,61.41L48.6,54.6c1-1,1.79-1,2.81,0Z"/></svg></i>
+                                            <h2 class="mt-3 f-w-300">{{request_approved}}</h2>
+                                        </div>
+                                    </div>
+                                    <div class="card card-event">
+                                        <div class="card-block">
+                                            <div class="row align-items-center justify-content-center">
+                                                <div class="col">
+                                                    <h5 class="m-0">Pending Request 
+                                                </h5>
+                                                </div>
+                                            </div>
+                                            <i class=" -30 text-c-red">
+                                                <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" 
+                                                xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 122.88 122.88" 
+                                                style="enable-background:new 0 0 122.88 122.88; width: 40px; height: 40px;" xml:space="preserve">
+                                             <style type="text/css">
+                                               <![CDATA[
+                                                 .st0{fill-rule:evenodd;clip-rule:evenodd;fill:#FF7900;}
+                                               ]]>
+                                             </style>
+                                             <g>
+                                               <path class="st0" d="M61.44,0c33.93,0,61.44,27.51,61.44,61.44c0,33.93-27.51,61.44-61.44,61.44C27.51,
+                                                   122.88,0,95.37,0,61.44 C0,27.51,27.51,0,61.44,0L61.44,0z M54.22,37.65c0-9.43,14.37-9.44,14.37,
+                                                   0.02v25.75l16.23,8.59c0.08,
+                                                   0.04,0.16,0.09,0.23,0.15 l0.14,0.1c7.54,4.94,0.53,16.81-7.53,12.15l-0.03-0.02L57.99,
+                                                   73.87c-2.3-1.23-3.79-3.67-3.79-6.29l0.01,
+                                                   0L54.22,37.65L54.22,37.65z"/>
+                                             </g>
+                                           </svg></i>
+                                            <h2 class="mt-3 f-w-300">{{request_unapproved}}</h2>
+                                        </div>
+                                    </div>
+                                    <div class="card card-event">
+                                        <div class="card-block">
+                                            <div class="row align-items-center justify-content-center">
+                                                <div class="col">
+                                                    <h5 class="m-0">TOTAL Devices</h5>
+                                                </div>
+                                            </div>
+                                            <i class=" -30 text-c-red">
+                                                <svg class="svg-icon" style="width: 40px;height: 40px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" 
+                                                version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M800 736m-32 0a32 32 0 1 0 64 0 32 32 0 1 0-64 0Z" fill="#5465CF" />
+                                                <path d="M672 736m-32 0a32 32 0 1 0 64 0 32 32 0 1 0-64 0Z" fill="#5465CF" />
+                                                <path d="M544 736m-32 0a32 32 0 1 0 64 0 32 32 0 1 0-64 0Z" fill="#5465CF" />
+                                                <path d="M840.224 544H183.776A184 184 0 0 0 0 727.776v16.448A184 184 0 0 0 183.776 928h656.448A184 184 0 
+                                                0 0 1024 744.224v-16.448A184 184 0 0 0 840.224 544zM960 744.224A119.904 119.904 0 0 1 840.224 864H183.776A119.904 
+                                                119.904 0 0 1 64 744.224v-16.448A119.904 119.904 0 0 1 183.776 608h656.448A119.904 119.904 0 0 1 960 727.776v16.448zM265.728 
+                                                226.56a32 32 0 0 0 44.48 46.048C364 220.64 435.648 192 512 192s148 28.64 201.792 80.608a31.968 31.968 0 0 0 45.248-0.768 32 32
+                                                0 0 0-0.768-45.248C692.48 163.008 604.992 128 512 128s-180.48 35.008-246.272 98.56z" fill="#5465CF" />
+                                                <path d="M672 384a32 32 0 0 0 22.208-55.04C645.504 281.92 580.8 256 512 256s-133.504 25.92-182.208 72.96a32 32 0 
+                                                0 0 44.416 46.08C410.976 339.52 459.872 320 512 320s101.024 19.52 137.792 55.04c6.176 5.984 14.208 8.96 22.208 8.96z" fill="#5465CF" />
+                                                <path d="M409.76 424.96a32 32 0 0 0 44.48 46.08c30.72-29.728 84.8-29.728 115.52 0a31.968 31.968 0 0 0 45.248-0.8 32 32 0 0 0-0.768-45.248C586.88
+                                                398.56 550.56 384 512 384s-74.88 14.56-102.24 40.96z" fill="#5465CF" /></svg></i>
+                                            <h2 class="mt-3 f-w-300">{{device_stock}}</h2>
+                                        </div>
+                                    </div>
+                                    <div class="card card-event">
+                                        <div class="card-block">
+                                            <div class="row align-items-center justify-content-center">
+                                                <div class="col">
+                                                    <h5 class="m-0">TOTAL Sim</h5>
+                                                </div>
+                                            </div>
+                                            <i class="f-30"> <svg height="40px" width="40px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+                                                viewBox="0 0 505 505" xml:space="preserve">
+                                                <circle style="fill:#84DBFF;" cx="252.5" cy="252.5" r="252.5"/>
+                                                <path style="fill:#FFFFFF;" d="M342.9,396.6H162.1c-9.5,0-17.2-7.7-17.2-17.2V125.6c0-9.5,7.7-17.2,17.2-17.2h116
+                                                c4.6,0,8.9,1.8,12.2,5l64.8,64.8c3.2,3.2,5,7.6,5,12.2v189.1C360.1,388.9,352.4,396.6,342.9,396.6z"/>
+                                                <path style="fill:#FFD05B;" d="M309.8,266.2H195.2c-2.5,0-4.6,2-4.6,4.6v83.6c0,2.5,2,4.6,4.6,4.6h114.7c2.5,0,4.6-2,4.6-4.6v-83.6
+                                                C314.4,268.3,312.4,266.2,309.8,266.2z"/>
+                                                <g>
+                                                    <polygon style="fill:#F9B54C;" points="281.1,293.1 281.1,266.2 274.6,266.2 274.6,293.1 230.4,293.1 230.4,266.2 223.9,266.2 
+                                                    223.9,293.1 190.6,293.1 190.6,299.7 314.4,299.7 314.4,293.1 	"/>
+                                                    <polygon style="fill:#F9B54C;" points="190.6,332 223.9,332 223.9,358.9 230.4,358.9 230.4,332 274.6,332 274.6,358.9 281.1,358.9 
+                                                    281.1,332 314.4,332 314.4,325.4 190.6,325.4 	"/>
+                                                </g>
+                                                </svg>
+                                                </i>
+                                            <h2 class="mt-3 f-w-300">{{sim_stock}}</h2>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <!-- [ Main Content ] end -->
                         </div>
