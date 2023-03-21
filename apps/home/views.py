@@ -39,7 +39,6 @@ from django.shortcuts import get_object_or_404
 
 # @login_required(login_url="/login/")
 def index(request):
-    context = {'segment': 'index'}
     request_approved = AddRequest.objects.filter(is_approved=True).count()
     request_unapproved = AddRequest.objects.filter(is_approved=False).count()
     sim_stock = sim_inventory.objects.filter(status__contains = 'NotAssigned').count()
@@ -50,10 +49,9 @@ def index(request):
         'us': us,
         'request_approved' : request_approved,
         'request_unapproved' : request_unapproved,
-
         'device_stock' : device_stock,
         'sim_stock' : sim_stock,
-
+        'segment': 'index'
     }
     html_template = loader.get_template('home/index.html')
     return HttpResponse(html_template.render(context, request))
@@ -86,7 +84,10 @@ def pages(request):
 
 # profile page
 def profile(request):
-    return render(request,"home/profile.html")
+    context={
+        'segment': 'profile'
+    }
+    return render(request,"home/profile.html", context)
 
 
 
