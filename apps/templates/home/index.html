@@ -6,7 +6,7 @@
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
-
+<script src="https://code.highcharts.com/highcharts.js"></script>
     <!-- [ Main Content ] start -->
     <div class="pcoded-main-container">
         <div class="pcoded-wrapper">
@@ -22,285 +22,68 @@
                             <div class="row">
                                 <!--[ Recent Users ] start-->
                                 <div class="col-xl-8 col-md-12 m-b-30">
-                                    <div class="tab-content" id="myTabContent">
-                                        <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
-                                            <table class="table table-hover">
-                                                <thead>
-                                                <tr>
-                                                    <th>User</th>
-                                                    <th>Joined Date</th>
-                                                    <th>Time</th>
-                                                    <th>Status</th>
-                                                    <th class="text-right"></th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                <tr>
-
-                                                    <td>
-                                                        <h6 class="m-0">The quick brown fox</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0">3:28 PM</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0 text-c-green">Done</h6>
-                                                    </td>
-                                                    <td class="text-right"><i class="fas fa-circle text-c-green f-10"></i>
-                                                    </td>
-                                                </tr>
-
-                                                <tr>
-                                                    <td>
-                                                        <h6 class="m-0"><img class="rounded-circle  m-r-10"
-                                                                                style="width:40px;"
-                                                                                src="{{ ASSETS_ROOT }}/images/user/avatar-2.jpg"
-                                                                                alt="activity-user">Albert Andersen</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0">Jumps over the lazy</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0">2:37 PM</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0 text-c-red">Missed</h6>
-                                                    </td>
-                                                    <td class="text-right"><i class="fas fa-circle text-c-red f-10"></i>
-                                                    </td>
-                                                </tr>
-
-                                                <tr>
-                                                    <td>
-                                                        <h6 class="m-0"><img class="rounded-circle  m-r-10"
-                                                                                style="width:40px;"
-                                                                                src="{{ ASSETS_ROOT }}/images/user/avatar-3.jpg"
-                                                                                alt="activity-user">Silje Larsen</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0">Dog the quick brown</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0">10:23 AM</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0 text-c-purple">Delayed</h6>
-                                                    </td>
-                                                    <td class="text-right"><i class="fas fa-circle text-c-purple f-10"></i>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <h6 class="m-0"><img class="rounded-circle  m-r-10"
-                                                                                style="width:40px;"
-                                                                                src="{{ ASSETS_ROOT }}/images/user/avatar-1.jpg"
-                                                                                alt="activity-user">Ida Jorgensen</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0">The quick brown fox</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0">4:28 PM</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0 text-c-green">Done</h6>
-                                                    </td>
-                                                    <td class="text-right"><i class="fas fa-circle text-c-green f-10"></i>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-
+                                    <div class=" row">
+                                        <div class="col-6">
+                                            <div class="card ">
+                                                <div class="card-block ">
+                                                    <div id="chart-container" style="height:300px"></div>
+                                                </div>
+                                            </div>
                                         </div>
+                                        <div class="col-6">
+                                            <div class="card">
+                                                <div class="card-block">
+                                                    <div id="chart-container2" style="height:300px"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-content" id="myTabContent">
                                         <div class="tab-pane fade active show" id="profile" role="tabpanel"
                                                 aria-labelledby="profile-tab">
                                             <table class="table table-hover">
                                                 <thead>
                                                 <tr>
                                                     <th>User</th>
-                                                    <th>Activity</th>
-                                                    <th>Time</th>
+                                                    <th>Joined Date</th>
+                                                    <th>last Login</th>
                                                     <th>Status</th>
                                                     <th class="text-right"></th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
+                                                    {% for user in us %}
                                                 <tr>
                                                     <td>
-                                                        <h6 class="m-0"><img class="rounded-circle  m-r-10"
-                                                                                style="width:40px;"
-                                                                                src="{{ ASSETS_ROOT }}/images/user/avatar-2.jpg"
-                                                                                alt="activity-user">Albert Andersen</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0">Jumps over the lazy</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0">2:37 PM</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0 text-c-red">Missed</h6>
-                                                    </td>
-                                                    <td class="text-right"><i class="fas fa-circle text-c-red f-10"></i>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <h6 class="m-0"><img class="rounded-circle m-r-10"
-                                                                                style="width:40px;"
-                                                                                src="{{ ASSETS_ROOT }}/images/user/avatar-1.jpg"
-                                                                                alt="activity-user">Ida Jorgensen</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0">The quick brown fox</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0">3:28 PM</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0 text-c-green">Done</h6>
-                                                    </td>
-                                                    <td class="text-right"><i class="fas fa-circle text-c-green f-10"></i>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <h6 class="m-0"><img class="rounded-circle  m-r-10"
-                                                                                style="width:40px;"
-                                                                                src="{{ ASSETS_ROOT }}/images/user/avatar-1.jpg"
-                                                                                alt="activity-user">Ida Jorgensen</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0">The quick brown fox</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0">4:28 PM</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0 text-c-green">{% for s in us %}
-                                                            {% if s.is_active == True %}
-                                                            online
+                                                        <h6 class="m-0">
+                                                            {% if user.first_name and user.last_name %}
+                                                            {{ user.first_name }} {{ user.last_name }}
+                                                            {% elif user.first_name %}
+                                                            {{ user.first_name }}
                                                             {% else %}
-                                                            offline
+                                                            {{ user.username }}
                                                             {% endif %}
-                                                        {% endfor %}</h6>
+                                                        </h6>
                                                     </td>
-                                                    <td class="text-right"><i class="fas fa-circle text-c-green f-10"></i>
+                                                    <td>
+                                                        <h6 class="m-0">{{ user.date_joined }}</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6 class="m-0">{{ user.last_login }}</h6>
+                                                    </td>
+                                                    <td>
+                                                            {% if n.is_active == True %}
+                                                            <h6 class="m-0 text-c-green">
+                                                            online<i class="text-right" class="fas fa-circle text-c-green f-10"></i>
+                                                            </h6>
+                                                            {% else %}
+                                                            <h6 class="m-0 text-c-red">
+                                                            offline
+                                                            </h6>
+                                                            {% endif %}
                                                     </td>
                                                 </tr>
-                                                <tr>
-                                                    <td>
-                                                        <h6 class="m-0"><img class="rounded-circle  m-r-10"
-                                                                                style="width:40px;"
-                                                                                src="{{ ASSETS_ROOT }}/images/user/avatar-3.jpg"
-                                                                                alt="activity-user">Silje Larsen</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0">Dog the quick brown</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0">10:23 AM</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0 text-c-purple">Delayed</h6>
-                                                    </td>
-                                                    <td class="text-right"><i class="fas fa-circle text-c-purple f-10"></i>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-
-                                        </div>
-                                        <div class="tab-pane fade" id="contact" role="tabpanel"
-                                                aria-labelledby="contact-tab">
-                                            <table class="table table-hover">
-                                                <thead>
-                                                <tr>
-                                                    <th>User</th>
-                                                    <th>Activity</th>
-                                                    <th>Time</th>
-                                                    <th>Status</th>
-                                                    <th class="text-right"></th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <h6 class="m-0"><img class="rounded-circle  m-r-10"
-                                                                                style="width:40px;"
-                                                                                src="{{ ASSETS_ROOT }}/images/user/avatar-3.jpg"
-                                                                                alt="activity-user">Silje Larsen</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0">Dog the quick brown</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0">10:23 AM</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0 text-c-purple">Delayed</h6>
-                                                    </td>
-                                                    <td class="text-right"><i class="fas fa-circle text-c-purple f-10"></i>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <h6 class="m-0"><img class="rounded-circle m-r-10"
-                                                                                style="width:40px;"
-                                                                                src="{{ ASSETS_ROOT }}/images/user/avatar-1.jpg"
-                                                                                alt="activity-user">Ida Jorgensen</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0">The quick brown fox</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0">3:28 PM</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0 text-c-green">Done</h6>
-                                                    </td>
-                                                    <td class="text-right"><i class="fas fa-circle text-c-green f-10"></i>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <h6 class="m-0"><img class="rounded-circle  m-r-10"
-                                                                                style="width:40px;"
-                                                                                src="{{ ASSETS_ROOT }}/images/user/avatar-2.jpg"
-                                                                                alt="activity-user">Albert Andersen</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0">Jumps over the lazy</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0">2:37 PM</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0 text-c-red">Missed</h6>
-                                                    </td>
-                                                    <td class="text-right"><i class="fas fa-circle text-c-red f-10"></i>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <h6 class="m-0"><img class="rounded-circle  m-r-10"
-                                                                                style="width:40px;"
-                                                                                src="{{ ASSETS_ROOT }}/images/user/avatar-1.jpg"
-                                                                                alt="activity-user">Ida Jorgensen</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0">The quick brown fox</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0">4:28 PM</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0 text-c-green">Done</h6>
-                                                    </td>
-                                                    <td class="text-right"><i class="fas fa-circle text-c-green f-10"></i>
-                                                       
-                                                    </td>
-                                                </tr>
+                                                {% endfor %}
                                                 </tbody>
                                             </table>
                                         </div>
@@ -369,7 +152,7 @@
                                         <div class="card-block">
                                             <div class="row align-items-center justify-content-center">
                                                 <div class="col">
-                                                    <h5 class="m-0">TOTAL Devices</h5>
+                                                    <h5 class="m-0">Devices</h5>
                                                 </div>
                                             </div>
                                             <i class=" -30 text-c-red">
@@ -393,7 +176,7 @@
                                         <div class="card-block">
                                             <div class="row align-items-center justify-content-center">
                                                 <div class="col">
-                                                    <h5 class="m-0">TOTAL Sim</h5>
+                                                    <h5 class="m-0">Sim</h5>
                                                 </div>
                                             </div>
                                             <i class="f-30"> <svg height="40px" width="40px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
@@ -424,9 +207,143 @@
 
         </div>
     </div>
-    <!-- [ Main Content ] end -->            
+    <script>
+        $.ajax({
+            url: '/chartdata2',
+            success: function (data) {
+                Highcharts.chart('chart-container2', {
+                    chart: {
+                        type: 'pie',
+                        backgroundColor: null,
+                        plotBackgroundColor: null,
+                        plotBorderWidth: 0,
+                        plotShadow: false,
+                        margin: [0, 0, 0, 0],
+                        spacingTop: 0,
+                        spacingBottom: 0,
+                        spacingLeft: 0,
+                        spacingRight: 0,
+                        width: 500,
+                        height: 250
+                    },
+                    title: {
+                        text: 'Completed',
+                        align: 'center',
+                        verticalAlign: 'middle',
+                        y: 50
+                    },
+                    plotOptions: {
+                        pie: {
+                            innerSize: '60%',
+                            depth: 45,
+                            dataLabels: {
+                                enabled: true,
+                                distance: 20,
+                                format: '{point.percentage:.1f} %'
+                            }
+                        }
+                    },
+                    tooltip: {
+                        pointFormat: '{series.name}: <b>{point.y:.1f}</b>'
+                    },
+                    series: [{
+                        name: data.chartLabel,
+                        colorByPoint: true,
+                        data: [{
+                            name: data.labels[0],
+                            y: data.chartdata[0],
+                        }, {
+                            name: data.labels[1],
+                            y: data.chartdata[1]
+                        }, {
+                            name: data.labels[2],
+                            y: data.chartdata[2]
+                        }]
+                    }]
+                });
+                // Update the chart with new data every 5 seconds
+                setInterval(function () {
+                    $.ajax({
+                        url: '/chartdata2',
+                        success: function (data) {
+                            var chart = $('#chart-container2').highcharts();
+                            chart.series[0].setData([
+                                { name: data.labels[0], y: data.chartdata[0] },
+                                { name: data.labels[1], y: data.chartdata[1] },
+                                { name: data.labels[2], y: data.chartdata[2] }
+                            ]);
+                        }
+                    });
+                }, 60000);
+            }
+        });
+        // Define a function to fetch the data from the API and update the chart
+        $.ajax({
+            url: '/api',
+            success: function(data) {
+              Highcharts.chart('chart-container', {
+                chart: {
+                  plotBackgroundColor: null,
+                  plotBorderWidth: 0,
+                  plotShadow: false,
+                  type: 'pie'
+                },
+                title: {
+                  text: 'Pending',
+                  align: 'center',
+                  verticalAlign: 'middle',
+                  y: 40
+                },
+                tooltip: {
+                  pointFormat: '{series.name}: <b>{point.y}</b>'
+                },
+                plotOptions: {
+                  pie: {
+                    dataLabels: {
+                      enabled: true,
+                      distance: -50,
+                      style: {
+                        fontWeight: 'bold',
+                        color: 'white'
+                      }
+                    },
+                    startAngle: -90,
+                    endAngle: 90,
+                    center: ['50%', '75%'],
+                    size: '110%'
+                  }
+                },
+                series: [{
+                  name: 'Pending',
+                  innerSize: '50%',
+                  data: data.chartdata.map((value, index) => ({
+                    name: data.labels[index],
+                    y: value
+                  }))
+                }]
+              });
+          
+              // Update the chart with new data every 5 seconds
+              setInterval(function () {
+                $.ajax({
+                  url: '/api',
+                  success: function (data) {
+                    var chart = $('#chart-container').highcharts();
+                    chart.series[0].setData(data.chartdata.map((value, index) => ({
+                      name: data.labels[index],
+                      y: value
+                    })));
+                  }
+                });
+              }, 60000);
+            }
+          });
+          
+    </script>
 
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
-{% block javascripts %}{% endblock javascripts %}
+{% block javascripts %}
+
+{% endblock javascripts %}

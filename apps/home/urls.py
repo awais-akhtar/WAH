@@ -5,6 +5,8 @@ from django.contrib.auth import views as auth_view
 from .forms import LoginForm
 from .forms import MyPasswordChangeForm
 urlpatterns = [
+    path('api/', views.ChartData.as_view()),
+    path('chartdata2/', views.ChartData2.as_view()),
     path('admin/', admin.site.urls),         # Django admin route
     # The home page
     path('', views.index, name='home'),
@@ -27,21 +29,22 @@ urlpatterns = [
     path('edit/<pk>', views.edit_device, name='edit'),
     path('delete/<pk>', views.delete_device, name='delete'),
     path('get_request_data/<int:id>', views.get_request_data, name='get_request_data'),
-
+#getting device data for update
     path('get_device_data/<int:id>', views.get_device_data, name='get_device_data'), # getting device data in pop model for update
     path('update_device_data/', views.update_device_data, name='update_device_data'), # updating device data
-
+#getting sim data for update
     path('get_sim_data/<int:id>', views.get_sim_data, name='get_sim_data'), # getting sim data in pop model for update
     path('update_sim_data/', views.update_sim_data, name='update_sim_data'), # updating sim data
-
+#displaying profile
     path('profile/', views.profile, name='profile'),
-
+#request approving
     path('approve_request/', views.approve_request, name='approve_request'),
-    path('reject_request/', views.reject_request, name='reject_request'),
-
-    path('login/', auth_view.LoginView.as_view(template_name='home/login.html',authentication_form=LoginForm),name="login"),
+    # path('reject_request/', views.reject_request, name='reject_request'),
+# account login and logout
+    path('accounts/login/', auth_view.LoginView.as_view(template_name='home/login.html',authentication_form=LoginForm),name="login"),
     path('logout/', auth_view.LogoutView.as_view(next_page='login'),name="logout"),
-    path('passwordchange/',auth_view.PasswordChangeView.as_view(template_name='changepassword.html',form_class=MyPasswordChangeForm,success_url='/profile'), name="password_change"),
-    path('password_change_done/',auth_view.PasswordChangeDoneView.as_view(template_name='profile.html')),
+# password change
+    path('passwordchange/',auth_view.PasswordChangeView.as_view(template_name='home/changepassword.html',form_class=MyPasswordChangeForm,success_url='/profile'), name="password_change"),
+    path('password_change_done/',auth_view.PasswordChangeDoneView.as_view(template_name='home/profile.html')),
 
 ]

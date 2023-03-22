@@ -19,6 +19,9 @@ from django.contrib import messages
 from django.db.models import Q
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
+from .forms import SetPasswordForm
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 # from .forms import DeviceInventoryForm, CreateInventoryForm
 
@@ -32,12 +35,51 @@ from django.shortcuts import get_object_or_404
 #             form.save_m2m()
 #     return render(request, 'home/create_device.html', {'form': form})
 
+class ChartData(APIView):
+    authentication_classes = []
+    permission_classes = []
+    def get(self, request, format = None):
+        labels = [
+            'Requests',
+            'Sim Cards',
+            'Devices',
+            ]
+        request_unapproved = AddRequest.objects.filter(is_approved=False).count()
+        sim_stock = sim_inventory.objects.filter(status__contains = 'NotAssigned').count()
+        device_stock = device_inventory.objects.filter(status__contains = 'NotAssigned').count()
+        chartLabel = " data"
+        chartdata = [ request_unapproved, sim_stock, device_stock]
+        data ={
+                "labels":labels,
+                "chartLabel":chartLabel,
+                "chartdata":chartdata,
+             }
+        return Response(data)
+    
+class ChartData2(APIView):
+    authentication_classes = []
+    permission_classes = []
+    def get(self, request, format = None):
+        labels = [
+            'Requests',
+            'Sim Cards',
+            'Devices',
+            ]
+        request_approved = AddRequest.objects.filter(is_approved=True).count()
+        sim_stock = sim_inventory.objects.filter(status__contains = 'Assigned').count()
+        device_stock = device_inventory.objects.filter(status__contains = 'Assigned').count()
+        chartLabel = " data"
+        chartdata = [request_approved, sim_stock, device_stock]
+        data ={
+                "labels":labels,
+                "chartLabel":chartLabel,
+                "chartdata":chartdata,
+             }
+        return Response(data)
 
 
 
-
-
-# @login_required(login_url="/login/")
+@login_required
 def index(request):
     request_approved = AddRequest.objects.filter(is_approved=True).count()
     request_unapproved = AddRequest.objects.filter(is_approved=False).count()
@@ -84,12 +126,40 @@ def pages(request):
 
 # profile page
 def profile(request):
+    user=request.user
+    if request.method=='POST':
+        user.first_name=request.POST['firstname']
+        user.last_name=request.POST['lastname']
+        user.email=request.POST['email']
+        user.save()
+        messages.info(request,"Updated Successfully")
+        return redirect('profile')
     context={
         'segment': 'profile'
     }
     return render(request,"home/profile.html", context)
 
 
+def password_change(request):
+    if request.user.is_authenticated or request.user.is_superuser or request.user.is_staff:
+        try:
+                user = request.user
+                if request.method == 'POST':
+                                form = SetPasswordForm(user, request.POST)
+                                if form.is_valid():
+                                                form.save()
+                                                messages.success(request, "Your password has been changed")
+                                                return redirect('profile')
+                                else:
+                                        for error in list(form.errors.values()):
+                                                messages.error(request, error)
+                form = SetPasswordForm(user)
+                return render(request, 'password_reset_confirm.html', {'form': form})
+        except:
+                messages.warning(request,"An Error is occurred!")
+                return redirect("/")
+    else:
+        return HttpResponse("You are not Authorized")
 
 def add_request(request):
     if request.method == "POST":

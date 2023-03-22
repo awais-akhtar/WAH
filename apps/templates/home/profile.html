@@ -18,13 +18,24 @@
                             <!-- [ Main Content ] start -->
                             <div class="row">
                                 <div class="col-sm-10">
+                                    {% if messages %}
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                        {% for message in messages %}
+                                            <strong> {{message}}</strong>
+                                        {% endfor %}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    {% endif %}
                                     <div class="card">
                                         <div class="card-header">
                                             <h5>Edit Info</h5>
                                         </div>
+                                        <form id="form" method="post" enctype="multipart/form-data" action="{% url 'profile' %}">
+                                                    {% csrf_token %}
                                         <div class="card-block">
                                             <div class="row">
-
                                                 <div class="col-sm-6 mb-4">
                                                     <div class="form-group">
                                                         <label {% if request.user.username %} class="text-success" {% endif %}
@@ -40,7 +51,7 @@
                                                     <div class="form-group">
                                                         <label {% if not request.user.email %} class="text-danger" {% else %} class="text-success"  {% endif %}
                                                                for="exampleInputEmail1">Email address</label>
-                                                        <input type="email"
+                                                        <input type="email" name="email" 
                                                                {% if request.user.email %} value="{{ request.user.email }}" {% endif %}
                                                                class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
                                                         {% if not request.user.email %}
@@ -57,7 +68,7 @@
                                                     <div class="form-group">
                                                         <label  {% if not request.user.first_name %} class="text-danger" {% else %} class="text-success"   {% endif %}
                                                         for="fn">First Name</label>
-                                                        <input type="text" value="{{ request.user.first_name }}" class="form-control" id="fn" aria-describedby="emailHelp" placeholder="Your first name">
+                                                        <input name="firstname" type="text" value="{{ request.user.first_name }}" class="form-control" id="fn" aria-describedby="emailHelp" placeholder="Your first name">
                                                         {% if not request.user.first_name %}
                                                         <small id="emailHelp" class="form-text text-danger">
                                                             You don't have first name associated with this account.
@@ -73,7 +84,7 @@
                                                     <div class="form-group">
                                                         <label  {% if not request.user.last_name %} class="text-danger" {% else %} class="text-success"   {% endif %}
                                                         for="ln">Last Name</label>
-                                                        <input type="email" value="{{ request.user.last_name }}" class="form-control" id="ln" aria-describedby="emailHelp" placeholder="Your last name">
+                                                        <input name="lastname" type="text" value="{{ request.user.last_name }}" class="form-control" id="ln" aria-describedby="emailHelp" placeholder="Your last name">
                                                         {% if not request.user.last_name %}
                                                         <small id="emailHelp" class="form-text text-danger">
                                                             You don't have last name associated with this account.
@@ -84,62 +95,20 @@
                                                     {% endif %}
                                                     </div>
                                                 </div>
-                                                {% comment %} <div class="col-sm-12 mb-4">
-                                                    <div class="form-group">
-                                                        <label for="abt">About Info</label>
-                                                        <textarea type="email" class="form-control" id="abt" aria-describedby="emailHelp" placeholder="Bio"></textarea>
-                                                        <small id="abf" class="form-text text-muted">We'll show this on your profile.</small>
-                                                    </div>
-                                                </div> {% endcomment %}
                                                 <div class="col-sm-12 mb-2">
                                                     <div class="form-group">
                                                         <button type="submit" class="btn btn-outline-success btn-glow-danger mb-2" >Update</button>
                                                     </div>
-                                                </div>   
-
+                                                </div>
                                             </div>
                                         </div>
+                                    </form>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
-                                    <a class="btn btn-outline-success btn-glow-danger mb-2" class="form-group" href="#">
-                                        Change Password?
-                                    </a>
-                                    {% comment %} <div class="card">
-                                        <div class="card-block">
-                                            <div class="d-flex align-items-center justify-content-center flex-column">
-                                                <div class="w-50 p-3">
-                                                    <img src="{{ ASSETS_ROOT }}/images/user/profile.jpg" alt="profile image"
-                                                        class="img-fluid rounded-circle">
-                                                </div>
-                                                <div class="text-center">
-                                                    <h4 class="font-weight-bold h6">
-                                                        {{ request.user.username }}
-                                                    </h4>
-                                                    <p class="font-italic text-muted">
-                                                        {% if request.user.email %} {{ request.user.email }} {% endif %}
-                                                    </p>
-                                                </div>
-                                            </div>
-
-                                            <div class="small font-weight-light mt-4 text-center text-muted">
-                                                <p>
-                                                    This page is your private space.
-                                                    <br />
-                                                </p>
-                                            </div>
-                                            <div class="d-flex justify-content-center align-items-center">
-                                                <a href="#" class="h6 text-muted d-block m-1"><i
-                                                        class="icon feather icon-facebook"></i></a>
-                                                <a href="#" class="h6 text-muted d-block m-1"><i
-                                                        class="icon feather icon-twitter"></i></a>
-                                                <a href="#" class="h6 text-muted d-block m-1"><i
-                                                        class="icon feather icon-instagram"></i></a>
-
-                                            </div>
-                                        </div>
-                                    </div> {% endcomment %}
-                                </div>
+                                    <a href="{% url 'password_change' %}">Change password?</a>
+                                    <!-- Button trigger modal -->
+                                    <form action="{% url 'password_change' %}">
                             </div>
                             <!-- [ Main Content ] end -->
                         </div>
