@@ -19,6 +19,9 @@
                     <div class="main-body">
                         <div class="page-wrapper">
                             <!-- [ Main Content ] start -->
+                            {% for u in online_users %}
+                            {{u.id}}
+                            {% endfor %}
                             <div class="row">
                                 <!--[ Recent Users ] start-->
                                 <div class="col-xl-8 col-md-12 m-b-30">

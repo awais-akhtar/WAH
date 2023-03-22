@@ -44,11 +44,8 @@ def get_current():
         user_id = data.get('_auth_user_id', None)
         if user_id:
             user_id_list.append(user_id)
-    # Query all logged in users based on id list
-    users = User.objects.filter(id__in=user_id_list)
-    # Get a list of usernames
-    usernames = [user.username for user in users]
-    return usernames
+    # Return the list of user IDs
+    return user_id_list
 
 
 
@@ -107,13 +104,14 @@ def index(request):
     print(queryset)
     print(queryset.exists())
     print(queryset.count())
-    online_users = get_current()
+    online_user_ids = get_current()
+    online_users = User.objects.filter(id__in=online_user_ids).values()
     print(online_users)
     request_approved = AddRequest.objects.filter(is_approved=True).count()
     request_unapproved = AddRequest.objects.filter(is_approved=False).count()
     sim_stock = sim_inventory.objects.filter(status__contains = 'NotAssigned').count()
     device_stock = device_inventory.objects.filter(status__contains = 'NotAssigned').count()
-    us = User.objects.filter(is_active=True).values()
+    us = User.objects.filter(id__in='1').values()
     print(us)
     context ={
         'us': us,
@@ -121,7 +119,8 @@ def index(request):
         'request_unapproved' : request_unapproved,
         'device_stock' : device_stock,
         'sim_stock' : sim_stock,
-        'segment': 'index'
+        'segment': 'index',
+        'online_users': online_users,
     }
     html_template = loader.get_template('home/index.html')
     return HttpResponse(html_template.render(context, request))
