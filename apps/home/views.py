@@ -17,70 +17,98 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.contrib import messages
 from django.db.models import Q
-from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from .forms import SetPasswordForm
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.renderers import JSONRenderer
+from django.contrib.sessions.models import Session
+from django.utils import timezone
 
-# from .forms import DeviceInventoryForm, CreateInventoryForm
+def get_current_users():
+    active_sessions = Session.objects.filter(expire_date__gte=timezone.now())
+    user_id_list = []
+    for session in active_sessions:
+        data = session.get_decoded()
+        user_id_list.append(data.get('_auth_user_id', None))
+    # Query all logged in users based on id list
+    return User.objects.filter(id__in=user_id_list)
 
-# def create_device(request):
-#     form = CreateInventoryForm()
-#     if request.method == 'POST':
-#         form = CreateInventoryForm(request.POST)
-#         if form.is_valid():
-#             device = form.save(commit=False)
-#             device.save()
-#             form.save_m2m()
-#     return render(request, 'home/create_device.html', {'form': form})
+
+
+def get_current():
+    active_sessions = Session.objects.filter(expire_date__gte=timezone.now())
+    user_id_list = []
+    for session in active_sessions:
+        data = session.get_decoded()
+        user_id = data.get('_auth_user_id', None)
+        if user_id:
+            user_id_list.append(user_id)
+    # Query all logged in users based on id list
+    users = User.objects.filter(id__in=user_id_list)
+    # Get a list of usernames
+    usernames = [user.username for user in users]
+    return usernames
+
+
+
 
 class ChartData(APIView):
     authentication_classes = []
     permission_classes = []
-    def get(self, request, format = None):
+    renderer_classes = [JSONRenderer]
+
+    def get(self, request, format=None):
         labels = [
             'Requests',
-            'Sim Cards',
-            'Devices',
-            ]
-        request_unapproved = AddRequest.objects.filter(is_approved=False).count()
-        sim_stock = sim_inventory.objects.filter(status__contains = 'NotAssigned').count()
-        device_stock = device_inventory.objects.filter(status__contains = 'NotAssigned').count()
-        chartLabel = " data"
-        chartdata = [ request_unapproved, sim_stock, device_stock]
-        data ={
-                "labels":labels,
-                "chartLabel":chartLabel,
-                "chartdata":chartdata,
-             }
+            'In-Stock Sim Cards',
+            'In-Stock Devices',
+        ]
+        chartdata = [
+            AddRequest.objects.filter(is_approved=False).count(),
+            sim_inventory.objects.filter(status__icontains='NotAssigned').count(),
+            device_inventory.objects.filter(status__icontains='NotAssigned').count(),
+        ]
+        data = {
+            "labels": labels,
+            "chartLabel": "data",
+            "chartdata": chartdata,
+        }
         return Response(data)
-    
+
+
 class ChartData2(APIView):
     authentication_classes = []
     permission_classes = []
-    def get(self, request, format = None):
+    renderer_classes = [JSONRenderer]
+    def get(self, request, format=None):
         labels = [
             'Requests',
             'Sim Cards',
             'Devices',
-            ]
-        request_approved = AddRequest.objects.filter(is_approved=True).count()
-        sim_stock = sim_inventory.objects.filter(status__contains = 'Assigned').count()
-        device_stock = device_inventory.objects.filter(status__contains = 'Assigned').count()
-        chartLabel = " data"
-        chartdata = [request_approved, sim_stock, device_stock]
-        data ={
-                "labels":labels,
-                "chartLabel":chartLabel,
-                "chartdata":chartdata,
-             }
+        ]
+        chartdata = [
+            AddRequest.objects.filter(is_approved=True).count(),
+            sim_inventory.objects.filter(status__icontains='Assigned').count(),
+            device_inventory.objects.filter(status__icontains='Assigned').count(),
+        ]
+        data = {
+            "labels": labels,
+            "chartLabel": "data",
+            "chartdata": chartdata,
+        }
         return Response(data)
 
 
 
 @login_required
 def index(request):
+    queryset = get_current_users()
+    print(queryset)
+    print(queryset.exists())
+    print(queryset.count())
+    online_users = get_current()
+    print(online_users)
     request_approved = AddRequest.objects.filter(is_approved=True).count()
     request_unapproved = AddRequest.objects.filter(is_approved=False).count()
     sim_stock = sim_inventory.objects.filter(status__contains = 'NotAssigned').count()
@@ -171,7 +199,10 @@ def add_request(request):
             db = AddRequest.objects.filter(Q(is_approved=False) & Q(employee_id=id)).values()
             print("details already exists=======", db)
             context={
-                'unapproved_requests': db
+                'unapproved_requests': db,
+                'segment': 'addrequest',
+                'segment': 'requeststatus',
+                'segment': 'assigment',
             }
             return render(request, "home/add_request.html", context)
         elif AddRequest.objects.filter(Q(is_approved=True) & Q(employee_id=id)).exists():
@@ -182,7 +213,10 @@ def add_request(request):
             print("the assigned device details=========", request_device)
             context={
                 'approved_requests': db2,
-                'request_device': request_device
+                'request_device': request_device,
+                'segment': 'addrequest',
+                'segment': 'requeststatus',
+                'segment': 'assigment',
             }
             return render(request, "home/add_request.html", context)
         else:
@@ -207,9 +241,17 @@ def add_request(request):
             ss= json.loads(response.text)
             data=ss['data']['PointsData']
             print(data)
-            context = {'obj':data, 'data2':data2}
+            context = {'obj':data, 'data2':data2,
+            'segment': 'addrequest',
+            'segment': 'requeststatus',
+            'segment': 'assigment',}
             return render(request, "home/add_request.html", context)
-    return render(request, "home/add_request.html")
+    context={
+        'segment': 'addrequest',
+        'segment': 'requeststatus',
+        'segment': 'assigment',
+    }
+    return render(request, "home/add_request.html", context)
 
 
 
@@ -219,6 +261,9 @@ def request_status(request):
     context = {
         'unapproved_requests': unapproved_requests,
         'approved_requests': approved_requests,
+            'segment': 'addrequest',
+            'segment': 'requeststatus',
+            'segment': 'assigment',
     }
     return render(request, "home/request_status.html", context)
 
@@ -269,12 +314,18 @@ def assignment(request):
         # print(find)
         context = {
         'unapproved_requests': unapproved_requests,
+            'segment': 'addrequest',
+            'segment': 'requeststatus',
+            'segment': 'assigment',
 
         }
         return render(request, "home/form_elements.html", context)
     unapproved_requests = AddRequest.objects.filter(is_approved=False).values()
     context = {
         'unapproved_requests': unapproved_requests,
+            'segment': 'addrequest',
+            'segment': 'requeststatus',
+            'segment': 'assigment',
     }
     return render(request, "home/form_elements.html", context)
 
@@ -386,7 +437,12 @@ def reject_request(request):
 
 # rendering Stock page
 def stock(request):
-    return render(request, "home/stock.html")
+    context={
+        'segment': 'AddDevice',
+        'segment': 'Devicerec',
+        'segment': 'simrec',
+    }
+    return render(request, "home/stock.html", context)
 
 
 def add_device(request):
@@ -479,12 +535,15 @@ def stock_record(request):
                                                 Q(type__contains=f'{type}') & Q(location__contains=f'{location}') & 
                                                 Q(data_limit__contains=f'{data_limit}') & Q(isp__contains=f'{isp}')).values()
             print(s)
-            context= {'s':s}
+            context= {'s':s,
+                       'segment': 'Devicerec'}
             return render(request, "home/record.html", context)
         else:
             messages.info(request,"No Record has been found!")
     s = device_inventory.objects.filter(status='NotAssigned').all()
-    context= {'s':s}
+    context= {'s':s,
+               'segment': 'Devicerec'}
+
     return render(request, "home/record.html", context)
 
 # filter sim record here
@@ -499,12 +558,14 @@ def sim_record(request):
         if sim_inventory.objects.filter(Q(sim_status__contains=f'{device_status}') | Q(sim_card__contains=f'{sim_card}') | Q(msisdn__contains=f'{msisdn}') | Q(location__contains=f'{location}') | Q(data_limit__contains=f'{data_limit}') | Q(isp__contains=f'{isp}')).exists():
             s = sim_inventory.objects.filter(Q(sim_status__contains=f'{device_status}') & Q(sim_card__contains=f'{sim_card}') & Q(msisdn__contains=f'{msisdn}') & Q(location__contains=f'{location}') & Q(data_limit__contains=f'{data_limit}') & Q(isp__contains=f'{isp}')).values()
             print(s)
-            context= {'s':s}
+            context= {'s':s,
+                      'segment': 'simrec'}
             return render(request, "home/record_sim.html", context)
         else:
             messages.info(request,"No Record has been found!")
     s = sim_inventory.objects.filter(status='NotAssigned').all()
-    context= {'s':s}
+    context= {'s':s,
+              'segment': 'simrec'}
     return render(request, "home/record_sim.html", context)
 
 

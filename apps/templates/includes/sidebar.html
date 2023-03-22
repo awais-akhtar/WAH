@@ -30,34 +30,34 @@
                     <label>Inventory</label>
                 </li>
                 <li data-username="basic components Button Alert Badges breadcrumb Paggination progress Tooltip popovers Carousel Cards Collapse Tabs pills Modal Grid System Typography Extra Shadows Embeds"
-                    class="nav-item pcoded-hasmenu ">
+                    class="nav-item
+                    {% if 'AddDevice' in segment %} active {% endif %}
+                    {% if 'Devicerec' in segment %} active {% endif %}
+                    {% if 'simrec' in segment %} active {% endif %}
+                     pcoded-hasmenu  ">
                     <a href="javascript:" class="nav-link "><span class="pcoded-micon"><i class="feather icon-box"></i></span><span
                             class="pcoded-mtext">Inventory</span></a>
                     <ul class="pcoded-submenu">
-                        <li class=""><a href="{% url 'stock' %}" class="">Add Device</a></li>
-                        <li class=""><a href="{% url 'stock_record' %}" class="">Device Record</a></li>
-                        <li class=""><a href="{% url 'sim_record' %}" class="">Sim Record</a></li>
-                        {% comment %} <li class=""><a href="/bc_button.html" class="">Button</a></li>
-                        <li class=""><a href="/bc_badges.html" class="">Badges</a></li>
-                        <li class=""><a href="/bc_breadcrumb-pagination.html" class="">Breadcrumb & paggination</a></li>
-                        <li class=""><a href="/bc_collapse.html" class="">Collapse</a></li>
-                        <li class=""><a href="/bc_tabs.html" class="">Tabs & pills</a></li>
-                        <li class=""><a href="/bc_typography.html" class="">Typography</a></li>
-                        <li class=""><a href="/icon-feather.html" class="">Feather<span
-                                class="pcoded-badge label label-danger">NEW</span></a></li> {% endcomment %}
+                        <li class="nav-item "><a href="{% url 'stock' %}" class="">Add Device</a></li>
+                        <li class="nav-item "><a href="{% url 'stock_record' %}" class="">Device Record</a></li>
+                        <li class="nav-item "><a href="{% url 'sim_record' %}" class="">Sim Record</a></li>
                     </ul>
                 </li>
                 <li class="nav-item pcoded-menu-caption">
                     <label>Employee Profile</label>
                 </li>
                 <li data-username="basic components Button Alert Badges breadcrumb Paggination progress Tooltip popovers Carousel Cards Collapse Tabs pills Modal Grid System Typography Extra Shadows Embeds"
-                class="nav-item pcoded-hasmenu ">
+                class="nav-item 
+                {% if 'addrequest' in segment %} active {% endif %}
+                {% if 'requeststatus' in segment %} active {% endif %}
+                {% if 'assigment' in segment %} active {% endif %}
+                pcoded-hasmenu ">
                 <a href="javascript:" class="nav-link "><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span
                         class="pcoded-mtext">Employee Profile</span></a>
                 <ul class="pcoded-submenu">
-                    <li class=""><a href="{% url 'add_request' %}" class="">Add Request</a></li>
-                    <li class=""><a href="{% url 'request_status' %}" class="">Request Status</a></li>
-                    <li class=""><a href="{% url 'form' %}" class="">Assignment</a></li>
+                    <li class="nav-item "><a href="{% url 'add_request' %}" class="">Add Request</a></li>
+                    <li class="nav-item "><a href="{% url 'request_status' %}" class="">Request Status</a></li>
+                    <li class="nav-item "><a href="{% url 'form' %}" class="">Assignment</a></li>
                     {% comment %} <li class=""><a href="{% url 'stock_record' %}" class="">Record</a></li> {% endcomment %}
                 </ul>
             </li>
