@@ -374,40 +374,56 @@ def approve_request(request):
             if device_inventory.objects.filter(imei=device_imei).exists() and sim_inventory.objects.filter(sim_card=sim_num).exists():
                 device = device_inventory.objects.get(imei=device_imei)
                 request_sim = sim_inventory.objects.get(sim_card=sim_num)
+                request_ticket = AddRequest.objects.get(ticket_id=ticket_id)
+                myid = request_ticket.employee_id
+                api_key = 'Basic Att3nd@nc3'
+                api_url = f'http://portal.ibexglobal.com/AttendancePointsService/api/values/getemployeehierarchy?portalid={myid}'
+                headers = {
+                'Authorization': api_key}
+                response = requests.get(api_url, headers=headers)
+                ss= json.loads(response.text)
+                data=ss['data']['PointsData']
+                for details in data:
+                    employee_loc = (details['Location'])
+                print(employee_loc)
                 if device.status == 'NotAssigned' and request_sim.status == 'NotAssigned':
                     if device.isp == request_sim.isp:
-                        request_ticket = AddRequest.objects.get(ticket_id=ticket_id)
-                        request_ticket.approved_date = timezone.now()
-                        request_ticket.is_approved = True
-                        request_ticket.approved_by = user
-                        request_ticket.assigned_device_imei = device_imei
-                        request_ticket.save()
-                        print("request approved")
+                        if device.location == request_sim.location == employee_loc:
+                            request_ticket = AddRequest.objects.get(ticket_id=ticket_id)
+                            request_ticket.approved_date = timezone.now()
+                            request_ticket.is_approved = True
+                            request_ticket.approved_by = user
+                            request_ticket.assigned_device_imei = device_imei
+                            request_ticket.save()
+                            print("request approved")
 
-                        request_device = device_inventory.objects.get(imei=device_imei)
-                        request_device.status = 'Assigned To'
-                        request_device.assigned_to = request_ticket.employee_id
-                        request_device.save()
-                        print("device allocated")
+                            request_device = device_inventory.objects.get(imei=device_imei)
+                            request_device.status = 'Assigned To'
+                            request_device.assigned_to = request_ticket.employee_id
+                            request_device.save()
+                            print("device allocated")
 
-                        request_sim = sim_inventory.objects.get(sim_card=sim_num)
-                        request_sim.status = 'Assigned To'
-                        request_sim.assigned_to = request_ticket.employee_id
-                        request_sim.save()
-                        print("sim allocated")
+                            request_sim = sim_inventory.objects.get(sim_card=sim_num)
+                            request_sim.status = 'Assigned To'
+                            request_sim.assigned_to = request_ticket.employee_id
+                            request_sim.save()
+                            print("sim allocated")
 
-                        device = device_inventory.objects.get(imei=device_imei)
-                        sim = sim_inventory.objects.get(sim_card=sim_num)
-                        ticket = AddRequest.objects.get(ticket_id=ticket_id)
-                        allocation = DeviceAllocation.objects.create(assigned_device=device,
+                            device = device_inventory.objects.get(imei=device_imei)
+                            sim = sim_inventory.objects.get(sim_card=sim_num)
+                            ticket = AddRequest.objects.get(ticket_id=ticket_id)
+                            allocation = DeviceAllocation.objects.create(assigned_device=device,
                                                                     assigned_sim=sim,
                                                                     ticket=ticket,
                                                                     allocated_date=timezone.now(),
                                                                     allocated_by=user, remarks=remarks)
-                        allocation.save()
-                        print("allocation done!")
-                        messages.success(request,"Request has been Approved")
-                        return redirect('form')
+                            allocation.save()
+                            print("allocation done!")
+                            messages.success(request,"Request has been Approved")
+                            return redirect('form')
+                        else:
+                            messages.error(request, "User and inventory must be on same location")
+                            return redirect('form')
                     else:
                         messages.error(request, "Different ISP of Sim or Device, it must be same")
                         return redirect('form')
