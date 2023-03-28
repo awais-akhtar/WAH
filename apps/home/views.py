@@ -24,29 +24,33 @@ from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
 from django.contrib.sessions.models import Session
 from django.utils import timezone
-
-def get_current_users():
-    active_sessions = Session.objects.filter(expire_date__gte=timezone.now())
-    user_id_list = []
-    for session in active_sessions:
-        data = session.get_decoded()
-        user_id_list.append(data.get('_auth_user_id', None))
-    # Query all logged in users based on id list
-    return User.objects.filter(id__in=user_id_list)
+from django.db.models.functions import TruncMonth
+from django.db.models import Count
 
 
-
-def get_current():
-    active_sessions = Session.objects.filter(expire_date__gte=timezone.now())
-    user_id_list = []
-    for session in active_sessions:
-        data = session.get_decoded()
-        user_id = data.get('_auth_user_id', None)
-        if user_id:
-            user_id_list.append(user_id)
-    # Return the list of user IDs
-    return user_id_list
-
+class ByMonthView(APIView):
+    def get(self, request):
+        device_counts = (
+            device_inventory.objects
+            .annotate(month=TruncMonth('instock_date'))
+            .values('month')
+            .annotate(count=Count('id'))
+        )
+        sim_counts = (
+            sim_inventory.objects
+            .annotate(month=TruncMonth('instock_date'))
+            .values('month')
+            .annotate(count=Count('id'))
+        )
+        device_data = [
+            {'x': item['month'].strftime('%Y-%m'), 'y': item['count']}
+            for item in device_counts
+        ]
+        sim_data = [{'x': item['month'].strftime('%Y-%m'), 'y': item['count']}
+            for item in sim_counts
+        ]
+        data = {'device_data': device_data, 'sim_data': sim_data}
+        return Response(data)
 
 
 
@@ -100,27 +104,16 @@ class ChartData2(APIView):
 
 @login_required
 def index(request):
-    queryset = get_current_users()
-    print(queryset)
-    print(queryset.exists())
-    print(queryset.count())
-    online_user_ids = get_current()
-    online_users = User.objects.filter(id__in=online_user_ids).values()
-    print(online_users)
     request_approved = AddRequest.objects.filter(is_approved=True).count()
     request_unapproved = AddRequest.objects.filter(is_approved=False).count()
     sim_stock = sim_inventory.objects.filter(status__contains = 'NotAssigned').count()
     device_stock = device_inventory.objects.filter(status__contains = 'NotAssigned').count()
-    us = User.objects.filter(id__in='1').values()
-    print(us)
     context ={
-        'us': us,
         'request_approved' : request_approved,
         'request_unapproved' : request_unapproved,
         'device_stock' : device_stock,
         'sim_stock' : sim_stock,
         'segment': 'index',
-        'online_users': online_users,
     }
     html_template = loader.get_template('home/index.html')
     return HttpResponse(html_template.render(context, request))
@@ -152,6 +145,7 @@ def pages(request):
         return HttpResponse(html_template.render(context, request))
 
 # profile page
+@login_required
 def profile(request):
     user=request.user
     if request.method=='POST':
@@ -166,7 +160,7 @@ def profile(request):
     }
     return render(request,"home/profile.html", context)
 
-
+@login_required
 def password_change(request):
     if request.user.is_authenticated or request.user.is_superuser or request.user.is_staff:
         try:
@@ -187,7 +181,8 @@ def password_change(request):
                 return redirect("/")
     else:
         return HttpResponse("You are not Authorized")
-
+    
+@login_required
 def add_request(request):
     if request.method == "POST":
         text = request.POST.get('text')
@@ -253,7 +248,7 @@ def add_request(request):
     return render(request, "home/add_request.html", context)
 
 
-
+@login_required
 def request_status(request):
     unapproved_requests = AddRequest.objects.filter(is_approved=False).values()
     approved_requests = AddRequest.objects.filter(is_approved=True).values()
@@ -267,7 +262,7 @@ def request_status(request):
     return render(request, "home/request_status.html", context)
 
 
-
+@login_required
 def request_data(request):
     if request.method == "POST":
         employee_id = request.POST['employee_id']
@@ -303,7 +298,7 @@ def request_data(request):
 
 
 
-
+@login_required
 def assignment(request):
     if request.method == "POST":
         employee_id = request.POST['employee_id']
@@ -329,6 +324,7 @@ def assignment(request):
     return render(request, "home/form_elements.html", context)
 
 # this will post data to approved request
+@login_required
 @csrf_exempt
 def get_approved_request_details(request):
     if request.method=="POST":
@@ -362,6 +358,7 @@ def get_approved_request_details(request):
 
 # device request approving here
 @csrf_exempt
+@login_required
 def approve_request(request):
     try:
         if request.method == 'POST':
@@ -442,6 +439,7 @@ def approve_request(request):
 
 # the reject method is not done yet. 
 @csrf_exempt
+@login_required
 def reject_request(request):
     if request.method == 'POST':
         request_id = request.POST.get('request_id')
@@ -451,6 +449,7 @@ def reject_request(request):
 
 
 # rendering Stock page
+@login_required
 def stock(request):
     context={
         'segment': 'AddDevice',
@@ -459,7 +458,7 @@ def stock(request):
     }
     return render(request, "home/stock.html", context)
 
-
+@login_required
 def add_device(request):
     if request.method == "POST":
         data = request.POST.dict()
@@ -475,7 +474,7 @@ def add_device(request):
             messages.info(request, "Device Record has been added!")
     return render(request, "home/stock.html")
 
-
+@login_required
 @csrf_exempt
 def add_sim(request):
     if request.method == "POST":
@@ -530,6 +529,7 @@ def add_sim(request):
 
 
 # filtering device record here
+@login_required
 def stock_record(request):
     if request.method == "POST":
         location=request.POST['location']
@@ -558,10 +558,10 @@ def stock_record(request):
     s = device_inventory.objects.filter(status='NotAssigned').all()
     context= {'s':s,
                'segment': 'Devicerec'}
-
     return render(request, "home/record.html", context)
 
 # filter sim record here
+@login_required
 def sim_record(request):
     if request.method == "POST":
         location=request.POST['location']
@@ -585,7 +585,7 @@ def sim_record(request):
 
 
 
-
+@login_required
 @csrf_exempt
 def find_isp(request):
     if request.method=="POST":
@@ -600,6 +600,8 @@ def find_isp(request):
             m= "OutofStock"
             return JsonResponse(m,safe=False, content_type='text/plain')
 
+
+@login_required
 @csrf_exempt
 def findQuota(request):
     if request.method=="POST":
@@ -618,19 +620,15 @@ def findQuota(request):
             m= "Out of Stock"
             return JsonResponse(m,safe=False, content_type='text/plain')
 
-
+@login_required
 def filter_dropdown(request):
-
     selected_value = request.GET.get('original_dropdown')
-
     # create a queryset with the selected value
     filtered_queryset = device_inventory.objects.filter(field=selected_value)
-
     # create a list of filtered options
     filtered_options = []
     for item in filtered_queryset:
         filtered_options.append({'id': item.id, 'name': item.name})
-
     # return filtered options as JSON
     return JsonResponse({'filtered_options': filtered_options})
 
@@ -664,7 +662,7 @@ def filter_dropdown(request):
 #     return render(request, 'device_confirm_delete.html', {'device': device})
 
 
-
+@login_required
 @csrf_exempt
 def delete_device(request,pk):
     if request.method == 'POST':
@@ -681,7 +679,7 @@ def delete_device(request,pk):
     else:
         return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
-
+@login_required
 def edit_device(request):
     if request.method == 'POST':
         device_id = request.POST.get('id')
@@ -723,7 +721,7 @@ def edit_device(request):
 
 
 
-
+@login_required
 @csrf_exempt
 def get_request_data(request, id):
     try:
@@ -744,7 +742,7 @@ def get_request_data(request, id):
     return JsonResponse(data)
 
 
-
+@login_required
 @csrf_exempt
 def update_device_data(request):
     if request.method == 'POST':
@@ -790,7 +788,7 @@ def update_device_data(request):
 #         return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
 
-
+@login_required
 @csrf_exempt
 def get_device_data(request, id):
     id=id
@@ -817,7 +815,7 @@ def get_device_data(request, id):
     return JsonResponse(data)
 
 
-
+@login_required
 @csrf_exempt
 def get_sim_data(request, id):
     id=id
@@ -840,7 +838,7 @@ def get_sim_data(request, id):
 
     return JsonResponse(data)
 
-
+@login_required
 @csrf_exempt
 def update_sim_data(request):
     if request.method == 'POST':

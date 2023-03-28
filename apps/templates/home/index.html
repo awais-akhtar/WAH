@@ -19,9 +19,6 @@
                     <div class="main-body">
                         <div class="page-wrapper">
                             <!-- [ Main Content ] start -->
-                            {% for u in online_users %}
-                            {{u.id}}
-                            {% endfor %}
                             <div class="row">
                                 <!--[ Recent Users ] start-->
                                 <div class="col-xl-8 col-md-12 m-b-30">
@@ -42,53 +39,8 @@
                                         </div>
                                     </div>
                                     <div class="tab-content" id="myTabContent">
-                                        <div class="tab-pane fade active show" id="profile" role="tabpanel"
-                                                aria-labelledby="profile-tab">
-                                            <table class="table table-hover">
-                                                <thead>
-                                                <tr>
-                                                    <th>User</th>
-                                                    <th>Joined Date</th>
-                                                    <th>last Login</th>
-                                                    <th>Status</th>
-                                                    <th class="text-right"></th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {% for user in us %}
-                                                <tr>
-                                                    <td>
-                                                        <h6 class="m-0">
-                                                            {% if user.first_name and user.last_name %}
-                                                            {{ user.first_name }} {{ user.last_name }}
-                                                            {% elif user.first_name %}
-                                                            {{ user.first_name }}
-                                                            {% else %}
-                                                            {{ user.username }}
-                                                            {% endif %}
-                                                        </h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0">{{ user.date_joined }}</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="m-0">{{ user.last_login }}</h6>
-                                                    </td>
-                                                    <td>
-                                                            {% if n.is_active == True %}
-                                                            <h6 class="m-0 text-c-green">
-                                                            online<i class="text-right" class="fas fa-circle text-c-green f-10"></i>
-                                                            </h6>
-                                                            {% else %}
-                                                            <h6 class="m-0 text-c-red">
-                                                            offline
-                                                            </h6>
-                                                            {% endif %}
-                                                    </td>
-                                                </tr>
-                                                {% endfor %}
-                                                </tbody>
-                                            </table>
+                                        <div class="tab-pane fade active show" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                            <div id="chart-container3" style="height:300px"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -211,6 +163,71 @@
         </div>
     </div>
     <script>
+        $.ajax({
+            url: '/bymonth',
+            dataType: 'json',
+            success: function(data) {
+              Highcharts.chart('chart-container3', {
+                title: {
+                  text: 'Monthly Inventory Count',
+                  align: 'left'
+                },
+                subtitle: {
+                  text: 'Source: Database',
+                  align: 'left'
+                },
+                yAxis: {
+                  title: {
+                    text: 'Inventory Count'
+                  }
+                },
+                xAxis: {
+                  type: 'datetime',
+                  accessibility: {
+                    rangeDescription: 'Range: 2010 to 2020'
+                  }
+                },
+                legend: {
+                  layout: 'vertical',
+                  align: 'right',
+                  verticalAlign: 'middle'
+                },
+                plotOptions: {
+                  series: {
+                    label: {
+                      connectorAllowed: false
+                    }
+                  }
+                },
+                series: [{
+                  name: 'Device Inventory Count',
+                  data: data.device_data.map(function(item) {
+                    return [Date.parse(item.x), item.y];
+                  })
+                }, {
+                  name: 'SIM Inventory Count',
+                  data: data.sim_data.map(function(item) {
+                    return [Date.parse(item.x), item.y];
+                  })
+                }],
+                responsive: {
+                  rules: [{
+                    condition: {
+                      maxWidth: 500
+                    },
+                    chartOptions: {
+                      legend: {
+                        layout: 'horizontal',
+                        align: 'center',
+                        verticalAlign: 'bottom'
+                      }
+                    }
+                  }]
+                }
+              });
+            }
+          });
+
         $.ajax({
             url: '/chartdata2',
             success: function (data) {

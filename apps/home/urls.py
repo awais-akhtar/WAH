@@ -7,6 +7,7 @@ from .forms import MyPasswordChangeForm
 urlpatterns = [
     path('api/', views.ChartData.as_view()),
     path('chartdata2/', views.ChartData2.as_view()),
+    path('bymonth/', views.ByMonthView.as_view()),
     path('admin/', admin.site.urls),         # Django admin route
     # The home page
     path('', views.index, name='home'),
