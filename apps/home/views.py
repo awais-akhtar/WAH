@@ -26,7 +26,7 @@ from django.contrib.sessions.models import Session
 from django.utils import timezone
 from django.db.models.functions import TruncMonth
 from django.db.models import Count
-
+from django.db import OperationalError
 
 class ByMonthView(APIView):
     def get(self, request):
@@ -104,22 +104,26 @@ class ChartData2(APIView):
 
 @login_required
 def index(request):
-    request_approved = AddRequest.objects.filter(is_approved=True).count()
-    request_unapproved = AddRequest.objects.filter(is_approved=False).count()
-    sim_stock = sim_inventory.objects.filter(status__contains = 'NotAssigned').count()
-    device_stock = device_inventory.objects.filter(status__contains = 'NotAssigned').count()
-    context ={
-        'request_approved' : request_approved,
-        'request_unapproved' : request_unapproved,
-        'device_stock' : device_stock,
-        'sim_stock' : sim_stock,
-        'segment': 'index',
-    }
-    html_template = loader.get_template('home/index.html')
-    return HttpResponse(html_template.render(context, request))
+    try:
+        request_approved = AddRequest.objects.filter(is_approved=True).count()
+        request_unapproved = AddRequest.objects.filter(is_approved=False).count()
+        sim_stock = sim_inventory.objects.filter(status__contains = 'NotAssigned').count()
+        device_stock = device_inventory.objects.filter(status__contains = 'NotAssigned').count()
+        context ={
+            'request_approved' : request_approved,
+            'request_unapproved' : request_unapproved,
+            'device_stock' : device_stock,
+            'sim_stock' : sim_stock,
+            'segment': 'index',
+        }
+        html_template = loader.get_template('home/index.html')
+        return HttpResponse(html_template.render(context, request))
+    except OperationalError as e:
+        # Handle the exception with a custom message or error page
+        return HttpResponse("An error occurred: {}".format(e))
 
 
-@login_required(login_url="/login/")
+@login_required
 def pages(request):
     context = {}
     # All resource paths end in .html.
@@ -147,99 +151,109 @@ def pages(request):
 # profile page
 @login_required
 def profile(request):
-    user=request.user
-    if request.method=='POST':
-        user.first_name=request.POST['firstname']
-        user.last_name=request.POST['lastname']
-        user.email=request.POST['email']
-        user.save()
-        messages.info(request,"Updated Successfully")
-        return redirect('profile')
-    context={
-        'segment': 'profile'
-    }
-    return render(request,"home/profile.html", context)
+    try:
+        user=request.user
+        if request.method=='POST':
+            user.first_name=request.POST['firstname']
+            user.last_name=request.POST['lastname']
+            user.email=request.POST['email']
+            user.save()
+            messages.info(request,"Updated Successfully")
+            return redirect('profile')
+        context={
+            'segment': 'profile'
+        }
+        return render(request,"home/profile.html", context)
+    except OperationalError as e:
+        # Handle the exception with a custom message or error page
+        return HttpResponse("An error occurred: {}".format(e))
 
 @login_required
 def password_change(request):
-    if request.user.is_authenticated or request.user.is_superuser or request.user.is_staff:
-        try:
-                user = request.user
-                if request.method == 'POST':
-                                form = SetPasswordForm(user, request.POST)
-                                if form.is_valid():
-                                                form.save()
-                                                messages.success(request, "Your password has been changed")
-                                                return redirect('profile')
-                                else:
-                                        for error in list(form.errors.values()):
-                                                messages.error(request, error)
-                form = SetPasswordForm(user)
-                return render(request, 'password_reset_confirm.html', {'form': form})
-        except:
-                messages.warning(request,"An Error is occurred!")
-                return redirect("/")
-    else:
-        return HttpResponse("You are not Authorized")
-    
+    try:
+        user = request.user
+        if request.method == 'POST':
+            form = SetPasswordForm(user, request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Your password has been changed")
+                return redirect('profile')
+            else:
+                for error in list(form.errors.values()):
+                    messages.error(request, error)
+        form = SetPasswordForm(user)
+        return render(request, 'password_reset_confirm.html', {'form': form})
+    except OperationalError as e:
+        # Handle the exception with a custom message or error page
+        return HttpResponse("An error occurred: {}".format(e))
+    except:
+        messages.warning(request, "An Error occurred!")
+        return redirect("/")
+
+
 @login_required
 def add_request(request):
     if request.method == "POST":
-        text = request.POST.get('text')
-        print(text)
-        id = int(text)
-        if AddRequest.objects.filter(Q(is_approved=False) & Q(employee_id=id)).exists():
-            messages.error(request, "A Request with the same details already exists in the database.")
-            db = AddRequest.objects.filter(Q(is_approved=False) & Q(employee_id=id)).values()
-            print("details already exists=======", db)
-            context={
-                'unapproved_requests': db,
+        try:
+            text = request.POST.get('text')
+            print(text)
+            id = int(text)
+            if AddRequest.objects.filter(Q(is_approved=False) & Q(employee_id=id)).exists():
+                messages.error(request, "A Request with the same details already exists in the database.")
+                db = AddRequest.objects.filter(Q(is_approved=False) & Q(employee_id=id)).values()
+                print("details already exists=======", db)
+                context={
+                    'unapproved_requests': db,
+                    'segment': 'addrequest',
+                    'segment': 'requeststatus',
+                    'segment': 'assigment',
+                }
+                return render(request, "home/add_request.html", context)
+            elif AddRequest.objects.filter(Q(is_approved=True) & Q(employee_id=id)).exists():
+                messages.error(request, "A Request with the same details already Approved.")
+                db2 = AddRequest.objects.filter(Q(is_approved=True) & Q(employee_id=id))
+                print("Same details with user is existing in database=====", db2)
+                request_device = device_inventory.objects.get(assigned_to=id)
+                print("the assigned device details=========", request_device)
+                context={
+                    'approved_requests': db2,
+                    'request_device': request_device,
+                    'segment': 'addrequest',
+                    'segment': 'requeststatus',
+                    'segment': 'assigment',
+                }
+                return render(request, "home/add_request.html", context)
+            else:
+                api_key = 'Basic Att3nd@nc3'
+                api_url = f'http://portal.ibexglobal.com/AttendancePointsService/api/values/getemployeehierarchy?portalid={id}'
+                headers = {
+                'Authorization': api_key}
+                response = requests.get(api_url, headers=headers)
+                # print(json.loads(response.text))
+                api_key2 = 'Basic Tk$PkD@taMast3r'
+                # mm/dd/y
+                d3 = date.today()
+                checktoday = d3.strftime("%m/%d/%y")
+                print("checktoday =", checktoday)
+                api_url2 = f'http://portal.ibexglobal.com:88/AttendancePointsService/api/values/GetLeavesBalance?portalid={id}&year={checktoday}'
+                headers2 = {
+                'Authorization': api_key2}
+                responsestatus = requests.get(api_url2, headers=headers2)
+                dd= json.loads(responsestatus.text)
+                data2=dd['data']['EmployeeStatus']
+                print(data2)
+                ss= json.loads(response.text)
+                data=ss['data']['PointsData']
+                print(data)
+                context = {'obj':data, 'data2':data2,
                 'segment': 'addrequest',
                 'segment': 'requeststatus',
-                'segment': 'assigment',
-            }
-            return render(request, "home/add_request.html", context)
-        elif AddRequest.objects.filter(Q(is_approved=True) & Q(employee_id=id)).exists():
-            messages.error(request, "A Request with the same details already Approved.")
-            db2 = AddRequest.objects.filter(Q(is_approved=True) & Q(employee_id=id))
-            print("Same details with user is existing in database=====", db2)
-            request_device = device_inventory.objects.get(assigned_to=id)
-            print("the assigned device details=========", request_device)
-            context={
-                'approved_requests': db2,
-                'request_device': request_device,
-                'segment': 'addrequest',
-                'segment': 'requeststatus',
-                'segment': 'assigment',
-            }
-            return render(request, "home/add_request.html", context)
-        else:
-            api_key = 'Basic Att3nd@nc3'
-            api_url = f'http://portal.ibexglobal.com/AttendancePointsService/api/values/getemployeehierarchy?portalid={id}'
-            headers = {
-            'Authorization': api_key}
-            response = requests.get(api_url, headers=headers)
-            # print(json.loads(response.text))
-            api_key2 = 'Basic Tk$PkD@taMast3r'
-            # mm/dd/y
-            d3 = date.today()
-            checktoday = d3.strftime("%m/%d/%y")
-            print("checktoday =", checktoday)
-            api_url2 = f'http://portal.ibexglobal.com:88/AttendancePointsService/api/values/GetLeavesBalance?portalid={id}&year={checktoday}'
-            headers2 = {
-            'Authorization': api_key2}
-            responsestatus = requests.get(api_url2, headers=headers2)
-            dd= json.loads(responsestatus.text)
-            data2=dd['data']['EmployeeStatus']
-            print(data2)
-            ss= json.loads(response.text)
-            data=ss['data']['PointsData']
-            print(data)
-            context = {'obj':data, 'data2':data2,
-            'segment': 'addrequest',
-            'segment': 'requeststatus',
-            'segment': 'assigment',}
-            return render(request, "home/add_request.html", context)
+                'segment': 'assigment',}
+                return render(request, "home/add_request.html", context)
+        except ValueError:
+            messages.error(request, "Invalid input format. Please enter a valid employee ID.")
+        except requests.exceptions.RequestException:
+            messages.error(request, "An error occurred while making the request. Please try again later.")
     context={
         'segment': 'addrequest',
         'segment': 'requeststatus',
