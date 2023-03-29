@@ -61,9 +61,32 @@
 
     {% include 'includes/scripts.html' %}
 
-    
     <!-- Specific Page JS goes HERE  -->
     {% block javascripts %}{% endblock javascripts %}
 
+    <style>
+        footer {
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          text-align: center;
+          background-color: #f1f1f1;
+          padding: 10px 0;
+        }
+        .container {
+          max-width: 800px;
+          margin: 0 auto;
+        }
+      </style>
+      <footer>
+        <div class="container">
+          <p>&copy; <span id="currentYear"></span> IBEX. All Right Reserved</p>
+        </div>
+      </footer>
+      <script>
+        var year = new Date().getFullYear();
+        document.getElementById("currentYear").textContent = year;
+      </script>
 </body>
 </html>
