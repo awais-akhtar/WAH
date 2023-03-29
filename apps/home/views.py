@@ -28,6 +28,29 @@ from django.db.models.functions import TruncMonth
 from django.db.models import Count
 from django.db import OperationalError
 
+
+def get_employee_details(id):
+    api_key = 'Basic Att3nd@nc3'
+    api_url = f'http://portal.ibexglobal.com/AttendancePointsService/api/values/getemployeehierarchy?portalid={id}'
+    headers = {
+        'Authorization': api_key
+    }
+    response = requests.get(api_url, headers=headers)
+    data=json.loads(response.text)['data']['PointsData']
+    return data
+
+def get_employee_status(id):
+    api_key = 'Basic Tk$PkD@taMast3r'
+    today_date = date.today().strftime("%m/%d/%y")
+    api_url = f'http://portal.ibexglobal.com:88/AttendancePointsService/api/values/GetLeavesBalance?portalid={id}&year={today_date}'
+    headers = { 'Authorization': api_key}
+    status = requests.get(api_url, headers=headers)
+    data=json.loads(status.text)['data']['EmployeeStatus']
+    return data
+
+
+
+
 class ByMonthView(APIView):
     def get(self, request):
         device_counts = (
@@ -191,6 +214,9 @@ def password_change(request):
         return redirect("/")
 
 
+
+
+
 @login_required
 def add_request(request):
     if request.method == "POST":
@@ -224,27 +250,8 @@ def add_request(request):
                 }
                 return render(request, "home/add_request.html", context)
             else:
-                api_key = 'Basic Att3nd@nc3'
-                api_url = f'http://portal.ibexglobal.com/AttendancePointsService/api/values/getemployeehierarchy?portalid={id}'
-                headers = {
-                'Authorization': api_key}
-                response = requests.get(api_url, headers=headers)
-                # print(json.loads(response.text))
-                api_key2 = 'Basic Tk$PkD@taMast3r'
-                # mm/dd/y
-                d3 = date.today()
-                checktoday = d3.strftime("%m/%d/%y")
-                print("checktoday =", checktoday)
-                api_url2 = f'http://portal.ibexglobal.com:88/AttendancePointsService/api/values/GetLeavesBalance?portalid={id}&year={checktoday}'
-                headers2 = {
-                'Authorization': api_key2}
-                responsestatus = requests.get(api_url2, headers=headers2)
-                dd= json.loads(responsestatus.text)
-                data2=dd['data']['EmployeeStatus']
-                print(data2)
-                ss= json.loads(response.text)
-                data=ss['data']['PointsData']
-                print(data)
+                data = get_employee_details(id)
+                data2 = get_employee_status(id)
                 context = {'obj':data, 'data2':data2,
                 'segment': 'addrequest',
                 'segment': 'requeststatus',
@@ -283,16 +290,8 @@ def request_data(request):
         # cnic = request.POST['cnic']
         # number = request.POST['number']
         isp = request.POST['isp']
-        id = int(employee_id)
-        api_key = 'Basic Att3nd@nc3'
-        api_url = f'http://portal.ibexglobal.com/AttendancePointsService/api/values/getemployeehierarchy?portalid={id}'
-        headers = {
-        'Authorization': api_key}
-        response = requests.get(api_url, headers=headers)
-        ss= json.loads(response.text)
-        data=ss['data']['PointsData']
+        data=get_employee_details(int(employee_id))
         for details in data:
-            print(details)
             name = (details['Name'])
             employee_email = (details['Email'])
         print(name)
@@ -300,7 +299,7 @@ def request_data(request):
         #     employee = AddRequest(employee_id=id,request_by=request.user,device_type=isp,name=name)
         #     employee.save() 
         # else:
-        employee = AddRequest(employee_id=id,request_by=request.user,isp=isp,name=name,employee_email=employee_email)
+        employee = AddRequest(employee_id=employee_id,request_by=request.user,isp=isp,name=name,employee_email=employee_email)
         employee.save() # save the instance to the database
         messages.warning(request,"Request has been created")
         MESSAGE_TAGS = 'alert-danger'
@@ -325,7 +324,6 @@ def assignment(request):
             'segment': 'addrequest',
             'segment': 'requeststatus',
             'segment': 'assigment',
-
         }
         return render(request, "home/form_elements.html", context)
     unapproved_requests = AddRequest.objects.filter(is_approved=False).values()
@@ -387,13 +385,7 @@ def approve_request(request):
                 request_sim = sim_inventory.objects.get(sim_card=sim_num)
                 request_ticket = AddRequest.objects.get(ticket_id=ticket_id)
                 myid = request_ticket.employee_id
-                api_key = 'Basic Att3nd@nc3'
-                api_url = f'http://portal.ibexglobal.com/AttendancePointsService/api/values/getemployeehierarchy?portalid={myid}'
-                headers = {
-                'Authorization': api_key}
-                response = requests.get(api_url, headers=headers)
-                ss= json.loads(response.text)
-                data=ss['data']['PointsData']
+                data=get_employee_details(myid)
                 for details in data:
                     employee_loc = (details['Location'])
                 print(employee_loc)
@@ -480,7 +472,7 @@ def add_device(request):
         isp = data.pop('isp')
         device_type = data.pop('type')
         data.pop('csrfmiddlewaretoken', None)  # Remove the csrfmiddlewaretoken field
-        if device_inventory.objects.filter(imei=imei).exists():
+        if device_inventory.objects.filter(Q(imei=imei) & Q(isp=isp)).exists():
             messages.error(request, "A Device with the same details already exists in the database.")
         else:
             device = device_inventory(punched_by=request.user, imei=imei, isp=isp, type=device_type, **data)

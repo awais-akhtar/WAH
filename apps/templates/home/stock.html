@@ -62,13 +62,17 @@
                                 <div class="card-header">
                                     <div class="row align-items-center">
                                         <div class="col">
-                                          <h5 class="mb-0">Sim Inventory</h5>
+                                          <h5 class="mb-2">
+                                            <a href="#collapseExamplesim" data-toggle="collapse" class="glow-on-hover">
+                                                Sim Inventory
+                                            </a>
+                                          </h5>
                                         </div>
-                                        <div class="col-auto">
+                                        {% comment %} <div class="col-auto">
                                            <button class="btn btn-outline-info btn-glow-info btn-block" type="button" data-toggle="collapse" data-target="#collapseExamplesim" aria-expanded="false" aria-controls="collapseExample">
-                                            Add Sim 
+                                            <b>Add Sim</b>
                                           </button>
-                                        </div>
+                                        </div> {% endcomment %}
                                     </div>
                                     <div class="collapse" id="collapseExamplesim" >
                                         <form action="{% url 'add_sim' %}" method="POST">
@@ -115,8 +119,8 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <button class="btn btn-outline-info btn-glow-info mt-2" type="submit">
-                                                Add Sim
+                                            <button class="btn btn-outline-success btn-glow-info mt-2" type="submit">
+                                                <b>Add Sim</b>
                                             </button>
                                         </form>
                                     </div>
@@ -127,13 +131,43 @@
                                 <div class="card-header">
                                     <div class="row align-items-center">
                                         <div class="col">
-                                          <h5 class="mb-0">Device Inventory</h5>
+                                          <h5 class="mb-2">
+                                            <a href="#collapseExample" data-toggle="collapse" class="glow-on-hover">
+                                                Device Inventory
+                                            </a>
+                                            <style>
+                                                .glow-on-hover {
+                                                  color: black; /* set text color */
+                                                  position: relative;
+                                                  transition: all 0.3s ease-in-out; /* add transition effect */
+                                                }
+                                                .glow-on-hover::after {
+                                                  content: '';
+                                                  position: absolute;
+                                                  z-index: -1;
+                                                  top: -5px;
+                                                  left: -5px;
+                                                  right: -5px;
+                                                  bottom: -5px;
+                                                  background-color: #00ffff;
+                                                  opacity: 0;
+                                                  transition: all 0.3s ease-in-out; /* add transition effect */
+                                                }
+                                                .glow-on-hover:hover {
+                                                  color: green;
+                                                  text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff;
+                                                }
+                                                .glow-on-hover:hover::after {
+                                                  opacity: 1;
+                                                }
+                                              </style>
+                                          </h5>
                                         </div>
-                                        <div class="col-auto">
+                                        {% comment %} <div class="col-auto">
                                            <button class="btn btn-outline-info btn-glow-info btn-block" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                                            Add device
+                                            <b>Add device</b>
                                           </button>
-                                        </div>
+                                        </div> {% endcomment %}
                                     </div>
                                     <div class="collapse" id="collapseExample" >
                                         <form action="{% url 'add_device' %}" method="post">
@@ -195,8 +229,8 @@
                                                 <label class="ml-3">Remarks</label>
                                                 <textarea class="form-control ml-3 mr-3" name="remarks" rows="3" cols="20" maxlength="200"></textarea>
                                             </div>
-                                                <button class="btn btn-outline-info btn-glow-info mt-3" type="submit">
-                                                    Add Device
+                                                <button class="btn btn-outline-success btn-glow-info mt-3" type="submit">
+                                                    <b>Add Device</b>
                                                 </button>
                                             </form>
                                     </div>
