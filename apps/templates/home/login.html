@@ -19,7 +19,6 @@
                         <i class="feather icon-unlock auth-icon"></i>
                     </div>
                     <h3 class="mb-4">Login</h3>
-                    
                     <span class="mb-0 text-muted">
                         {% if msg %}
                             <span class="text-danger">{{ msg | safe }}</span>
@@ -34,13 +33,13 @@
                         {% csrf_token %}
                         <div class="p-5">
                             {% for fm in form %}
-                            <div class="form-group mb-2 mt-2">
+                            <div class="form-group mb-2 mt-3">
                                 {{fm.label_tag}} {{fm}}<small class="text-danger">{{fm.errors|striptags}}</small>
                             </div>
                             {% endfor %}
                             <div class="row">
                                 <div class="col-sm-12 text-center mt-3">
-                                    <input type="submit" value="Login"  class="btn btn-primary btn-user btn-glow-success">
+                                    <input type="submit" value="Login" class="btn btn-primary btn-user btn-glow-success">
                                     <br>
                                 </div>
                                 {% if form.non_field_errors %}
@@ -49,7 +48,7 @@
                                  {% endfor %}
                                {% endif %}
                             </div>
-                            {% comment %} <p class="mt-2 mb-2 text-muted">Kindly use your credentials</p> {% endcomment %}
+                            {% comment %} <p class="mt-2 mb-2 text-muted"> </p> {% endcomment %}
                         </div>
                     </form>
                 </div>
