@@ -27,6 +27,14 @@
                                         <div >
                                           <div class="table-responsive">
                                               <table class="table table-hover">
+                                                <thead>
+                                                  <tr>
+                                                    <th>Name</th>
+                                                    <th>Requested on</th>
+                                                    <th>Ticket ID</th>
+                                                    <th>Status</th>
+                                                  </tr>
+                                                </thead>
                                                   <tbody>
                                                     {% for s in unapproved_requests %}
                                                   <tr class="unread">
@@ -35,11 +43,10 @@
                                                           <p class="m-0">{{s.employee_id}}</p>
                                                       </td>
                                                       <td>
-                                                        <h6 class="text-muted"><i
-                                                                class="fas fa-circle  f-10 m-r-15"></i>{{s.request_date}}</h6>
+                                                        <h6 class="text-muted">{{s.request_date}}</h6>
                                                     </td>
                                                     <td>
-                                                      <h6 class="text-muted">Ticket id: #{{s.ticket_id}}</h6>
+                                                      <h6 class="text-muted">#{{s.ticket_id}}</h6>
                                                     </td>
                                                     <td>
                                                       <h6 class="text-muted"><i
@@ -61,6 +68,14 @@
                                         <div>
                                           <div class="table-responsive">
                                             <table class="table table-hover">
+                                              <thead>
+                                                <tr>
+                                                  <th>Name</th>
+                                                  <th>Requested on</th>
+                                                  <th>Ticket ID</th>
+                                                  <th>Status</th>
+                                                </tr>
+                                              </thead>
                                               <tbody>
                                                 {% for s in approved_requests %}
                                                <tr class="unread">
@@ -69,15 +84,14 @@
                                                       <p class="m-0">{{s.employee_id}}</p>
                                                   </td>
                                                   <td>
-                                                    <h6 class="text-muted"><i
-                                                            class="fas fa-circle f-10 m-r-15"></i>{{s.approved_date}}</h6>
+                                                    <h6 class="text-muted">{{s.approved_date}}</h6>
                                                 </td>
                                                 <td>
-                                                  <h6 class="text-muted">Ticket id: #{{s.ticket_id}}</h6>
+                                                  <h6 class="text-muted">#{{s.ticket_id}}</h6>
                                                 </td>
                                                 <td>
                                                   <h6 class="text-muted"><i
-                                                          class="fas fa-circle text-c-green f-10 m-r-15"></i>Completed Request</h6>
+                                                          class="fas fa-circle text-c-green f-10 m-r-15"></i>Completed</h6>
                                                 </td>
                                               </tr>
                                               {% endfor %}
