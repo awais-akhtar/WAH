@@ -57,8 +57,12 @@ class AddRequest(models.Model):
     approved_by = models.CharField(max_length=20, null=True, blank=True)
     is_approved = models.BooleanField(default=False)
     assigned_device_imei = models.CharField(max_length=50, null=True, blank=True)
-    # cnic = models.CharField(max_length=15, null=True, blank=True)
-    # phone = models.CharField(max_length=11, null=True, blank=True)
+    cnic = models.CharField(max_length=17)
+    number = models.CharField(max_length=12)
+    entity = models.CharField(max_length=30)
+    department = models.CharField(max_length=30)
+    designation = models.CharField(max_length=30)
+    location = models.CharField(max_length=17)
     # Generate a unique ticket ID on save
     def save(self, *args, **kwargs):
         if not self.ticket_id:
@@ -76,6 +80,7 @@ class DeviceAllocation(models.Model):
     ticket = models.ForeignKey(AddRequest, on_delete=models.CASCADE)
     allocated_date = models.DateTimeField(auto_now_add=True)
     allocated_by = models.CharField(max_length=20)
+    criteria = models.CharField(max_length=15)
     remarks = models.CharField(max_length=300)
 
     class Meta:

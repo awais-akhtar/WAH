@@ -251,6 +251,7 @@ def add_request(request):
                 return render(request, "home/add_request.html", context)
             else:
                 data = get_employee_details(id)
+                print(data)
                 data2 = get_employee_status(id)
                 context = {'obj':data, 'data2':data2,
                 'segment': 'addrequest',
@@ -287,19 +288,26 @@ def request_status(request):
 def request_data(request):
     if request.method == "POST":
         employee_id = request.POST['employee_id']
-        # cnic = request.POST['cnic']
-        # number = request.POST['number']
+        cnic = request.POST['cnic']
+        number = request.POST['number']
+        print(number,cnic)
         isp = request.POST['isp']
         data=get_employee_details(int(employee_id))
         for details in data:
             name = (details['Name'])
             employee_email = (details['Email'])
+            location = (details['Location'])
+            Current_Designation = (details['Current_Designation'])
+            LegalEntity = (details['LegalEntity'])
+            Department = (details['Department'])
         print(name)
         # if request.user.get_full_name:
         #     employee = AddRequest(employee_id=id,request_by=request.user,device_type=isp,name=name)
         #     employee.save() 
-        # else:
-        employee = AddRequest(employee_id=employee_id,request_by=request.user,isp=isp,name=name,employee_email=employee_email)
+        # else:                
+        employee = AddRequest(number=number,location=location,designation=Current_Designation,entity=LegalEntity,
+                              cnic=cnic,employee_id=employee_id,request_by=request.user,isp=isp,name=name,
+                              employee_email=employee_email,department=Department)
         employee.save() # save the instance to the database
         messages.warning(request,"Request has been created")
         MESSAGE_TAGS = 'alert-danger'
@@ -416,6 +424,7 @@ def approve_request(request):
                             sim = sim_inventory.objects.get(sim_card=sim_num)
                             ticket = AddRequest.objects.get(ticket_id=ticket_id)
                             allocation = DeviceAllocation.objects.create(assigned_device=device,
+                                                                    criteria= request_sim.data_limit,
                                                                     assigned_sim=sim,
                                                                     ticket=ticket,
                                                                     allocated_date=timezone.now(),

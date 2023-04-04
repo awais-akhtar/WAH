@@ -210,13 +210,13 @@
                             <option value="PTCL">PTCL</option>
                             <option value="Jazz">Jazz</option>
                           </select>
-                          {% comment %} <input type="text"  data-inputmask="'mask': '99999-9999999-9'"  placeholder="XXXXX-XXXXXXX-X"  name="cnic" required="" maxlength="15">
-                          <input type="text"  data-inputmask="'mask': '0399-9999999'" required=""  type = "number" maxlength = "12" >
+                          <label class="font-weight-bold mt-2">CNIC</label>
+                          <input  style="border-bottom: 2px solid" class="form-control font-weight-bold" type="text"  data-inputmask="'mask': '99999-9999999-9'"  placeholder="XXXXX-XXXXXXX-X"  name="cnic" required maxlength="15">
                           <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
                           <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/jquery.inputmask.bundle.js"></script>
                           <script>
                             $(":input").inputmask();
-                          </script> {% endcomment %}
+                          </script>
                           <input
                             type="Submit"
                             class="btn btn-outline-success btn-glow-success mt-3"
@@ -264,6 +264,15 @@
                             style="border-bottom: 2px solid"
                             >{{item.SupervisorEmail}}</label
                           >
+                          {% if data2 == 'Active' %}
+                          <label class="font-weight-bold">Phone Number</label>
+                          <input name="number"  style="border-bottom: 2px solid" class="form-control font-weight-bold"  data-inputmask="'mask': '0399-9999999'" required type="text" maxlength = "12" >
+                          <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+                          <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/jquery.inputmask.bundle.js"></script>
+                          <script>
+                            $(":input").inputmask();
+                          </script>
+                          {% endif %}
                         </div>
                         {% endfor %}
                       </div>
