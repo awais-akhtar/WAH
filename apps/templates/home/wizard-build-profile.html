@@ -18,11 +18,11 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
 
 	<!-- CSS Files -->
-	<link href="{{ ASSETS_ROOT }}/css/bootstrap.min.css" rel="stylesheet" />
-	<link href="{{ ASSETS_ROOT }}/css/material-bootstrap-wizard.css" rel="stylesheet" />
+	<link href="{% ASSETS_ROOT '/css/bootstrap.min.css' %}" rel="stylesheet" />
+	<link href="{% ASSETS_ROOT '/css/material-bootstrap-wizard.css' %}" rel="stylesheet" />
 
 	<!-- CSS Just for demo purpose, don't include it in your project -->
-	<link href="{{ ASSETS_ROOT }}/css/demo.css" rel="stylesheet" />
+	<link href="{% ASSETS_ROOT '/css/demo.css' %}" rel="stylesheet" />
 </head>
 
 <body>
@@ -55,7 +55,7 @@
 		                                	<div class="col-sm-4 col-sm-offset-1">
 		                                    	<div class="picture-container">
 		                                        	<div class="picture">
-                                        				<img src="{{ ASSETS_ROOT }}/images/default-avatar.png" class="picture-src" id="wizardPicturePreview" title=""/>
+                                        				<img src="{% ASSETS_ROOT '/images/default-avatar.png' %}" class="picture-src" id="wizardPicturePreview" title=""/>
 
 		                                        	</div>
 		                                        	<h6></h6>
@@ -149,12 +149,12 @@
 
 </body>
 	<!--   Core JS Files   -->
-    <script src="{{ ASSETS_ROOT }}/js/jquery-2.2.4.min.js" type="text/javascript"></script>
-	<script src="{{ ASSETS_ROOT }}/js/bootstrap.min.js" type="text/javascript"></script>
-	<script src="{{ ASSETS_ROOT }}/js/jquery.bootstrap.js" type="text/javascript"></script>
+    <script src="{% static 'assets2/js/jquery-2.2.4.min.js'%}" type="text/javascript"></script>
+	<script src="{% static 'assets2/js/bootstrap.min.js' %}" type="text/javascript"></script>
+	<script src="{% static 'assets2/js/jquery.bootstrap.js' %}" type="text/javascript"></script>
 	<!--  Plugin for the Wizard -->
-	<script src="{{ ASSETS_ROOT }}/js/material-bootstrap-wizard.js"></script>
+	<script src="{% static 'assets2/js/material-bootstrap-wizard.js' %}"></script>
     <!--  More information about jquery.validate here: http://jqueryvalidation.org/	 -->
-	<script src="{{ ASSETS_ROOT }}/js/jquery.validate.min.js"></script>
+	<script src="{% static 'assets2/js/jquery.validate.min.js' %}"></script>
 
 </html>

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
+{% load static %}
 <head>
     <title>
         iBex. WAH {% block title %}{% endblock %} 
@@ -28,15 +28,15 @@
     <meta name="author" content="CodedThemes"/>
 
     <!-- Favicon icon -->
-    <link rel="icon" href="{{ ASSETS_ROOT }}/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="{% static 'assets/images/favicon.ico' %}" type="image/x-icon">
     <!-- fontawesome icon -->
-    <link rel="stylesheet" href="{{ ASSETS_ROOT }}/fonts/fontawesome/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="{% static 'assets/fonts/fontawesome/css/fontawesome-all.min.css' %}">
     <!-- animation css -->
-    <link rel="stylesheet" href="{{ ASSETS_ROOT }}/plugins/animation/css/animate.min.css">
+    <link rel="stylesheet" href="{% static 'assets/plugins/animation/css/animate.min.css' %}">
     <!-- vendor css -->
-    <link rel="stylesheet" href="{{ ASSETS_ROOT }}/css/style.css">
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
     <!-- dark mode css -->
-    <link rel="stylesheet" href="{{ ASSETS_ROOT }}/css/dark.css">
+    <link rel="stylesheet" href="{% static 'assets/css/dark.css' %}">
 
     <!-- Specific CSS goes HERE -->
     {% block stylesheets %}
@@ -55,6 +55,7 @@
     max-width: 800px;
     margin: 0 auto;
   }
+  
 </style>
 </head>
 <body>

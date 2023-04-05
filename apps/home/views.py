@@ -753,6 +753,13 @@ def get_request_data(request, id):
         'request_by': request.request_by,
         'device_type': request.isp,
         'ticket_id' : request.ticket_id,
+        'cnic' : request.cnic,
+        'number' : request.number,
+        'entity': request.entity,
+        'department' : request.department,
+        'designation' : request.designation,
+        'location': request.location,
+        'employee_email' : request.employee_email,
     }
     return JsonResponse(data)
 

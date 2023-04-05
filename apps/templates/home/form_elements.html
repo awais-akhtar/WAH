@@ -78,7 +78,8 @@ $(document).ready(function() {
       url: '/get_request_data/' + id,
       type: 'GET',
       dataType: 'json',
-      success: function(data) {
+      success: function(data) { 
+        console.log(data);
         var datetime = new Date(data.request_date);
         var options = { 
           month: 'long', 
@@ -94,6 +95,7 @@ $(document).ready(function() {
         $('#name').empty().append(data.name);
         $('#request_by').empty().append(data.request_by);
         $('#employee_idd').empty().append(data.employee_idd);
+        $('#employee_email').empty().append(data.employee_email);
         $('#request_date').empty().append(formattedDatetime);
         $('#device_type').empty().append(data.device_type);
         $('#name_id').empty().val(data.id).append(data.id);
@@ -113,6 +115,14 @@ $(document).ready(function() {
         // set the value of the id input field
         $('#id').val(id);
         $('#ticket').val(data.ticket_id);
+
+        $('#cnic').empty().append(data.cnic);
+        $('#number').empty().append(data.number);
+        $('#entity').empty().append(data.entity);
+        $('#department').empty().append(data.department);
+        $('#designation').empty().append(data.designation);
+        $('#location').empty().append(data.location);
+        
         $('#deviceModal').modal('show');
       },
       error: function() {
@@ -140,33 +150,61 @@ $(document).ready(function() {
                <input type="hidden" name="ticket" id="ticket" value="">
         <div class="modal-body">
           <div class="row">
-            <div class="col-4">
+            <div class="col-3">
               <div class="form-group">
                 <label for="name">Name</label>
                 <h6 class="mb-1" id="name" name="name"></h6>
               </div>
               <div class="form-group">
-                <label for="request_by">Requested by</label>
-                <h6 class="mb-1" id="request_by" name="request_by"></h6>
-              </div>
-            </div>
-            <div class="col-4">
-              <div class="form-group">
                 <label for="employee_id">Employee ID</label>
-               <!-- <input type="text" class="form-control" id="employee_idd" name="employee_id">  -->
                 <h6 class="mb-1" id="employee_idd" name="employee_idd"></h6>
               </div>
               <div class="form-group">
-                <label for="request_date">Request Date</label>
-                <!-- <input type="text" class="form-control" id="request_date" name="request_date"> -->
-                <h6 class="mb-1"  id="request_date" name="request_dates"></h6>
+                <label for="employee_email">Email</label>
+                <h6 class="mb-1" id="employee_email" name="employee_email"></h6>
               </div>
             </div>
-            <div class="col-4">
+            <div class="col-3">
+              <div class="form-group">
+                <label for="cnic">CNIC</label>
+                <h6 class="mb-1" id="cnic" name="cnic"></h6>
+              </div>
+              <div class="form-group">
+                <label for="number">Mobile Number</label>
+                <h6 class="mb-1" id="number" name="number"></h6>
+              </div>
+              <div class="form-group">
+                <label for="location">Location</label>
+                <h6 class="mb-1" id="location" name="location"></h6>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <label for="entity">Entity</label>
+                <h6 class="mb-1" id="entity" name="entity"></h6>
+              </div>
+              <div class="form-group">
+                <label for="department">Department</label>
+                <h6 class="mb-1" id="department" name="department"></h6>
+              </div>
+              <div class="form-group">
+                <label for="designation">Desination</label>
+                <h6 class="mb-1" id="designation" name="designation"></h6>
+              </div>
+            </div>
+            <div class="col-3">
               <div class="form-group">
                 <label for="device_type">Requested Device</label>
                 <h6 class="mb-1"  id="device_type" name="device_type"></h6>
               </div>
+              <div class="form-group">
+                <label for="request_date">Request Date</label>
+                <h6 class="mb-1"  id="request_date" name="request_dates"></h6>
+              </div>
+              {% comment %} <div class="form-group">
+                <label for="request_by">Requested By</label>
+                <h6 class="mb-1" id="request_by" name="request_by"></h6>
+              </div> {% endcomment %}
               <div class="form-group">
                 <label for="ticket_id">Ticket ID</label>
                 <h6 class="mb-1"  id="ticket_id" name="ticket_id"></h6>
@@ -189,7 +227,7 @@ $(document).ready(function() {
           </div>
         <div>
         <label for="remarks">Remarks:</label>
-        <textarea class="form-control"  rows="3" cols="5" maxlength="300" id="remarks" name="remarks"></textarea>
+        <textarea class="form-control"  rows="3" cols="3" maxlength="300" id="remarks" name="remarks"></textarea>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-outline-danger btn-glow-danger" data-bs-dismiss="modal">Close</button>
@@ -200,90 +238,3 @@ $(document).ready(function() {
     </div>
   </div>
   {% endblock content %}
-
-
-
-
-
-
-
-
-
-  {% comment %} $('#updateBtn').click(function() {
-    var id = $('#idd').val(); // add this line
-    $.ajax({
-        url: '/update_device_data/' + id,
-        type: 'POST',
-        data: {
-            location: $('#location').val(),
-            type: $('#type').val(),
-            isp: $('#isp').val(),
-            data_limit: $('#data_limit').val(),
-            manufacturer: $('#manufacturer').val(),
-            device_model: $('#device_model').val(),
-            imei: $('#imei').val(),
-            msisdn: $('#msisdn').val(),
-            sim_card: $('#sim_card').val(),
-            device_status: $('#device_status').val(),
-            punched_by: $('#punched_by').val(),
-            remarks: $('#remarks').val(),
-            instock_date: $('#instock_date').val(),
-        },
-        success: function(response) {
-            console.log('Device data updated successfully.');
-            $('#deviceModal').modal('hide');
-        },
-        error: function() {
-            console.log('Error: Failed to update device data.');
-        }
-    });
-});
- {% endcomment %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-{% comment %}   
-</div>
-     $('.approve-btn').click(function() {
-        var request_id = $(this).data('id');
-        var id = $('#id').val();
-        console.log(id)
-        $.ajax({
-          url: '/approve_request/',
-          type: 'POST',
-          data: {'request_id': request_id},
-          success: function(response) {
-            console.log('Request approved successfully!');
-            location.reload();  // Reload the page to show the updated requests
-          },
-          error: function(xhr) {
-            console.log('Error approving request');
-          }
-        });
-      });
-      
-      $('.reject-btn').click(function() {
-        var request_id = $(this).data('id');
-        $.ajax({
-          url: '/reject_request/',
-          type: 'POST',
-          data: {'request_id': request_id},
-          success: function(response) {
-            console.log('Request rejected successfully!');
-            location.reload();  // Reload the page to show the updated requests
-          },
-          error: function(xhr) {
-            console.log('Error rejecting request');
-          }
-        });
-      }); {% endcomment %}
