@@ -17,14 +17,14 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG =True #env('DEBUG')
+DEBUG =env('DEBUG')
 
 # Assets Management
-ASSETS_ROOT = os.getenv('ASSETS_ROOT', '/static/assets') 
+ASSETS_ROOT = env('ASSETS_ROOT') 
 ASSETS_ROOT2 = os.getenv('ASSETS_ROOT2', '/static/assets2') 
 
 # load production server from .env
-ALLOWED_HOSTS        = ['127.0.0.1'   ]# ,env('SERVER')
+ALLOWED_HOSTS        = [env('SERVER')]
 # CSRF_TRUSTED_ORIGINS = ['http://localhost:85', 'http://127.0.0.1', 'https://' + env('SERVER', default='127.0.0.1') ]
 
 # Application definition
@@ -90,9 +90,9 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'portal',
-        'USER': 'root',
-        'PASSWORD': 'root',  
+        'NAME': 'wahuser',
+        'USER': 'wahuser',
+        'PASSWORD': '7avr2@skxr1sc',  
         'HOST': '127.0.0.1',  
         'PORT': '3306', 
         'OPTIONS': {
